@@ -1,27 +1,27 @@
 /* f_encryption.sql
 
-Purpose: f_encrypt_str encrypts a 255 character string with AES256 encryption using a 32bit key.
+Purpose: f_encrypt_str encrypts a 256 character string with AES256 encryption using a 32 character key.
 f_decrypt_str decrypts this encrypted string and returns the original plaintext.  
 
 Internal dependencies: None
 
 External dependencies: pyaes (https://github.com/ricmoo/pyaes)
 
-2015-09-10: written by chriz@  
+2015-09-10: created by chriz@  
 */
 
 CREATE LIBRARY pyaes
 language plpythonu 
-from 'https://s3.amazonaws.com/casebucket/pyaes.zip';
+from 'https://s3.amazonaws.com/udf-bucket/pyaes.zip';
 
-create or replace function f_encrypt_str(a varchar(255),key char(32))
+create or replace function f_encrypt_str(a varchar(256),key char(32))
 returns varchar(max)
 STABLE
 AS $$
     import pyaes
     aes = pyaes.AESModeOfOperationCTR(key)
     e = repr(aes.encrypt(a))
-    return e.replace('\\x00','*NUL*')
+    return e.replace('\\x00','*NUL*') # Replace null bytes with NUL placeholder string 
 $$ LANGUAGE plpythonu;
 
 create or replace function f_decrypt_str(a varchar(max),key char(32))
@@ -30,7 +30,7 @@ STABLE
 AS $$
     import pyaes
     aes = pyaes.AESModeOfOperationCTR(key)
-    b = a.replace('*NUL*','\\x00')
+    b = a.replace('*NUL*','\\x00') # Replace NUL placeholder string with NUL bytes
     c = eval(b)
     d = aes.decrypt(c)
     return d
@@ -48,6 +48,8 @@ udf-# ('ckages. requests sleep slyly. quickly even pinto beans promise above the
 udf-# ('platelets. regular deposits detect asymptotes. blithely unusual packages nag slyly at the fluf'),  
 udf-# ('nag. furiously careful packages are slyly at the accounts. furiously regular in');
 INSERT 0 5
+
+# NOTE: Passphrase must be exactly 32 characters
 
 udf=# create table encrypted as select c_comment, f_encrypt_str(c_comment,'PassphrasePassphrasePassphrase32') as c_comment_encrypted from base;
 SELECT
