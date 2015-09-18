@@ -175,6 +175,12 @@ TERMS AND CONDITIONS FOR USE, REPRODUCTION, AND DISTRIBUTION
 
 END OF TERMS AND CONDITIONS
 
+Note: Other license terms may apply to certain, identified software 
+files contained within or distributed with the accompanying software 
+if such terms are included in the directory containing the accompanying 
+software. Such other license terms will then apply in lieu of the terms 
+of the software license above.
+
 APPENDIX: How to apply the Apache License to your work.
 
    To apply the Apache License to your work, attach the following
@@ -186,7 +192,7 @@ APPENDIX: How to apply the Apache License to your work.
    same "printed page" as the copyright notice for easier
    identification within third-party archives.
 
-Copyright 2012-2015 Amazon.com, Inc. or its affiliates. All Rights Reserved.
+Copyright 2015-2015 Amazon.com, Inc. or its affiliates. All Rights Reserved.
 
 Licensed under the Apache License, Version 2.0 (the "License");
 you may not use this file except in compliance with the License.
