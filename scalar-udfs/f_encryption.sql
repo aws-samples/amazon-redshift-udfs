@@ -19,19 +19,20 @@ returns varchar(max)
 STABLE
 AS $$
     import pyaes
+    import base64
     aes = pyaes.AESModeOfOperationCTR(key)
-    e = repr(aes.encrypt(a))
-    return e.replace('\\x00','*NUL*') # Replace null bytes with NUL placeholder string 
+    e = base64.b64encode(aes.encrypt(a))
+    return e
 $$ LANGUAGE plpythonu;
 
 create or replace function f_decrypt_str(a varchar(max),key char(32))
 returns varchar(max)
 STABLE
 AS $$
+    import base64
     import pyaes
     aes = pyaes.AESModeOfOperationCTR(key)
-    b = a.replace('*NUL*','\\x00') # Replace NUL placeholder string with NUL bytes
-    c = eval(b)
+    c = base64.b64decode(a)
     d = aes.decrypt(c)
     return d
 $$ LANGUAGE plpythonu;
