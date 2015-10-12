@@ -1,15 +1,16 @@
 /* Purpose: Converts a UNIX timestamp to a UTC datetime with up to microseconds granularity. 
 
-Internal dependencies: Pandas
+Internal dependencies: pandas
 
 External dependencies: None
 
+2015-09-10: written by chriz@
 */
 
-create or replace function f_unixts_to_timestamp(ts bigint, units char(2))
-returns timestamp
-stable
-as $$
+CREATE OR REPLACE FUNCTION f_unixts_to_timestamp(ts BIGINT, units CHAR(2))
+RETURNS timestamp
+STABLE
+AS $$
     import pandas
     if units == 'ss':
         return pandas.to_datetime(ts, unit='s')
@@ -21,19 +22,19 @@ $$ LANGUAGE plpythonu;
 
 /* Example usage:
 
-udf=# select f_unixts_to_timestamp(1349720105,'ss');
+udf=# SELECT f_unixts_to_timestamp(1349720105,'ss');
  f_unixts_to_timestamp 
 -----------------------
  2012-10-08 18:15:05
 (1 row)
 
-udf=# select f_unixts_to_timestamp(1349720105123,'ms');
+udf=# SELECT f_unixts_to_timestamp(1349720105123,'ms');
   f_unixts_to_timestamp  
 -------------------------
  2012-10-08 18:15:05.123
 (1 row)
 
-udf=# select f_unixts_to_timestamp(1349720105123123,'us');
+udf=# SELECT f_unixts_to_timestamp(1349720105123123,'us');
    f_unixts_to_timestamp    
 ----------------------------
  2012-10-08 18:15:05.123123

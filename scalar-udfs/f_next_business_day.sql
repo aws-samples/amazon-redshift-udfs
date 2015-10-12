@@ -6,12 +6,13 @@ Internal dependencies: pandas
 
 External dependencies: None
 
+2015-09-10: written by chriz@
 */
 
-create or replace function f_next_business_day(dt date)
-returns date
-stable
-as $$
+CREATE OR REPLACE FUNCTION f_next_business_day(dt DATE)
+RETURNS date
+STABLE
+AS $$
     import pandas
     from pandas.tseries.offsets import CustomBusinessDay
     from pandas.tseries.holiday import USFederalHolidayCalendar
@@ -22,19 +23,19 @@ $$ LANGUAGE plpythonu;
 
 /* Example usage:
 
-udf=# select f_next_business_day('2015-09-04');
+udf=# SELECT f_next_business_day('2015-09-04');
  f_next_business_day 
 ---------------------
  2015-09-08
 (1 row)
 
-udf=# select f_next_business_day('2015-09-05');
+udf=# SELECT f_next_business_day('2015-09-05');
  f_next_business_day 
 ---------------------
  2015-09-08
 (1 row)
 
-udf=# select f_next_business_day('2015-09-08');
+udf=# SELECT f_next_business_day('2015-09-08');
  f_next_business_day 
 ---------------------
  2015-09-09

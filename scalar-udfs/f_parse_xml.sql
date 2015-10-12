@@ -2,16 +2,17 @@
 
 Purpose: This function showcases how parsing XML is possible with UDFs.
 
-Internal dependencies: None
+Internal dependencies: xml.etree.ElementTree
 
 External dependencies: None
 
+2015-09-10: written by chriz@
 */
 
-create or replace function f_parse_xml(xml varchar(max))
-returns varchar(max)
-stable
-as $$
+CREATE OR REPLACE FUNCTION f_parse_xml(xml VARCHAR(MAX))
+RETURNS varchar(max)
+STABLE
+AS $$
     import xml.etree.ElementTree as ET
     root = ET.fromstring(xml)
     for country in root.findall('country'):
@@ -22,10 +23,10 @@ $$ LANGUAGE plpythonu;
 
 /* Example usage:
 
-udf=# create table xml_log (id int, xml varchar(max));
+udf=# CREATE TABLE xml_log (id INT, xml VARCHAR(MAX));
 CREATE TABLE
 
-udf=# insert into xml_log values (1,'<data>
+udf=# INSERT INTO xml_log VALUES (1,'<data>
 udf'#     <country name="Liechtenstein">
 udf'#         <rank>1</rank>
 udf'#         <year>2008</year>
@@ -35,7 +36,7 @@ udf'#         <neighbor name="Switzerland" direction="W"/>
 udf'#     </country></data>');
 INSERT 0 1
 
-udf=# select f_parse_xml(xml) from xml_log;
+udf=# SELECT f_parse_xml(xml) FROM xml_log;
    f_parse_xml   
 -----------------
  Liechtenstein:1
