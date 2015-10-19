@@ -12,17 +12,12 @@ RETURNS timestamp
 STABLE
 AS $$
     import pandas
-    if units == 'ss':
-        return pandas.to_datetime(ts, unit='s')
-    elif units == 'ms':
-        return pandas.to_datetime(ts, unit='ms')
-    elif units == 'us':
-        return pandas.to_datetime(ts, unit='us')
+    return pandas.to_datetime(ts, unit=units.rstrip())
 $$ LANGUAGE plpythonu;
 
 /* Example usage:
 
-udf=# SELECT f_unixts_to_timestamp(1349720105,'ss');
+udf=# SELECT f_unixts_to_timestamp(1349720105,'s');
  f_unixts_to_timestamp 
 -----------------------
  2012-10-08 18:15:05
