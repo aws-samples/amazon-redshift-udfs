@@ -16,9 +16,7 @@ STABLE
 AS $$
     s = {"null", "invalid", "unknown", "n/a", "not applicable", "void", "nothing", "nonexistent", "null and void"}
     b = str(a).lower()
-    if b in s:
-        return True
-    return False
+    return b in s
 $$ LANGUAGE plpythonu;
 
 /* Example usage:
