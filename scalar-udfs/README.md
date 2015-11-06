@@ -4,6 +4,8 @@ If you are using psql, you can use \i &lt;script.sql&gt; to run.
 
 | Script | Purpose |
 | ------------- | ------------- |
+| f_bitwise_to_delimited | Convert a column of booleans "packed" into an integer to a delimited string of 1s and 0s. |
+| f_bitwise_to_string | Convert a column of booleans "packed" into an integer to a string of 1s and 0s. |
 | f_encryption.sql | Uses pyaes library to encrypt/decrypt strings using passphrase |
 | f_next_business_day.sql | Uses pandas library to return dates which are US Federal Holiday aware |
 | f_null_syns.sql | Uses python sets to match strings, similar to a SQL IN condition |
