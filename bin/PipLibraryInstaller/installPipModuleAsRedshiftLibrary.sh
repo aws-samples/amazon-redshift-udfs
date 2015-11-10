@@ -30,7 +30,7 @@ if [ $? != 0 ]; then
 fi
 
 # look up runtime arguments of the module name and the destination S3 Prefix
-while getopts "m:s:r:e:" opt; do
+while getopts "m:s:r:" opt; do
 	case $opt in
 		m) module="$OPTARG";;
 		s) s3Prefix="$OPTARG";;
