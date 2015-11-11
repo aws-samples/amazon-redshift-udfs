@@ -1,3 +1,16 @@
+/* install_data_masking.sql
+
+Purpose: Installs a series of user defined functions which perform encipher and
+decipher operations using Pycipher.
+
+Please note that data masking IS NOT ENCRYPTION and should be used with caution
+
+Internal dependencies: random, string
+
+External dependencies: pycipher (https://pypi.python.org/pypi/pycipher and http://pycipher.readthedocs.org/en/latest) 
+
+2015-11-11: created by meyersi@  
+*/
 CREATE LIBRARY pycipher
 LANGUAGE plpythonu
 from 'https://s3.amazonaws.com/udf-bucket/pycipher.zip';
