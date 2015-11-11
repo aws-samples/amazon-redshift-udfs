@@ -14,7 +14,7 @@ To run the installer simply execute:
 ./installPipModuleAsRedshiftLibrary.sh -m <module> -s <upload prefix> -r <region>
 
 where <module> is the name of the Pip module to be installed
-      <upload prefix> is the location on S3 to upload the artifact to. Must be in format s3://bucket/prefix
+      <upload prefix> is the location on S3 to upload the artifact to. Must be in format s3://bucket/prefix/
       <region> is the optional region where the S3 bucket was created
 ```
 
