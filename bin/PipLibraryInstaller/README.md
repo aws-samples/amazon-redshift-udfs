@@ -4,7 +4,7 @@ In this directory you'll find a shell script which allows you to prepare a pip m
 
 ## Pre-requisites
 
-In order to run this module, you need to have python, pip, and the AWS command line interface installed. Pip also needs to have `wheel` installed.
+In order to run this module, you need to have python, pip, and the AWS command line interface installed. Pip also needs to have `wheel` installed. Furthermore, you must run within a shell that has the $TMPDIR environment variable set.
 
 ## Running the installer
 
