@@ -1,6 +1,6 @@
 /* UDF: f_format_number.sql
 
-Purpose: Provide a simple, non-locale aware way to format a number with user defined  thousands and decimal separator.
+Purpose: Provides a simple, non-locale aware way to format a number with user defined  thousands and decimal separator.
 
 Internal dependencies: math.modf, collections.deque
 
