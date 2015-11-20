@@ -5,6 +5,7 @@ If you are using psql, you can use \i &lt;script.sql&gt; to run.
 | Script | Purpose |
 | ------------- | ------------- |
 | f\_encryption.sql | Uses pyaes library to encrypt/decrypt strings using passphrase |
+| f\_format\_number.sql | Provides a simple, non-locale aware way to format a number with user defined  thousands and decimal separator |
 | f\_next\_business\_day.sql | Uses pandas library to return dates which are US Federal Holiday aware |
 | f\_null\_syns.sql | Uses python sets to match strings, similar to a SQL IN condition |
 | f\_parse\_url\_query\_string.sql | Uses urlparse to parse the field-value pairs from a url query string |
