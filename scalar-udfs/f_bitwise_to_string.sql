@@ -15,7 +15,7 @@ External dependencies: none
 
 2015-10-15: created by Joe Harris (https://github.com/joeharris76)
 */
-CREATE OR REPLACE FUNCTION dba.f_bitwise_to_string(bitwise_column BIGINT, bits_in_column INT)
+CREATE OR REPLACE FUNCTION f_bitwise_to_string(bitwise_column BIGINT, bits_in_column INT)
     RETURNS VARCHAR(255)
 STABLE
 AS $$
