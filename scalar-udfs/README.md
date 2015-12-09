@@ -4,6 +4,8 @@ If you are using psql, you can use \i &lt;script.sql&gt; to run.
 
 | Script | Purpose |
 | ------------- | ------------- |
+| f_bitwise_to_delimited | Convert a column of booleans "packed" into an integer to a delimited string of 1s and 0s. |
+| f_bitwise_to_string | Convert a column of booleans "packed" into an integer to a string of 1s and 0s. |
 | f\_encryption.sql | Uses pyaes library to encrypt/decrypt strings using passphrase |
 | f\_format\_number.sql | Provides a simple, non-locale aware way to format a number with user defined  thousands and decimal separator |
 | f\_next\_business\_day.sql | Uses pandas library to return dates which are US Federal Holiday aware |
@@ -12,7 +14,6 @@ If you are using psql, you can use \i &lt;script.sql&gt; to run.
 | f\_parse\_xml.sql | Uses xml.etree.ElementTree to parse XML |
 | f\_unixts\_to\_timestamp.sql | Uses pandas library to convert a unix timestamp to UTC datetime |
 | install\_substitution\_masking.sql | Installs a series of functions which allow you to perform simple data masking using either a simple substitution cipher, or an Affine cipher |
-
 
 ## install\_substitution\_masking.sql
 
