@@ -1,13 +1,21 @@
 # amazon-redshift-udfs
-A collection of example User Defined Functions and Utilities for Amazon Redshift.
+A collection of example user-defined functions (UDFs) and utilities for Amazon Redshift.
 
 ## Contents
 
-This project is divided into several areas: the `bin` directory contains utilies related to working with User Defined Functions. This includes the PipLibraryInstaller, which prepares Pip libraries, with their associated dependencies, for installation into a Redshift Database.
+This project is divided into several areas: 
 
-The `lib` folder contains libraries that we've built for your use and as a starting point for new applications. Today, this includes *pyaes* for performing AES encryption, and *SubstitutionMasking* for performing simple data masking.
+- `bin/` 
 
-Finally, the `scalar-udfs` folder includes functions that you can install into your Redshift database and use right away.
+Contains utilies related to working with UDFs. This includes the PipLibraryInstaller, which prepares Pip libraries, with their associated dependencies, for installation into an Amazon Redshift database.
+
+- `lib/` 
+
+Contains libraries that we've provided for your use and as a starting point for new applications. Today, this includes *pyaes* for performing AES encryption, and *SubstitutionMasking* for performing simple data masking.
+
+- `scalar-udfs/` 
+
+Contains SQL to create example UDFs that you can either modify or directly install into your Amazon Redshift database.
 
 ## Contributing
 
