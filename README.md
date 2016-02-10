@@ -1,4 +1,4 @@
-# amazon-redshift-udfs
+# Amazon Redshift UDFs
 A collection of example user-defined functions (UDFs) and utilities for Amazon Redshift.
 
 ## Contents
