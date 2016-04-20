@@ -17,6 +17,10 @@ Contains libraries that we've provided for your use and as a starting point for 
 
 Contains SQL to create example UDFs that you can either modify or directly install into your Amazon Redshift database.
 
+- `views/` 
+
+Contains CREATE VIEW DDL that can be queried to simplify administration of UDFs.
+
 ## Contributing
 
 We would love to receive your pull requests for new functionality!
