@@ -11,6 +11,7 @@ If you are using psql, you can use \i &lt;script.sql&gt; to run.
 | f\_next\_business\_day.sql | Uses pandas library to return dates which are US Federal Holiday aware |
 | f\_null\_syns.sql | Uses python sets to match strings, similar to a SQL IN condition |
 | f\_parse\_url\_query\_string.sql | Uses urlparse to parse the field-value pairs from a url query string |
+| f\_parse\_url.sql | Uses urlparse to parse URL and returns specified attribute of given URL |
 | f\_parse\_xml.sql | Uses xml.etree.ElementTree to parse XML |
 | f\_unixts\_to\_timestamp.sql | Uses pandas library to convert a unix timestamp to UTC datetime |
 | install\_substitution\_masking.sql | Installs a series of functions which allow you to perform simple data masking using either a simple substitution cipher, or an Affine cipher |
