@@ -11,7 +11,7 @@ Contains utilies related to working with UDFs. This includes the PipLibraryInsta
 
 - `lib/` 
 
-Contains libraries that we've provided for your use and as a starting point for new applications. Today, this includes *pyaes* for performing AES encryption, and *SubstitutionMasking* for performing simple data masking.
+Contains libraries that we've provided for your use and as a starting point for new applications. Today, this includes *SubstitutionMasking* for performing simple data masking.
 
 - `scalar-udfs/` 
 

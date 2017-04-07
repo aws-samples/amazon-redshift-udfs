@@ -6,7 +6,6 @@ If you are using psql, you can use \i &lt;script.sql&gt; to run.
 | ------------- | ------------- |
 | f_bitwise_to_delimited.sql | Convert a column of booleans "packed" into an integer to a delimited string of 1s and 0s. |
 | f_bitwise_to_string.sql | Convert a column of booleans "packed" into an integer to a string of 1s and 0s. |
-| f\_encryption.sql | Uses pyaes library to encrypt/decrypt strings using passphrase |
 | f\_format\_number.sql | Provides a simple, non-locale aware way to format a number with user defined  thousands and decimal separator |
 | f\_next\_business\_day.sql | Uses pandas library to return dates which are US Federal Holiday aware |
 | f\_null\_syns.sql | Uses python sets to match strings, similar to a SQL IN condition |
