@@ -1,5 +1,5 @@
 # Amazon Redshift UDFs
-A collection of example user-defined functions (UDFs) and utilities for Amazon Redshift.
+A collection of example user-defined functions (UDFs) and utilities for Amazon Redshift. The intent of this collection is to provide examples for defining python UDFs, but the UDF examples themselves may not be optimal to achieve your requirements.
 
 ## Contents
 
@@ -8,10 +8,6 @@ This project is divided into several areas:
 - `bin/` 
 
 Contains utilies related to working with UDFs. This includes the PipLibraryInstaller, which prepares Pip libraries, with their associated dependencies, for installation into an Amazon Redshift database.
-
-- `lib/` 
-
-Contains libraries that we've provided for your use and as a starting point for new applications. Today, this includes *SubstitutionMasking* for performing simple data masking.
 
 - `scalar-udfs/` 
 
