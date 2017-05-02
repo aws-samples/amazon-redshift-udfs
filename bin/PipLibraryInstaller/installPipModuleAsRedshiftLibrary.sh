@@ -114,8 +114,9 @@ LANGUAGE plpythonu
 from '$s3Prefix$zipFile'
 WITH CREDENTIALS AS 'aws_access_key_id=<key_id>;aws_secret_access_key=<secret>'"
 
-if [ "$region" != "" ]; then
-	echo "region $region"
+if [ "$region" != "" ]; 
+	then echo "region '$region';"
+	else echo ";"
 fi
 
 rm -Rf "$TMPDIR/.$module"
