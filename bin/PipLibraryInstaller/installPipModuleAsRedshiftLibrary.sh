@@ -99,7 +99,7 @@ wheelFile=`find . -name *.whl`
 zipFile=$module.zip
 mv $wheelFile $zipFile
 
-aws s3 cp $zipFile $s3Prefix$zipFile
+aws s3 cp $zipFile $s3Prefix$zipFile --region $region
 
 if [ $? != 0 ]; then
 	rm -Rf "$TMPDIR/.$module"
