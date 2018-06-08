@@ -8,7 +8,7 @@ function usage {
 	echo
 	echo "where <module> is the name of the Pip module to be installed"
 	echo "      <upload prefix> is the location on S3 to upload the artifact to. Must be in format s3://bucket/prefix/"
-	echo "      <region> is the optional region where the S3 bucket was created"
+	echo "      <region> is the region where the S3 bucket was created"
 	echo
 	
 	exit 0;
@@ -56,6 +56,7 @@ done
 # validate arguments
 notNull "$module" "Please provide the pip module name using -m"
 notNull "$s3Prefix" "Please provide an S3 Prefix to store the library in using -s"
+notNull "$region" "Please provide a S3 region using -r"
 
 # check that the s3 prefix is in the right format
 # starts with 's3://'
