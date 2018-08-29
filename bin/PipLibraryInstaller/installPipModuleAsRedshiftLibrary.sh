@@ -95,9 +95,9 @@ fi
 
 cd "$TMPDIR/.$module"
 
-wheelFile=`find . -name *.whl`
+wheelFile=`find . -name "*.whl"`
 zipFile=$module.zip
-mv $wheelFile $zipFile
+zip $zipFile $wheelFile
 
 aws s3 cp $zipFile $s3Prefix$zipFile
 
