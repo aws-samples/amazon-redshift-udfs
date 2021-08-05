@@ -1,16 +1,15 @@
 #!/bin/bash
-#set -x 
 
 # Install Pip Module as Redshift Library
 
 function usage {
-	echo "./installPipModuleAsRedshiftLibrary.sh -m <module> -s <upload prefix> -r <region>"
+	echo "./installPipModuleAsRedshiftLibrary.sh -m <module> -s <s3 prefix> -r <iam role> -"
 	echo
 	echo "where <module> is the name of the Pip module to be installed"
-	echo "      <upload prefix> is the location on S3 to upload the artifact to. Must be in format s3://bucket/prefix/"
-	echo "      <region> is the optional region where the S3 bucket was created"
+	echo "      <s3 prefix> is the location on S3 to upload the artifact to. Must be in format s3://bucket/prefix/"
+	echo "      <iam role> is the role which is attached to the Redshift cluster and has access to read from the s3 upload location"
 	echo
-	
+
 	exit 0;
 }
 
@@ -72,7 +71,7 @@ if ! [[ $s3Prefix =~ .*\/$ ]]; then
 fi
 
 # check if this is a valid module in pip
-pip search $module &> /dev/null 
+pip search $module &> /dev/null
 
 if [ $? -ne 0 ]; then
 	echo "Unable to find module $module in pip."
@@ -87,37 +86,22 @@ rm -Rf "$TMPDIR/.$module" &> /dev/null
 mkdir "$TMPDIR/.$module"
 
 pip wheel $module --wheel-dir "$TMPDIR/.$module"
-
 if [ $? != 0 ]; then
 	rm -Rf "$TMPDIR/.$module"
 	exit $?
 fi
 
-cd "$TMPDIR/.$module"
-
-wheelFile=`find . -name *.whl`
-zipFile=$module.zip
-mv $wheelFile $zipFile
-
-aws s3 cp $zipFile $s3Prefix$zipFile
-
-if [ $? != 0 ]; then
-	rm -Rf "$TMPDIR/.$module"
-	exit $?
-fi
-
-echo "
-Packaging Complete. Please run the following CREATE LIBRARY command in your Redshift database to use this module
-
-CREATE LIBRARY $module
-LANGUAGE plpythonu
-from '$s3Prefix$zipFile'
-WITH CREDENTIALS AS 'aws_access_key_id=<key_id>;aws_secret_access_key=<secret>'"
-
-if [ "$region" != "" ]; 
-	then echo "region '$region';"
-	else echo ";"
-fi
+for file in "$TMPDIR/.$module/*.whl"
+do
+	depname=${file%.*}
+	aws s3 cp "$TMPDIR/.$module/$depname.whl" "$s3Prefix/$category/$function/$depname.zip"
+	sql="CREATE OR REPLACE LIBRARY ${depname%%-*} LANGUAGE plpythonu FROM '$s3Prefix/$depname.zip' WITH CREDENTIALS AS 'aws_iam_role=$s3Role'; "
+	execQuery.sh $cluster $db $user $schema "$sql"
+	if [ $? != 0 ]; then
+		rm -Rf "$TMPDIR/.$module"
+		exit $?
+	fi
+done
 
 rm -Rf "$TMPDIR/.$module"
 cd - &> /dev/null
