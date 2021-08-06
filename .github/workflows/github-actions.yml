@@ -14,10 +14,12 @@ jobs:
           aws-region: ${{ secrets.REGION }}
       - id: files
         uses: jitterbit/get-changed-files@v1
-      - name: Copy glue files, deploy CFN templates (appflow, glue jobs, scheduled queries), execute sql
-        run: |
+        with:
+          format: 'json'
+      - run: |
           folders=""
-          for file in ${{ steps.files.outputs.all }}; do
+          readarray -t files <<<"$(jq -r '.[]' <<<'${{ steps.files.outputs.all }}')"
+          for file in ${files[@]}; do
             folders="$folders $(dirname $file)"
           done
           folders="$folders" | tr " " "\n" | sort | uniq | tr "\n" " "

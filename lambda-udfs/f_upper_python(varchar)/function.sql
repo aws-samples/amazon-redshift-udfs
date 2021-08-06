@@ -5,6 +5,7 @@ Purpose:
 Internal dependencies: None
 External dependencies: None
 2021-08-01: written by rjvgupta
+test
 */
 CREATE OR REPLACE EXTERNAL FUNCTION f_upper_python(varchar) RETURNS varchar IMMUTABLE
 LAMBDA 'f_upper_python(varchar)' IAM_ROLE ':role';
