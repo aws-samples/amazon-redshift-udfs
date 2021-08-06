@@ -2,10 +2,6 @@
 
 Purpose: Provides a simple, non-locale aware way to format a number with user defined  thousands and decimal separator.
 
-Internal dependencies: math.modf, collections.deque
-
-External dependencies: None
-
 2015-11-9: written by sdia
 
 */

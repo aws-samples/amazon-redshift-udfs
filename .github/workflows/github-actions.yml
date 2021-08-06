@@ -17,6 +17,7 @@ jobs:
         with:
           format: 'json'
       - run: |
+          set -eux
           folders=""
           readarray -t files <<<"$(jq -r '.[]' <<<'${{ steps.files.outputs.all }}')"
           for file in ${files[@]}; do
@@ -25,6 +26,7 @@ jobs:
           folders="$folders" | tr " " "\n" | sort | uniq | tr "\n" " "
           cd bin
           for folder in $folders; do
-              ./deployFunction.sh $category $function ${{ secrets.S3_LOC }} ${{ secrets.IAM_ROLE }} ${{ secrets.CLUSTER }} ${{ secrets.DB }} ${{ secrets.USER }} ${{ secrets.SCHEMA }}
-              ./testFunction.sh $category $function ${{ secrets.CLUSTER }} ${{ secrets.DB }} ${{ secrets.USER }} ${{ secrets.SCHEMA }}
+              IFS="/" read -ra PARTS <<< "$(folder)"
+              ./deployFunction.sh ${PARTS[0]} "${PARTS[1]}" ${{ secrets.S3_LOC }} ${{ secrets.IAM_ROLE }} ${{ secrets.CLUSTER }} ${{ secrets.DB }} ${{ secrets.USER }} ${{ secrets.SCHEMA }}
+              ./testFunction.sh ${PARTS[0]} "${PARTS[1]}" ${{ secrets.CLUSTER }} ${{ secrets.DB }} ${{ secrets.USER }} ${{ secrets.SCHEMA }}
           done
