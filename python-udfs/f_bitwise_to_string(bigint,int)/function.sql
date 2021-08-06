@@ -1,7 +1,7 @@
 /* f_bitwise_to_string.sql
 
-Purpose: Bitwise operations are very fast in Redshift and are invaluable when dealing 
-         with many thousands of BOOLEAN columns. This function, most useful for reporting, 
+Purpose: Bitwise operations are very fast in Redshift and are invaluable when dealing
+         with many thousands of BOOLEAN columns. This function, most useful for reporting,
          creates a VARCHAR representation of an INT column containing bit-wise encoded
          BOOLEAN values, e.g. 281 => '100011001'
 
@@ -23,26 +23,3 @@ AS $$
   b = bin(bitwise_column)[2:].zfill(bits_in_column)
   return b
 $$ LANGUAGE plpythonu;
-
-/* Example usage:
-
-udf=# CREATE TEMP TABLE bitwise_example (id INT, packed_bools BIGINT, packed_count INT);
-CREATE TABLE
-
-udf=# INSERT INTO bitwise_example 
-udf-# VALUES (1, B'100011001'::integer, 9),
-udf-#        (2, B'000011010'::integer, 9),
-udf-#        (3, B'100011101'::integer, 9),
-udf-#        (4, B'000110001'::integer, 9);
-INSERT 0 4
-
-udf=# SELECT id, packed_bools, f_bitwise_to_string(packed_bools,packed_count) FROM bitwise_example;
- id | packed_bools | f_bitwise_to_string 
-----+--------------+--------------------
-  2 |           26 | 000011010
-  3 |          285 | 100011101
-  4 |           49 | 000110001
-  1 |          281 | 100011001
-(4 rows)
-
-*/
