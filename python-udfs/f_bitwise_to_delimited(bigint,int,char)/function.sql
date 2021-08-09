@@ -3,7 +3,7 @@ Purpose: Bitwise operations are very fast in Redshift and are invaluable when de
          with many thousands of BOOLEAN columns. This function, most useful for exports,
          creates a VARCHAR, delimited by a specified character, from an INT column
          containing bit-wise encoded BOOLEAN values, e.g. 281 => '1,0,0,0,1,1,0,0,1'
-
+test
 Arguments:
     • `bitwise_column` - column containing bit-wise encoded BOOLEAN values
     • `bits_in_column` - number of bits encoded in the column

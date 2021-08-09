@@ -17,13 +17,21 @@ execQuery() {
     sleep 1
     status=`aws redshift-data describe-statement --id $id | jq -r .Status`
   done
-  if [ "$status" == "FINISHED" ]; then
-    result=`aws redshift-data get-statement-result --id $id:2`
+  if ["$status" == "FAILED"]; then
+    aws redshift-data describe-statement --id $id
+    exit 1
+  else
+    aws redshift-data get-statement-result --id $id:2
+    #echo $id:$status
   fi
-  if [ "$status" == "FAILED" ]; then
-    result=`aws redshift-data describe-statement --id $id`
-  fi
-  echo $result
+
+  #if [ "$status" == "FINISHED" ]; then
+  #  result=`aws redshift-data get-statement-result --id $id:2`
+  #fi
+  #if [ "$status" == "FAILED" ]; then
+  #  result=`aws redshift-data describe-statement --id $id`
+  #fi
+  #echo $result
 }
 
 arrIN=(${function//(/ })

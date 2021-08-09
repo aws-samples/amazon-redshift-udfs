@@ -112,7 +112,12 @@ execQuery()
     sleep 1
     status=`aws redshift-data describe-statement --id $id | jq -r .Status`
   done
-  echo $id:$status
+	if ["$status" == "FAILED"]; then
+    aws redshift-data describe-statement --id $id
+    exit 1
+  else
+    echo $id:$status
+  fi
 }
 
 
