@@ -45,9 +45,9 @@ if test -f "../$category/$function/lambda.yaml"; then
   template=$(<"../$category/$function/lambda.yaml")
   stackname=${function//(/_}
   stackname=${stackname//)/_}
-  output=`aws cloudformation update-stack --stack-name ${function} --parameters ParameterKey=LambdaRole,ParameterValue=$iamRole --template-body "$template"`
+  output=`aws cloudformation update-stack --stack-name ${stackname} --parameters ParameterKey=LambdaRole,ParameterValue=$iamRole --template-body "$template"`
   if [ $? != 0 ]; then
-		output=`aws cloudformation create-stack --stack-name ${function} --parameters ParameterKey=LambdaRole,ParameterValue=$iamRole --template-body "$template"`
+		output=`aws cloudformation create-stack --stack-name ${stackname} --parameters ParameterKey=LambdaRole,ParameterValue=$iamRole --template-body "$template"`
 	fi
   if [ $? != 0 ]; then
     echo $output
