@@ -1,4 +1,6 @@
 #!/bin/bash
+set -eu
+
 category=$1
 function=$2
 cluster=$3
@@ -29,6 +31,8 @@ name=${arrIN[0]}
 args=${arrIN[1]}
 args=${args%?}
 i=0
+fields=
+params=
 OIFS=$IFS
 IFS=','
 for arg in $args

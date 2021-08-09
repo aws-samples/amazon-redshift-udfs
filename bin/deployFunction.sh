@@ -1,4 +1,5 @@
 #!/bin/bash
+set -eu
 
 # Depends on Python installed, and the AWS CLI configured including the region, iam priv to write to the location and get DB credentials for the user supplied
 category=$1
@@ -35,6 +36,7 @@ if test -f "../$category/$function/requirements.txt"; then
 fi
 
 sql=$(<"../$category/$function/function.sql")
+echo execQuery $cluster $db $user $schema "$sql"
 execQuery $cluster $db $user $schema "$sql"
 #to-do: handle parameters (i.e. lambda arn, role arn)
 if [ $? != 0 ]; then
