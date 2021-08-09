@@ -16,7 +16,7 @@ schema=$8
 
 execQuery()
 {
-  output=`aws redshift-data execute-statement --cluster-identifier $cluster --database $db --db-user $user --parameters [{"name":"iamRole","value":"$iamRole"}] --sql "set search_path to $schema; $1"`
+  output=`aws redshift-data execute-statement --cluster-identifier $cluster --database $db --db-user $user --parameters "[{\"name\":\"iamRole\",\"value\":\"$iamRole\"}]" --sql "set search_path to $schema; $1"`
   id=`echo $output | jq -r .Id`
 
   status="SUBMITTED"
@@ -47,6 +47,8 @@ if test -f "../$category/$function/lambda.yaml"; then
   stackname=${stackname//)/-}
   stackname=${stackname//_/-}
   aws cloudformation update-stack --stack-name ${stackname} --parameters ParameterKey=LambdaRole,ParameterValue=$iamRole --template-body "$template" || aws cloudformation create-stack --stack-name ${stackname} --parameters ParameterKey=LambdaRole,ParameterValue=$iamRole --template-body "$template"
+  aws cloudformation wait stack-create-complete --stack-name ${stackname}
+  stack=`echo $output | jq -r .StackId`
 fi
 
 
