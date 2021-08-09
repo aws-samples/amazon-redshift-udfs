@@ -1,6 +1,6 @@
-/* 
+/*
 Purpose: This function will extract from the user_agent string. This function demos packaging of an external library.
-
+test
 2021-08-08: written by rjvgupta
 */
 --
