@@ -1,5 +1,5 @@
 #!/bin/bash
-set -eux
+set -eu
 
 category=$1
 function=$2
