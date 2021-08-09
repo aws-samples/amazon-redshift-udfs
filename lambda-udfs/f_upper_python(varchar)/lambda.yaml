@@ -4,7 +4,7 @@ Parameters:
     Description: The IAM Role to use when executing this lambda function. Test
     Type: String
 Resources:
-  LambdaGlueJobRedshiftCommands:
+  LambdaUDFFunction:
      Type: "AWS::Lambda::Function"
      Properties:
        FunctionName: f-upper-python-varchar
