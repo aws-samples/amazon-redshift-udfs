@@ -8,7 +8,7 @@ Arguments:
     • `bitwise_column` - column containing bit-wise encoded BOOLEAN values
     • `bits_in_column` - number of bits encoded in the column
     • `delimiter`      - character that will delimit the output
-test
+
 2015-10-15: created by Joe Harris (https://github.com/joeharris76)
 */
 CREATE OR REPLACE FUNCTION f_bitwise_to_delimited(bitwise_column BIGINT, bits_in_column INT, delimter CHAR(1))
