@@ -1,5 +1,5 @@
 #!/bin/bash
-set -eu
+set -eux
 
 # Depends on Python installed, and the AWS CLI configured including the region, iam priv to write to the location and get DB credentials for the user supplied
 category=$1
