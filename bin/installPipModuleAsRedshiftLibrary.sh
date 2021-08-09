@@ -7,7 +7,7 @@ function usage {
 	echo
 	echo "where <module> is the name of the Pip module to be installed"
 	echo "      <s3 prefix> is the location on S3 to upload the artifact to. Must be in format s3://bucket/prefix/"
-	echo "      <iam role> is the role which is attached to the Redshift cluster and has access to read from the s3 upload location"
+	echo "      <s3 role> is the role which is attached to the Redshift cluster and has access to read from the s3 upload location"
 	echo
 
 	exit 0;
@@ -44,7 +44,7 @@ while getopts "m:s:r:h" opt; do
 	case $opt in
 		m) module="$OPTARG";;
 		s) s3Prefix="$OPTARG";;
-		r) region="$OPTARG";;
+		r) s3role="$OPTARG";;
 		h) usage;;
 		\?) echo "Invalid option: -"$OPTARG"" >&2
 			exit 1;;
