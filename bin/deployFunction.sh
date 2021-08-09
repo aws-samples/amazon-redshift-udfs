@@ -1,5 +1,5 @@
 #!/bin/bash
-set -eu
+set -eux
 
 # Depends on Python installed, and the AWS CLI configured including the region, iam priv to write to the location and get DB credentials for the user supplied
 category=$1
@@ -16,7 +16,7 @@ schema=$8
 
 execQuery()
 {
-  output=`aws redshift-data execute-statement --cluster-identifier $1 --database $2 --db-user $3 --sql "set search_path to $4; $5"`
+  output=`aws redshift-data execute-statement --cluster-identifier $cluster --database $db --db-user $user --parameters [{"name":"iamRole","value":"$iamRole"}] --sql "set search_path to $schema; $1"`
   id=`echo $output | jq -r .Id`
 
   status="SUBMITTED"
@@ -33,6 +33,7 @@ execQuery()
   fi
 
 }
+
 
 if test -f "../$category/$function/requirements.txt"; then
   sql=""
@@ -55,6 +56,6 @@ fi
 
 
 sql=$(<"../$category/$function/function.sql")
-echo execQuery $cluster $db $user $schema "$sql"
-execQuery $cluster $db $user $schema "$sql"
+echo execQuery "$sql"
+execQuery "$sql"
 #to-do: handle parameters (i.e. lambda arn, role arn)
