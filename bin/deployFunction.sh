@@ -47,7 +47,7 @@ if test -f "../$category/$function/lambda.yaml"; then
   stackname=${stackname//)/}
   stackname=${stackname//_/-}
   stackname=${stackname//,/-}
-  aws cloudformation update-stack --on-failure DELETE --stack-name ${stackname} --parameters ParameterKey=LambdaRole,ParameterValue=$iamRole --template-body "$template" || aws cloudformation create-stack --on-failure DELETE --stack-name ${stackname} --parameters ParameterKey=LambdaRole,ParameterValue=$iamRole --template-body "$template"
+  aws cloudformation update-stack --stack-name ${stackname} --parameters ParameterKey=LambdaRole,ParameterValue=$iamRole --template-body "$template" || aws cloudformation create-stack --on-failure DELETE --stack-name ${stackname} --parameters ParameterKey=LambdaRole,ParameterValue=$iamRole --template-body "$template"
   aws cloudformation wait stack-create-complete --stack-name ${stackname}
 fi
 
