@@ -10,13 +10,14 @@ cluster=$5
 db=$6
 user=$7
 schema=$8
+sqlparam=
 
 #to-do: create dependent services, set outputs to env
 #to-do: if lambda cfn, deploy, pass in parameters from env
 
 execQuery()
 {
-  output=`aws redshift-data execute-statement --cluster-identifier $cluster --database $db --db-user $user --parameters "[{\"name\":\"iamRole\",\"value\":\"$iamRole\"}]" --sql "set search_path to $schema; $1"`
+  output=`aws redshift-data execute-statement --cluster-identifier $cluster --database $db --db-user $user $sqlparam --sql "set search_path to $schema; $1"`
   id=`echo $output | jq -r .Id`
 
   status="SUBMITTED"
@@ -41,6 +42,7 @@ if test -f "../$category/$function/requirements.txt"; then
   done < ../$category/$function/requirements.txt
 fi
 
+
 if test -f "../$category/$function/lambda.yaml"; then
   template=$(<"../$category/$function/lambda.yaml")
   stackname=${function//(/-}
@@ -49,6 +51,7 @@ if test -f "../$category/$function/lambda.yaml"; then
   stackname=${stackname//,/-}
   aws cloudformation update-stack --stack-name ${stackname} --parameters ParameterKey=LambdaRole,ParameterValue=$iamRole --template-body "$template" || aws cloudformation create-stack --on-failure DELETE --stack-name ${stackname} --parameters ParameterKey=LambdaRole,ParameterValue=$iamRole --template-body "$template"
   aws cloudformation wait stack-create-complete --stack-name ${stackname}
+  sqlparm=`--parameters "[{\"name\":\"iamRole\",\"value\":\"$iamRole\"}]"`
 fi
 
 
