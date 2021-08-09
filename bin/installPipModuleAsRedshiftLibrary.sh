@@ -3,12 +3,15 @@
 # Install Pip Module as Redshift Library
 
 function usage {
-	echo "./installPipModuleAsRedshiftLibrary.sh -m <module> -s <s3 prefix> -r <iam role> -"
+	echo "./installPipModuleAsRedshiftLibrary.sh -m <module> -s <s3 prefix> -r <iam role> -c <cluster> -d <database> -u <db user> -n <namespace/schema"
 	echo
 	echo "where <module> is the name of the Pip module to be installed"
 	echo "      <s3 prefix> is the location on S3 to upload the artifact to. Must be in format s3://bucket/prefix/"
 	echo "      <s3 role> is the role which is attached to the Redshift cluster and has access to read from the s3 upload location"
-	echo
+	echo "      <cluster> is the Redshift cluster you will deploy the function to"
+	echo "      <database> is the database you will deploy the function to"
+	echo "      <db user> is the db user who will create the function"
+	echo " 	    <namespace/schema> is the schema you will deploy the function to"
 
 	exit 0;
 }
@@ -45,6 +48,10 @@ while getopts "m:s:r:h" opt; do
 		m) module="$OPTARG";;
 		s) s3Prefix="$OPTARG";;
 		r) s3role="$OPTARG";;
+		c) cluster="$OPTARG";;
+		d) db="$OPTARG";;
+		u) user="$OPTARG";;
+		n) schema="$OPTARG";;
 		h) usage;;
 		\?) echo "Invalid option: -"$OPTARG"" >&2
 			exit 1;;
