@@ -2,7 +2,7 @@
 Purpose: Returns the next business day with respect to US Federal Holidays and a M-F work week.
 Arguments:
     • `dt` - date to be shifted
-test
+
 2015-09-10: written by chriz@
 */
 
