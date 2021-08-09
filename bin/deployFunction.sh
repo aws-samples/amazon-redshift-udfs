@@ -31,7 +31,6 @@ execQuery()
   else
     echo $id:$status
   fi
-
 }
 
 
@@ -44,6 +43,8 @@ fi
 
 if test -f "../$category/$function/lambda.yaml"; then
   template=$(<"../$category/$function/lambda.yaml")
+  stackname=${function//(/_}
+  stackname=${stackname//)/_}
   output=`aws cloudformation update-stack --stack-name ${function} --parameters ParameterKey=LambdaRole,ParameterValue=$iamRole --template-body "$template"`
   if [ $? != 0 ]; then
 		output=`aws cloudformation create-stack --stack-name ${function} --parameters ParameterKey=LambdaRole,ParameterValue=$iamRole --template-body "$template"`
