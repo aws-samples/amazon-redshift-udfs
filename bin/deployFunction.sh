@@ -46,14 +46,7 @@ if test -f "../$category/$function/lambda.yaml"; then
   stackname=${function//(/-}
   stackname=${stackname//)/-}
   stackname=${stackname//_/-}
-  output=`aws cloudformation update-stack --stack-name ${stackname} --parameters ParameterKey=LambdaRole,ParameterValue=$iamRole --template-body "$template"`
-  if [ $? != 0 ]; then
-		output=`aws cloudformation create-stack --stack-name ${stackname} --parameters ParameterKey=LambdaRole,ParameterValue=$iamRole --template-body "$template"`
-	fi
-  if [ $? != 0 ]; then
-    echo $output
-    exit $?
-  fi
+  aws cloudformation update-stack --stack-name ${stackname} --parameters ParameterKey=LambdaRole,ParameterValue=$iamRole --template-body "$template" || aws cloudformation create-stack --stack-name ${stackname} --parameters ParameterKey=LambdaRole,ParameterValue=$iamRole --template-body "$template"
 fi
 
 
