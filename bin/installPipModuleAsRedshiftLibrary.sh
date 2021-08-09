@@ -86,6 +86,9 @@ fi
 # found the module - install to a local hidden directory
 echo "Installing $module with pip and uploading to $s3Prefix"
 
+$TMPDIR=.tmp
+mkdir $TMPDIR
+
 rm -Rf "$TMPDIR/.$module" &> /dev/null
 
 mkdir "$TMPDIR/.$module"
