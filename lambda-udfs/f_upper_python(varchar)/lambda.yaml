@@ -7,7 +7,7 @@ Resources:
   LambdaGlueJobRedshiftCommands:
      Type: "AWS::Lambda::Function"
      Properties:
-       FunctionName: f_upper_python(varchar)
+       FunctionName: f-upper-python-varchar
        Role: !Ref LambdaRole
        Timeout: 300
        Code:
