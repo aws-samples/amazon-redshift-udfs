@@ -41,6 +41,19 @@ if test -f "../$category/$function/requirements.txt"; then
   done < ../$category/$function/requirements.txt
 fi
 
+if test -f "../$category/$function/lambda.yaml"; then
+  template=$(<"../$category/$function/lambda.yaml")
+  output=aws cloudformation update-stack --stack-name ${function} --parameters ParameterKey=LambdaRole,ParameterValue=$iamRole --template-body "$template"
+  if [ $? != 0 ]; then
+		output=aws cloudformation create-stack --stack-name ${function} --parameters ParameterKey=LambdaRole,ParameterValue=$iamRole --template-body "$template"
+	fi
+  if [ $? != 0 ]; then
+    echo $output
+    exit $?
+  fi
+fi
+
+
 sql=$(<"../$category/$function/function.sql")
 echo execQuery $cluster $db $user $schema "$sql"
 execQuery $cluster $db $user $schema "$sql"
