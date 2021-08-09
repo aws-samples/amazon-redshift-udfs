@@ -17,9 +17,9 @@ jobs:
         with:
           format: 'json'
       - run: |
-          set -eux
+          set -eu
           folders=""
-          files=`jq '.[]' <<<'${{ steps.files.outputs.all }}'`
+          files=`jq -r '.[]' <<<'${{ steps.files.outputs.all }}'`
 
           for file in ${files[@]}; do
             folders="$folders $(dirname $file)"
@@ -27,7 +27,7 @@ jobs:
           folders="$folders" | tr " " "\n" | sort | uniq | tr "\n" " "
           cd bin
           for folder in $folders; do
-              IFS="/" read -ra PARTS <<< "($folder)"
+              IFS="/" read -ra PARTS <<< "$folder"
               ./deployFunction.sh ${PARTS[0]} "${PARTS[1]}" ${{ secrets.S3_LOC }} ${{ secrets.IAM_ROLE }} ${{ secrets.CLUSTER }} ${{ secrets.DB }} ${{ secrets.USER }} ${{ secrets.SCHEMA }}
               ./testFunction.sh ${PARTS[0]} "${PARTS[1]}" ${{ secrets.CLUSTER }} ${{ secrets.DB }} ${{ secrets.USER }} ${{ secrets.SCHEMA }}
           done
