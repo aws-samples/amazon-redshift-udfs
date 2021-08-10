@@ -1,5 +1,5 @@
-/* Purpose: Converts a UNIX timestamp to a UTC datetime with up to microseconds granularity. 
-
+/* Purpose: Converts a UNIX timestamp to a UTC datetime with up to microseconds granularity.
+ 
 2015-09-10: written by chriz@
 */
 
