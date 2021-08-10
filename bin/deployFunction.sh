@@ -17,7 +17,7 @@ sqlparam=
 
 execQuery()
 {
-  output=`aws redshift-data execute-statement --cluster-identifier $cluster --database $db --db-user $user $sqlparam --sql "set search_path to $schema; $1"`
+  output=`aws redshift-data execute-statement --cluster-identifier $cluster --database $db --db-user $user $sqlparam --sql \"set search_path to $schema; $1\"`
   id=`echo $output | jq -r .Id`
 
   status="SUBMITTED"
