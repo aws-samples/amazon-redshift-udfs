@@ -27,11 +27,11 @@ jobs:
           folders="$folders" | tr " " "\n" | sort | uniq | tr "\n" " "
           cd bin
           for folder in $folders; do
-              IFS="/" read -ra PARTS <<< "$folder"
-              if [[ ${PARTS[0]} == *udfs ]]; then
+              if [[ $folder == *udfs ]]; then
+                IFS="/" read -ra PARTS <<< "$folder"
                 ./deployFunction.sh ${PARTS[0]} "${PARTS[1]}" ${{ secrets.S3_LOC }} ${{ secrets.IAM_ROLE }} ${{ secrets.CLUSTER }} ${{ secrets.DB }} ${{ secrets.USER }} ${{ secrets.SCHEMA }}
                 ./testFunction.sh ${PARTS[0]} "${PARTS[1]}" ${{ secrets.CLUSTER }} ${{ secrets.DB }} ${{ secrets.USER }} ${{ secrets.SCHEMA }}
               else
-                echo Ignoring: ${PARTS[0]}
+                echo Ignoring: $folder
               fi
           done
