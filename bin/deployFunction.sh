@@ -17,7 +17,7 @@ sqlparam=
 
 execQuery()
 {
-  output=`aws redshift-data execute-statement --cluster-identifier $cluster --database $db --db-user $user $sqlparam --sql \"set search_path to $schema; $1\"`
+  output=`aws redshift-data execute-statement --cluster-identifier $cluster --database $db --db-user $user --sql "set search_path to $schema; $1"`
   id=`echo $output | jq -r .Id`
 
   status="SUBMITTED"
@@ -52,11 +52,11 @@ if test -f "../$category/$function/lambda.yaml"; then
   #aws cloudformation update-stack --stack-name ${stackname} --parameters ParameterKey=LambdaRole,ParameterValue=$iamRole  --template-body "$template" || aws cloudformation create-stack --on-failure DELETE --stack-name ${stackname} --parameters ParameterKey=LambdaRole,ParameterValue=$iamRole --template-body "$template"
   #aws cloudformation wait stack-create-complete --stack-name ${stackname}
   aws cloudformation deploy --template-file ../${category}/${function}/lambda.yaml --stack-name ${stackname} --parameter-overrides LambdaRole=${iamRole} --no-fail-on-empty-changeset
-  sqlparm=`echo --parameters "[{\"name\":\"iamRole\",\"value\":\"$iamRole\"}]"`
+  #sqlparm=`echo --parameters "[{\"name\":\"iamRole\",\"value\":\"$iamRole\"}]"`
 fi
 
 
 sql=$(<"../$category/$function/function.sql")
-echo execQuery "$sql"
-execQuery "$sql"
+echo execQuery "${sql//:iamRole/$iamRole}"
+execQuery "${sql//:iamRole/$iamRole}"
 #to-do: handle parameters (i.e. lambda arn, role arn)
