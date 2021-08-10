@@ -14,7 +14,7 @@ Resources:
          ZipFile: |
            import json
 
-           def lambda_handler(event, context):
+           def handler(event, context):
                print(json.dumps(event))
                res = [x[0].upper() for x in event['arguments']]
                ret_json = json.dumps({"results": res})
