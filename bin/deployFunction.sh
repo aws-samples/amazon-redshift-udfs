@@ -38,7 +38,7 @@ execQuery()
 if test -f "../$category/$function/requirements.txt"; then
   sql=""
   while read dep; do
-    ./installPipModuleAsRedshiftLibrary.sh -m $dep -s $s3Loc -r $iamRole -c $cluster -d $db -u $user
+    ./libraryInstaller.sh -m $dep -s $s3Loc -r $iamRole -c $cluster -d $db -u $user
   done < ../$category/$function/requirements.txt
 fi
 
