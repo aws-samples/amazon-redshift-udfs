@@ -4,8 +4,10 @@ A collection of user-defined functions (UDFs) for Amazon Redshift. The intent of
 ## Contents
 Each function is allocated a folder.  At minimal each function will have the the following files:
 
-**function.sql** - the SQL script to be run in the Redshift DB which creates the UDF.  If a Lambda function, use the string `:RedshiftRole` for the IAM role to be passed in by the deployment script. 
+**function.sql** - the SQL script to be run in the Redshift DB which creates the UDF.  If a Lambda function, use the string `:RedshiftRole` for the IAM role to be passed in by the deployment script.
+
 **input.csv** - a list of sample input parameters to the function, delimited by comma (,) and where strings are denoted with single-quotes. 
+
 **output.csv** - a list of expected output values from the function.
 
 ### python-udfs
