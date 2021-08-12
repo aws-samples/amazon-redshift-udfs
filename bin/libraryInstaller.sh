@@ -71,9 +71,9 @@ if ! [[ $s3Prefix == s3:\/\/* ]]; then
 fi
 
 # ends with slash
-if ! [[ $s3Prefix =~ .*\/$ ]]; then
-	s3Prefix="$s3Prefix/"
-fi
+#if ! [[ $s3Prefix =~ .*\/$ ]]; then
+#	s3Prefix="$s3Prefix/"
+#fi
 
 # check if this is a valid module in pip
 #pip3 search $module &> /dev/null
@@ -87,7 +87,9 @@ fi
 echo "Installing $module with pip and uploading to $s3Prefix"
 
 TMPDIR=.tmp
-mkdir $TMPDIR
+if [ ! -d "$TMPDIR" ]; then
+  mkdir $TMPDIR
+fi
 
 rm -Rf "$TMPDIR/.$module" &> /dev/null
 
