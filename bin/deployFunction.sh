@@ -98,6 +98,7 @@ if test -f "../$type/$function/requirements.txt"; then
   fi
 
   while read dep; do
+    echo Installing: $dep
     ./libraryInstaller.sh -m $dep -s $s3Loc -r $redshiftRole -c $cluster -d $db -u $user
   done < ../$type/$function/requirements.txt
 fi
