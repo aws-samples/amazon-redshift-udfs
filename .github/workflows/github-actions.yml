@@ -1,0 +1,37 @@
+name: GitHub Actions Demo
+on: [push]
+jobs:
+  DeployCode:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Check out repository code
+        uses: actions/checkout@v2
+      - name: Configure AWS credentials
+        uses: aws-actions/configure-aws-credentials@v1
+        with:
+          aws-access-key-id: ${{ secrets.AWS_ID }}
+          aws-secret-access-key: ${{ secrets.AWS_KEY }}
+          aws-region: ${{ secrets.REGION }}
+      - id: files
+        uses: jitterbit/get-changed-files@v1
+        with:
+          format: 'json'
+      - run: |
+          set -eu
+          folders=""
+          files=`jq -r '.[]' <<<'${{ steps.files.outputs.all }}'`
+
+          for file in ${files[@]}; do
+            folders="$folders $(dirname $file)"
+          done
+          folders="$folders" | tr " " "\n" | sort | uniq | tr "\n" " "
+          cd bin
+          for folder in $folders; do
+              if [[ $folder == *-udfs/* ]]; then
+                IFS="/" read -ra PARTS <<< "$folder"
+                ./deployFunction.sh -t ${PARTS[0]} -f "${PARTS[1]}" -s ${{ secrets.S3_LOC }} -l ${{ secrets.IAM_ROLE }} -r ${{ secrets.IAM_ROLE }} -c ${{ secrets.CLUSTER }} -d ${{ secrets.DB }} -u ${{ secrets.USER }} -n ${{ secrets.SCHEMA }}
+                ./testFunction.sh -t ${PARTS[0]} -f "${PARTS[1]}" -c ${{ secrets.CLUSTER }} -d ${{ secrets.DB }} -u ${{ secrets.USER }} -n ${{ secrets.SCHEMA }}
+              else
+                echo Ignoring: $folder
+              fi
+          done

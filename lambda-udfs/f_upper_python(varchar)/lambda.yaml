@@ -1,0 +1,23 @@
+AWSTemplateFormatVersion: '2010-09-09'
+Parameters:
+  LambdaRole:
+    Description: The IAM Role to use when executing this lambda function. Test
+    Type: String
+Resources:
+  LambdaUDFFunction:
+     Type: "AWS::Lambda::Function"
+     Properties:
+       FunctionName: f-upper-python-varchar
+       Role: !Ref LambdaRole
+       Timeout: 300
+       Code:
+         ZipFile: |
+           import json
+
+           def handler(event, context):
+               print(json.dumps(event))
+               res = [x[0].upper() for x in event['arguments']]
+               ret_json = json.dumps({"results": res})
+               return ret_json
+       Handler: index.handler
+       Runtime: python3.7

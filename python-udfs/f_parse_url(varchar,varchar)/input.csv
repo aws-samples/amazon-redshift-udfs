@@ -1,0 +1,4 @@
+'https://example.com/issues/23?hello=world', 'scheme'
+'https://example.com/issues/23?hello=world', 'hostname'
+'https://example.com/issues/23?hello=world', 'path'
+'https://example.com/issues/23?hello=world', 'query'

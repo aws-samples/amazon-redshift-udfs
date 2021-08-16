@@ -1,0 +1,21 @@
+AWSTemplateFormatVersion: '2010-09-09'
+Parameters:
+  LambdaRole:
+    Description: The IAM Role to use when executing this lambda function. Test
+    Type: String
+Resources:
+  LambdaUDFFunction:
+     Type: "AWS::Lambda::Function"
+     Properties:
+       FunctionName: f-upper-javascript-varchar
+       Role: !Ref LambdaRole
+       Timeout: 300
+       Code:
+         ZipFile: |
+           exports.handler = async (event) => {
+               var res = event.arguments.map((x) => x[0].toUpperCase());
+               var ret_json = JSON.stringify({"results": res});
+               return ret_json
+           };
+       Handler: index.handler
+       Runtime: nodejs14.x

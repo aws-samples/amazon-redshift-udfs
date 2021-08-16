@@ -2,15 +2,11 @@
 
 Purpose: Provides a simple, non-locale aware way to format a number with user defined  thousands and decimal separator.
 
-Internal dependencies: math.modf, collections.deque
-
-External dependencies: None
-
 2015-11-9: written by sdia
 
 */
 
-			
+
 CREATE OR REPLACE FUNCTION f_format_number(value FLOAT, group_sep VARCHAR, decimal_sep VARCHAR,
        group_length INT, prec INT, sign BOOL)
 
@@ -43,7 +39,7 @@ AS $$
             return fract_string.split('.')[-1]
         else:
             return ''
-	
+
 
     def f_format_number(value, group_sep=',', decimal_sep='.', group_length=3,
                         precision=2, sign=False):
@@ -59,7 +55,7 @@ AS $$
         except AssertionError, e:
             print('A problem occured with formatting, group and decimal separators should not be equal!')
             raise(e)
-    
+
         if value < 0:
             sign_symbol = '-'
         elif sign:
@@ -83,25 +79,3 @@ AS $$
     	   prec, sign)
 
 $$ LANGUAGE plpythonu;
-
-/* Example usage:
-
-udf=# SELECT f_format_number(-123456789, ',', '.', 3, 2, FALSE);
- f_format_number
------------------
- -123,456,789.00
-(1 row)
-
-udf=# SELECT f_format_number(123456789, ' ', '.', 3, 0, 0);
- f_format_number
------------------
- 123 456 789
-(1 row)
-
-udf=# SELECT f_format_number(123456789, ',', '.', 3, 2, 1);
- f_format_number
------------------
- +123,456,789.00
-(1 row)
-
-*/
