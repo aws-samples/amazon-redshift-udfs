@@ -28,7 +28,8 @@ Located in the `bin` directory are tools to deploy and test your UDF functions.
 
 > **Note:** Pull requests will be tested using a Github workflow which leverages these scripts. Please execute these script prior to submitting a pull request to ensure the request is approved quickly.
 
-**deployFunction.sh** - This script will orchestrate the deployment of the UDF to your AWS environment. This includes
+### deployFunction.sh
+This script will orchestrate the deployment of the UDF to your AWS environment. This includes
 1. Looping through modules in a `requirements.txt` file (if present) and installing them using the `libraryInstall.sh` script by uploading the packages to the `$S3_LOC` and creating the library in Redshift using the `$REDSHIFT_ROLE`.
 2. If deploying a lambda UDF, deploying a CloudFormation template `lambda.yaml` (if present) passing in the `LambdaRole` parameter.
 3. Creating the UDF function by executing the `function.sql` sql script using the `RedshiftRole` parameter (for Lambda functions).
@@ -39,7 +40,8 @@ Located in the `bin` directory are tools to deploy and test your UDF functions.
 ./deployFunction.sh -t python-udfs -f "f_ua_parser_family(varchar)" -c $CLUSTER -d $DB -u $USER -n $SCHEMA -r $REDSHIFT_ROLE -s $S3_LOC
 ```
 
-**testFunction.sh** - This script will test the UDF by
+### testFunction.sh
+This script will test the UDF by
 1. Creating a temporary table containing the input parameters of the function.
 2. Loading sample input data of the function using the `input.csv` file.  
 3. Running the function leveraging the sample data and comparing the output to the `output.csv` file.
