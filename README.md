@@ -2,7 +2,7 @@
 A collection of user-defined functions (UDFs) for Amazon Redshift. The intent of this collection is to provide examples for defining python UDFs as well as useful functions which extend Amazon Redshift capabilities as well as support migrations from legacy DB platforms.
 
 ## Contents
-Each function is allocated a folder.  At minimal each function will have the the following files:
+Each function is allocated a folder.  At minimal each function will have the the following files which will be used by the [deployFunction.sh](#deployFunction.sh) script and [testFunction.sh](#testFunction.sh) scripts:
 
 - **function.sql** - the SQL script to be run in the Redshift DB which creates the UDF.  If a Lambda function, use the string `:RedshiftRole` for the IAM role to be passed in by the deployment script.
 - **input.csv** - a list of sample input parameters to the function, delimited by comma (,) and where strings are denoted with single-quotes. 
@@ -10,18 +10,18 @@ Each function is allocated a folder.  At minimal each function will have the the
 
 ### python-udfs
 
-See the AWS Documentation for more details on [creating a scalar python UDF](https://docs.aws.amazon.com/redshift/latest/dg/udf-creating-a-scalar-udf.html). Python UDFs may include the following additional file:
+[Python UDFs](https://docs.aws.amazon.com/redshift/latest/dg/udf-creating-a-scalar-udf.html) may include the following additional file:
 
-- **requirements.txt** - If your function requires modules not available already in Redshift, a list of modules.  The will be packaged, uploaded to S3, and mapped in Redshift.  
+- **requirements.txt** - If your function requires modules not available already in Redshift, a list of modules.  The modeules will be packaged, uploaded to S3, and mapped to a [library](https://docs.aws.amazon.com/redshift/latest/dg/r_CREATE_LIBRARY.html) in Redshift.  
 
 ### lambda-udfs
 
-See the AWS documentation for more detail on [creating a scalar Lambda UDF](https://docs.aws.amazon.com/redshift/latest/dg/udf-creating-a-lambda-sql-udf.html).  Lambda UDFs will include the following additional file:
+[Lambda UDFs](https://docs.aws.amazon.com/redshift/latest/dg/udf-creating-a-lambda-sql-udf.html) must include the following additional file:
 
 - **lambda.yaml** - a CFN template containing the Lambda function. The template should contain an input parameter for the `LambdaRole` which will be attached to the function.  This role should be one that can be assumed by the Lambda service.
 
 ### sql-udfs
-See the AWS documentation for more detail on [create a scalar SQL UDF](https://docs.aws.amazon.com/redshift/latest/dg/udf-creating-a-scalar-sql-udf.html).  For lambda UDFs, also include the following file.
+[SQL UDFs](https://docs.aws.amazon.com/redshift/latest/dg/udf-creating-a-scalar-sql-udf.html) do not require any additional files.
 
 ## Deployment & Testing
 Located in the `bin` directory are tools to deploy and test your UDF functions.  
@@ -51,8 +51,7 @@ Located in the `bin` directory are tools to deploy and test your UDF functions.
 ```
 
 ### Redshift Role
-
-Suggested `$REDSHIFT_ROLE` Policy
+The following permission should be added to your `$REDSHIFT_ROLE` policy to ensure Lambda UDFs can invoke the Lambda Function and in order for uploaded libraries to access the uploaded `*.whl` files located in s3.
 ```json
 {
     "Version": "2012-10-17",
