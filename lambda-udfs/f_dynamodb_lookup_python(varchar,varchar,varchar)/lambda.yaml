@@ -8,12 +8,6 @@ Resources:
         -
           AttributeName: "id"
           AttributeType: "S"
-        -
-          AttributeName: "fname"
-          AttributeType: "S"
-        -
-          AttributeName: "lname"
-          AttributeType: "S"
       KeySchema:
         -
           AttributeName: "id"
