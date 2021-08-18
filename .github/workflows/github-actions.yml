@@ -29,7 +29,7 @@ jobs:
           for folder in $folders; do
               if [[ $folder == *-udfs/* ]]; then
                 IFS="/" read -ra PARTS <<< "$folder"
-                ./deployFunction.sh -t ${PARTS[0]} -f "${PARTS[1]}" -s ${{ secrets.S3_LOC }} -l ${{ secrets.IAM_ROLE }} -r ${{ secrets.IAM_ROLE }} -c ${{ secrets.CLUSTER }} -d ${{ secrets.DB }} -u ${{ secrets.USER }} -n ${{ secrets.SCHEMA }}
+                ./deployFunction.sh -t ${PARTS[0]} -f "${PARTS[1]}" -s ${{ secrets.S3_LOC }} -r ${{ secrets.IAM_ROLE }} -c ${{ secrets.CLUSTER }} -d ${{ secrets.DB }} -u ${{ secrets.USER }} -n ${{ secrets.SCHEMA }}
                 ./testFunction.sh -t ${PARTS[0]} -f "${PARTS[1]}" -c ${{ secrets.CLUSTER }} -d ${{ secrets.DB }} -u ${{ secrets.USER }} -n ${{ secrets.SCHEMA }}
               else
                 echo Ignoring: $folder
