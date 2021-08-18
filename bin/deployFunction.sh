@@ -108,9 +108,8 @@ if test -f "../$type/$function/lambda.yaml"; then
   stackname=${stackname//_/-}
   stackname=${stackname//,/-}
   if ! aws cloudformation deploy --template-file ../${type}/${function}/lambda.yaml --stack-name ${stackname} --no-fail-on-empty-changeset --capabilities CAPABILITY_IAM; then
-		err=$?
 		aws cloudformation delete-stack --stack-name ${stackname}
-		exit $err
+		exit 1
 	fi
 fi
 
