@@ -42,6 +42,7 @@ Resources:
        Code:
          ZipFile: |
            exports.handler = async (event) => {
+               console.log('Received event:', JSON.stringify(event, null, 2));
                var res = event.arguments.map((x) => x[0].toUpperCase());
                var ret_json = JSON.stringify({"results": res});
                return ret_json

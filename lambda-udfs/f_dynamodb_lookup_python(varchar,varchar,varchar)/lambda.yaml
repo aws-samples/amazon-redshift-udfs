@@ -1,5 +1,5 @@
 AWSTemplateFormatVersion: '2010-09-09'
-Resources: 
+Resources:
   DynamoDBTable:
     Type: AWS::DynamoDB::Table
     Properties:
@@ -19,14 +19,38 @@ Resources:
       Role: !GetAtt 'LambdaRole.Arn'
       Handler: index.handler
       Runtime: python3.9
-      Timeout: 300
+      Timeout: 30
       Code:
         ZipFile: |
-          import cfnresponse
           import boto3
           dynamodb = boto3.resource('dynamodb')
 
+          def send(event, context, responseStatus, responseData):
+            responseUrl = event['ResponseURL']
+            print(responseUrl)
+            responseBody = {
+                'Status' : responseStatus,
+                'Reason' : "See the details in CloudWatch Log Stream: {}".format(context.log_stream_name),
+                'PhysicalResourceId' : context.log_stream_name,
+                'StackId' : event['StackId'],
+                'RequestId' : event['RequestId'],
+                'LogicalResourceId' : event['LogicalResourceId'],
+                'NoEcho' : False,
+                'Data' : responseData
+            }
+            json_responseBody = json.dumps(responseBody)
+            headers = {
+                'content-type' : '',
+                'content-length' : str(len(json_responseBody))
+            }
+            try:
+                response = http.request('PUT', responseUrl, headers=headers, body=json_responseBody)
+            except Exception as e:
+                print("send(..) failed executing http.request(..):", e)
+
+
           def handler(event, context):
+            print("Received event: " + json.dumps(event, indent=2))
             if event['RequestType'] != 'Delete':
               try:
                 table = dynamodb.Table(event.ResourceProperties.DynamoTableName)
@@ -36,9 +60,9 @@ Resources:
                 table.put_item(Item={'id':'4','fname':'Diego','lname':'Ramirez'})
                 table.put_item(Item={'id':'5','fname':'Mary','lname':'Major'})
                 table.put_item(Item={'id':'6','fname':'Richard','lname':'Roe'})
-                cfnresponse.send(event, context, cfnresponse.SUCCESS, {'Data': 'Insert complete'})
+                cfnresponse.send(event, context, 'SUCCESS', {'Data': 'Insert complete'})
               except Exception as e:
-                cfnresponse.send(event, context, cfnresponse.FAILED, {'Data': 'Insert failed'})
+                cfnresponse.send(event, context, 'FAILED', {'Data': 'Insert failed'})
   InitializeDynamoDB:
       Type: Custom::InitFunction
       DependsOn: DynamoDBTable
@@ -101,6 +125,7 @@ Resources:
             dynamodb = boto3.resource('dynamodb')
 
             def handler(event, context):
+             print("Received event: " + json.dumps(event, indent=2))
              ret = dict()
              try:
               tableName = event["arguments"][0][0]
