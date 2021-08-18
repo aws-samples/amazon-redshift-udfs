@@ -18,15 +18,13 @@ Each function is allocated a folder.  At minimal each function will have the the
 
 [Lambda UDFs](https://docs.aws.amazon.com/redshift/latest/dg/udf-creating-a-lambda-sql-udf.html) must include the following additional file:
 
-- **lambda.yaml** - a CFN template containing the Lambda function. The template should contain an input parameter for the `LambdaRole` which will be attached to the function.  This role should be one that can be assumed by the Lambda service.
+- **lambda.yaml** - a CFN template containing the Lambda function.  The lambda function name should start with the prefix `f-`. The template may contain additional AWS services required by the lambda function and should contain a role which can be assumed by the lambda service and which grants access to those additional services (if applicable).  
 
 ### sql-udfs
 [SQL UDFs](https://docs.aws.amazon.com/redshift/latest/dg/udf-creating-a-scalar-sql-udf.html) do not require any additional files.
 
 ## Deployment & Testing
 Located in the `bin` directory are tools to deploy and test your UDF functions.  
-
-> **Note:** Pull requests will be tested using a Github workflow which leverages these scripts. Please execute these script prior to submitting a pull request to ensure the request is approved quickly.
 
 ### deployFunction.sh
 This script will orchestrate the deployment of the UDF to your AWS environment. This includes
@@ -35,7 +33,7 @@ This script will orchestrate the deployment of the UDF to your AWS environment. 
 3. Creating the UDF function by executing the `function.sql` sql script using the `RedshiftRole` parameter (for Lambda functions).
 
 ```
-./deployFunction.sh -t lambda-udfs -f "f_upper_python(varchar)" -c $CLUSTER -d $DB -u $USER -n $SCHEMA -r $REDSHIFT_ROLE -l $LAMBDA_ROLE
+./deployFunction.sh -t lambda-udfs -f "f_upper_python(varchar)" -c $CLUSTER -d $DB -u $USER -n $SCHEMA -r $REDSHIFT_ROLE 
 
 ./deployFunction.sh -t python-udfs -f "f_ua_parser_family(varchar)" -c $CLUSTER -d $DB -u $USER -n $SCHEMA -r $REDSHIFT_ROLE -s $S3_LOC
 ```
@@ -52,8 +50,12 @@ This script will test the UDF by
 ./testFunction.sh -t python-udfs -f "f_ua_parser_family(varchar)" -c $CLUSTER -d $DB -u $USER -n $SCHEMA
 ```
 
+## Pull Requests
+
+> Pull requests will be tested using a Github workflow which leverages the above testing scripts. Please execute these script prior to submitting a pull request to ensure the request is approved quickly.  When executed in the test enviornment the [RedshiftRole](#redshift-role) will be defined as follows. You can create a similar role in your local environment for testing.
+
 ### Redshift Role
-The following permission should be added to your `$REDSHIFT_ROLE` policy to ensure Lambda UDFs can invoke the Lambda Function and in order for uploaded libraries to access the uploaded `*.whl` files located in s3.
+These privileges ensure the UDF can invoke the Lambda Function as well as access the uploaded `*.whl` files located in s3.  
 ```json
 {
     "Version": "2012-10-17",
@@ -66,7 +68,7 @@ The following permission should be added to your `$REDSHIFT_ROLE` policy to ensu
             ],
             "Resource": [
                 "arn:aws:lambda:*:*:function:f-*",
-                "arn:aws:s3:::$S3_LOC*"
+                "arn:aws:s3:::<test bucket>/*"
             ]
         }
     ]
