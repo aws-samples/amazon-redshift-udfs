@@ -21,11 +21,11 @@ Resources:
       BillingMode: PAY_PER_REQUEST
   InitFunction:
     Type: AWS::Lambda::Function
-    Role: !GetAtt 'LambdaRole.Arn'
-    Handler: index.handler
-    Runtime: python3.9
-    Timeout: 300
     Properties:
+      Role: !GetAtt 'LambdaRole.Arn'
+      Handler: index.handler
+      Runtime: python3.9
+      Timeout: 300
       Code:
         ZipFile: |
           import boto3
