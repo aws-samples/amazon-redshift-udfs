@@ -37,7 +37,7 @@ Resources:
      Type: "AWS::Lambda::Function"
      Properties:
        FunctionName: f-upper-javascript-varchar
-       Role: !Ref LambdaRole
+       Role: !GetAtt 'LambdaRole.Arn'
        Timeout: 300
        Code:
          ZipFile: |

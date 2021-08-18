@@ -1,5 +1,5 @@
 AWSTemplateFormatVersion: '2010-09-09'
-Resources: 
+Resources:
   LambdaRole:
     Type: AWS::IAM::Role
     Properties:
@@ -37,7 +37,7 @@ Resources:
      Type: "AWS::Lambda::Function"
      Properties:
        FunctionName: f-upper-python-varchar
-       Role: !Ref LambdaRole
+       Role: !GetAtt 'LambdaRole.Arn'
        Timeout: 300
        Code:
          ZipFile: |
