@@ -22,10 +22,11 @@ Resources:
       Timeout: 300
       Code:
         ZipFile: |
-          import boto3
           import cfnresponse
+          import boto3
           dynamodb = boto3.resource('dynamodb')
-          def lambda_handler(event, context):
+
+          def handler(event, context):
             if event['RequestType'] != 'Delete':
               try:
                 table = dynamodb.Table(event.ResourceProperties.DynamoTableName)
@@ -77,7 +78,7 @@ Resources:
                     - logs:CreateLogStream
                     - logs:PutLogEvents
                   Resource:
-                    - !Sub "arn:aws:logs:${AWS::Region}:${AWS::AccountId}:log-group:/aws/lambda/f-upper-javascript-varchar"
+                    - !Sub "arn:aws:logs:${AWS::Region}:${AWS::AccountId}:log-group:/aws/lambda/f-dynamodb-lookup-python-varchar-varchar-varchar*"
                 -
                   Effect: Allow
                   Action:
@@ -99,7 +100,7 @@ Resources:
             import boto3
             dynamodb = boto3.resource('dynamodb')
 
-            def lambda_handler(event, context):
+            def handler(event, context):
              ret = dict()
              try:
               tableName = event["arguments"][0][0]
