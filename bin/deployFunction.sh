@@ -5,12 +5,11 @@ set -e
 #to-do: if lambda cfn, deploy, pass in parameters from env
 
 function usage {
-	echo "./deployFunction.sh -t <type> -f <function> -s <s3 location> -l <lambda role> -r <redshift role> -c <cluster> -d <database> -u <db user> -n <namespace>"
+	echo "./deployFunction.sh -t <type> -f <function> -s <s3 location> -r <redshift role> -c <cluster> -d <database> -u <db user> -n <namespace>"
 	echo
 	echo "where <type> is the type of function to be installed. e.g. python-udfs, lambda-udfs, sql-udfs"
 	echo "      <function> is the name of the function, including the parameters and enclosed in quotes e.g. \"f_bitwise_to_string(bigint,int)\""
 	echo "      <s3 location> (optional) is the location on S3 to upload the artifact to. Must be in format s3://bucket/prefix/"
-	echo "      <lambda role> (optional) is the role which can be assumed by your lambda function"
 	echo "      <redshift role> (optional) is the role which is attached to the Redshift cluster and has access to read from the s3 upload location (for python libs) and/or lambda execute permissions (for lambda fns)"
 	echo "      <cluster> is the Redshift cluster you will deploy the function to"
 	echo "      <database> is the database you will deploy the function to"
@@ -63,7 +62,6 @@ while getopts "t:f:s:l:r:c:d:u:n:h" opt; do
 		t) type="$OPTARG";;
 		f) function="$OPTARG";;
 		s) s3Loc="$OPTARG";;
-		l) lambdaRole="$OPTARG";;
 		r) redshiftRole="$OPTARG";;
 		c) cluster="$OPTARG";;
 		d) db="$OPTARG";;
@@ -104,14 +102,12 @@ if test -f "../$type/$function/requirements.txt"; then
 fi
 
 if test -f "../$type/$function/lambda.yaml"; then
-  notNull "$lambdaRole" "Please provide the Lambda role which can be assumed by your lambda function -l"
-
   template=$(<"../$type/$function/lambda.yaml")
   stackname=${function//(/-}
   stackname=${stackname//)/}
   stackname=${stackname//_/-}
   stackname=${stackname//,/-}
-  aws cloudformation deploy --template-file ../${type}/${function}/lambda.yaml --stack-name ${stackname} --parameter-overrides LambdaRole=${lambdaRole} --no-fail-on-empty-changeset
+  aws cloudformation deploy --template-file ../${type}/${function}/lambda.yaml --stack-name ${stackname} --no-fail-on-empty-changeset
 fi
 
 
