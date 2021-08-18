@@ -1,0 +1,129 @@
+AWSTemplateFormatVersion: '2010-09-09'
+Resources:
+  DynamoDBTable:
+    Type: AWS::DynamoDB::Table
+    TableName: CustomerLambdaUDF
+    Properties:
+      AttributeDefinitions:
+        -
+          AttributeName: "id"
+          AttributeType: "S"
+        -
+          AttributeName: "fname"
+          AttributeType: "S"
+        -
+          AttributeName: "lname"
+          AttributeType: "S"
+      KeySchema:
+        -
+          AttributeName: "id"
+          KeyType: "HASH"
+      BillingMode: PAY_PER_REQUEST
+  InitFunction:
+    Type: AWS::Lambda::Function
+    Role: !GetAtt 'LambdaRole.Arn'
+    Handler: index.handler
+    Runtime: python3.9
+    Timeout: 300
+    Properties:
+      Code:
+        ZipFile: |
+          import boto3
+          import cfnresponse
+          dynamodb = boto3.resource('dynamodb')
+          def lambda_handler(event, context):
+            if event['RequestType'] != 'Delete':
+              try:
+                table = dynamodb.Table(event.ResourceProperties.DynamoTableName)
+                table.put_item(Item={'id':'1','fname':'John','lname':'Doe'})
+                table.put_item(Item={'id':'2','fname':'Jane','lname':'Doe'})
+                table.put_item(Item={'id':'3','fname':'Carlos','lname':'Salazar'})
+                table.put_item(Item={'id':'4','fname':'Diego','lname':'Ramirez'})
+                table.put_item(Item={'id':'5','fname':'Mary','lname':'Major'})
+                table.put_item(Item={'id':'6','fname':'Richard','lname':'Roe'})
+                cfnresponse.send(event, context, cfnresponse.SUCCESS, {'Data': 'Insert complete'})
+              except Exception as e:
+                cfnresponse.send(event, context, cfnresponse.FAILED, {'Data': 'Insert failed'})
+  InitializeDynamoDB:
+      Type: Custom::InitFunction
+      DependsOn: DynamoDBTable
+      Properties:
+        ServiceToken:
+           Fn::GetAtt: [ InitFunction , "Arn" ]
+        DynamoTableName: CustomerLambdaUDF
+  LambdaRole:
+    Type: AWS::IAM::Role
+    Properties:
+      AssumeRolePolicyDocument:
+          Version: 2012-10-17
+          Statement:
+            -
+              Effect: Allow
+              Principal:
+                Service:
+                  - lambda.amazonaws.com
+              Action:
+                - sts:AssumeRole
+      Path: /
+      Policies:
+          -
+            PolicyName: CloudwatchLogs
+            PolicyDocument:
+              Version: 2012-10-17
+              Statement:
+                -
+                  Effect: Allow
+                  Action:
+                    - logs:CreateLogGroup
+                  Resource:
+                    - !Sub "arn:aws:logs:${AWS::Region}:${AWS::AccountId}:*"
+                -
+                  Effect: Allow
+                  Action:
+                    - logs:CreateLogStream
+                    - logs:PutLogEvents
+                  Resource:
+                    - !Sub "arn:aws:logs:${AWS::Region}:${AWS::AccountId}:log-group:/aws/lambda/f-upper-javascript-varchar"
+                -
+                  Effect: Allow
+                  Action:
+                    - dynamodb:DescribeTable
+                    - dynamodb:GetItem
+                  Resource:
+                    - !Sub "arn:aws:dynamodb:${AWS::Region}:${AWS::AccountId}:table/*"
+  LambdaUDFFunction:
+     Type: "AWS::Lambda::Function"
+     Properties:
+       FunctionName: f-dynamodb-lookup-python-varchar-varchar-varchar
+       Role: !GetAtt 'LambdaRole.Arn'
+       Handler: index.handler
+       Runtime: python3.9
+       Timeout: 300
+       Code:
+         ZipFile: |
+            import json
+            import boto3
+            dynamodb = boto3.resource('dynamodb')
+
+            def lambda_handler(event, context):
+             ret = dict()
+             try:
+              tableName = event["arguments"][0][0]
+              columnName = event["arguments"][0][1]
+
+              table = dynamodb.Table(tableName)
+              table.item_count
+              res = []
+              for argument in event['arguments']:
+               try:
+                columnValue = argument[2]
+                response = table.get_item(Key={columnName: columnValue })
+                res.append(json.dumps(response["Item"]))
+               except:
+                res.append(None)
+              ret['success'] = True
+              ret['results'] = res
+             except Exception as e:
+              ret['success'] = False
+              ret['error_msg'] = str(e)
+             return json.dumps(ret)
