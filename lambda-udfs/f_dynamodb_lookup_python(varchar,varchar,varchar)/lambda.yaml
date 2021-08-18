@@ -2,8 +2,8 @@ AWSTemplateFormatVersion: '2010-09-09'
 Resources:
   DynamoDBTable:
     Type: AWS::DynamoDB::Table
-    TableName: CustomerLambdaUDF
     Properties:
+      TableName: CustomerLambdaUDF
       AttributeDefinitions:
         -
           AttributeName: "id"
