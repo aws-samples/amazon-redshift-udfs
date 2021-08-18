@@ -25,14 +25,14 @@ Resources:
                   Action:
                     - logs:CreateLogGroup
                   Resource:
-                    - !Sub "arn:aws:logs:${AWS::Region}:${AWS::Account}:*"
+                    - !Sub "arn:aws:logs:${AWS::Region}:${AWS::AccountId}:*"
                 -
                   Effect: Allow
                   Action:
                     - logs:CreateLogStream
                     - logs:PutLogEvents
                   Resource:
-                    - !Sub "arn:aws:logs:${AWS::Region}:${AWS::Account}:log-group:/aws/lambda/f-upper-javascript-varchar"
+                    - !Sub "arn:aws:logs:${AWS::Region}:${AWS::AccountId}:log-group:/aws/lambda/f-upper-javascript-varchar"
   LambdaUDFFunction:
      Type: "AWS::Lambda::Function"
      Properties:
