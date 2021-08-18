@@ -107,7 +107,7 @@ if test -f "../$type/$function/lambda.yaml"; then
   stackname=${stackname//)/}
   stackname=${stackname//_/-}
   stackname=${stackname//,/-}
-  aws cloudformation deploy --template-file ../${type}/${function}/lambda.yaml --stack-name ${stackname} --no-fail-on-empty-changeset
+  aws cloudformation deploy --template-file ../${type}/${function}/lambda.yaml --stack-name ${stackname} --no-fail-on-empty-changeset --capabilities CAPABILITY_IAM
 fi
 
 
