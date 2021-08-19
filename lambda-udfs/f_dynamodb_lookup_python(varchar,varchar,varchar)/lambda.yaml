@@ -56,7 +56,7 @@ Resources:
             print("Received event: " + json.dumps(event, indent=2))
             if event['RequestType'] != 'Delete':
               try:
-                table = dynamodb.Table(event.ResourceProperties.DynamoTableName)
+                table = dynamodb.Table(event['ResourceProperties']['DynamoTableName'])
                 table.put_item(Item={'id':'1','fname':'John','lname':'Doe'})
                 table.put_item(Item={'id':'2','fname':'Jane','lname':'Doe'})
                 table.put_item(Item={'id':'3','fname':'Carlos','lname':'Salazar'})
@@ -65,6 +65,7 @@ Resources:
                 table.put_item(Item={'id':'6','fname':'Richard','lname':'Roe'})
                 send(event, context, 'SUCCESS', {'Data': 'Insert complete'})
               except Exception as e:
+                print(e)
                 send(event, context, 'FAILED', {'Data': 'Insert failed'})
   InitializeDynamoDB:
       Type: Custom::InitFunction
@@ -111,6 +112,7 @@ Resources:
                   Action:
                     - dynamodb:DescribeTable
                     - dynamodb:GetItem
+                    - dynamodb:PutItem
                   Resource:
                     - !Sub "arn:aws:dynamodb:${AWS::Region}:${AWS::AccountId}:table/*"
   LambdaUDFFunction:
