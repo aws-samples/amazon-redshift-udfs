@@ -26,21 +26,21 @@ exports.handler = async (event, context) => {
 
   var table = event.arguments[0][0];
   var columnName = event.arguments[0][1];
-  var columnType = event.arguments[0][2];
   var returnColumnName = event.arguments[0][3];
 
-  var createStmt = 'create temporary table ' + table + '_jointemp (temp_seq int, '+ columnName + ' ' + columnType + '); ';
+  var createStmt = 'create temporary table ' + table + '_jointemp (temp_seq int, '+ columnName + ' varchar(100)); ';
   await conn.query(createStmt);
 
-  var values = event.arguments.map((x, i) => "("+i+","+x[5]+")");
+  var values = event.arguments.map((x, i) => "("+i+",'"+x[5]+"')");
   var insertStmt = 'insert into ' + table + '_jointemp(temp_seq, '+ columnName +') values ' + values.join(',') + ';';
   await conn.query(insertStmt);
 
-  var selectStmt = 'select t1.' + returnColumnName + ' FROM ' + table + '_jointemp t LEFT OUTER JOIN ' + table + ' t1 on t.'+ columnName +' = t1.'+ columnName + ' order by temp_seq;'  const [results, fields] = await conn.execute(selectStmt);
+  var selectStmt = 'select t2.* FROM ' + table + '_jointemp t1 LEFT OUTER JOIN ' + table + ' t2 using ('+ columnName +') order by temp_seq;'
+  const [results, fields] = await conn.execute(selectStmt);
 
   var res = {};
   if(results.length > 0){
-    res = results.map((row) => row[returnColumnName]);
+    res = results.map((row) => JSON.stringify(row));
     }
     var response = JSON.stringify({"results": res});
     conn.end();

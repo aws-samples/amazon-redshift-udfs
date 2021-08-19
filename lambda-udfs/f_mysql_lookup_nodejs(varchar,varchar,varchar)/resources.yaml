@@ -3,10 +3,10 @@ Resources:
   MySQLDatabase:
     Type: AWS::RDS::DBCluster
     Properties:
-      DBInstanceClass: String
-      DBName: String
+      DBName: f-mysql-lookup-nodejs-db
       EngineMode: serverless
       Engine: aurora-mysql
+      EnableHttpEndpoint: TRUE
   MySQLSecret:
     Type: AWS::SecretsManager::Secret
     Properties:
@@ -23,6 +23,45 @@ Resources:
       SecretId: !Ref MySQLSecret
       TargetId: !Ref MySQLDatabase
       TargetType: AWS::RDS::DBCluster
+  InitRole:
+    Type: AWS::IAM::Role
+    Properties:
+      AssumeRolePolicyDocument:
+          Version: 2012-10-17
+          Statement:
+            -
+              Effect: Allow
+              Principal:
+                Service:
+                  - lambda.amazonaws.com
+              Action:
+                - sts:AssumeRole
+      Path: /
+      Policies:
+          -
+            PolicyName: CloudwatchLogs
+            PolicyDocument:
+              Version: 2012-10-17
+              Statement:
+                -
+                  Effect: Allow
+                  Action:
+                    - logs:CreateLogGroup
+                  Resource:
+                    - !Sub "arn:aws:logs:${AWS::Region}:${AWS::AccountId}:*"
+                -
+                  Effect: Allow
+                  Action:
+                    - logs:CreateLogStream
+                    - logs:PutLogEvents
+                  Resource:
+                    - !Sub "arn:aws:logs:${AWS::Region}:${AWS::AccountId}:log-group:/aws/lambda/*"
+                -
+                  Effect: Allow
+                  Action:
+                    - rds-data:ExecuteStatement
+                  Resource:
+                    - !Sub "arn:aws:rds:${AWS::Region}:${AWS::AccountId}:cluster:*"
   InitFunction:
     Type: AWS::Lambda::Function
     DeletionPolicy: Retain
@@ -36,7 +75,7 @@ Resources:
           import boto3, json, urllib3
 
           http = urllib3.PoolManager()
-          dynamodb = boto3.resource('dynamodb')
+          rdsdata = boto3.resource('rds-data')
 
           def send(event, context, responseStatus, responseData):
             responseUrl = event['ResponseURL']
@@ -68,7 +107,13 @@ Resources:
               send(event, context, 'SUCCESS', {'Data': 'Delete complete'})
             else:
               try:
-                /*todo: create table if non-existant, insert records*/
+                secretArn = dynamodb.Table(event['ResourceProperties']['SecretArn'])
+                resourceArn = dynamodb.Table(event['ResourceProperties']['ResourceArn'])
+                database =
+                sql="create table customers(id varchar(10), fname varchar(100), lname varchar(100));"
+                rds.execute_statement(database='f-mysql-lookup-nodejs-db', sql=sql, resourceArn=resourceArn, secretArn=secretArn);
+                sql="insert into customer values ('1','John','Doe'),('2','Jane','Doe'),('3','Carlos','Salazar'),('4','Diego','Ramirez'),('5','Mary','Major'),('6','Richard','Roe'); "
+                rds.execute_statement(database='f-mysql-lookup-nodejs-db', sql=sql, resourceArn=resourceArn, secretArn=secretArn);
               except Exception as e:
                 print(e)
                 send(event, context, 'FAILED', {'Data': 'Insert failed'})
@@ -77,4 +122,8 @@ Resources:
       DependsOn: MySQLDatabase
       Properties:
         ServiceToken:
-           Fn::GetAtt: [ InitFunction , "Arn" ]
+          Fn::GetAtt: [ InitFunction , "Arn" ]
+        SecretArn:
+          Fn::GetAtt: [ MySQLSecret , "Arn" ]
+        ResourceArn:
+          Fn::GetAtt: [ MySQLDatabase, "Arn" ]

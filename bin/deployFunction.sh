@@ -98,7 +98,7 @@ if test -f "../$type/$function/package.json"; then
 	rm package-lock.json
 	rm -rf node_modules
 	cd ../../bin
-	params="--parameter-overrides S3Bucket=$s3Bucket S3Key=$s3Key/$function.zip"
+	params="--parameter-overrides S3Bucket=$s3Bucket S3Key=$s3Key$function.zip"
 fi
 
 if test -f "../$type/$function/requirements.txt"; then
