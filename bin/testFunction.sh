@@ -81,6 +81,18 @@ notNull "$user" "Please provide the Redshift cluster user name -u"
 notNull "$schema" "Please provide the Redshift cluster namespace (schema) -n"
 
 
+if test -f "../$type/$function/resources.yaml"; then
+  template=$(<"../$type/$function/resources.yaml")
+  stackname=${function//(/-}
+  stackname=${stackname//)/}
+  stackname=${stackname//_/-}
+  stackname=${stackname//,/-}
+  if ! aws cloudformation deploy --template-file ../${type}/${function}/resources.yaml --stack-name ${stackname}-resrouces --no-fail-on-empty-changeset; then
+		aws cloudformation delete-stack --stack-name ${stackname}
+		exit 1
+	fi
+fi
+
 arrIN=(${function//(/ })
 name=${arrIN[0]}
 args=${arrIN[1]}

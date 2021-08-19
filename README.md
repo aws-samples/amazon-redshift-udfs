@@ -5,7 +5,7 @@ A collection of user-defined functions (UDFs) for Amazon Redshift. The intent of
 Each function is allocated a folder.  At minimal each function will have the the following files which will be used by the [deployFunction.sh](#deployFunctionsh) script and [testFunction.sh](#testFunctionsh) scripts:
 
 - **function.sql** - the SQL script to be run in the Redshift DB which creates the UDF.  If a Lambda function, use the string `:RedshiftRole` for the IAM role to be passed in by the deployment script.
-- **input.csv** - a list of sample input parameters to the function, delimited by comma (,) and where strings are denoted with single-quotes. 
+- **input.csv** - a list of sample input parameters to the function, delimited by comma (,) and where strings are denoted with single-quotes.
 - **output.csv** - a list of expected output values from the function.
 
 ### python-udfs
@@ -18,7 +18,9 @@ Each function is allocated a folder.  At minimal each function will have the the
 
 [Lambda UDFs](https://docs.aws.amazon.com/redshift/latest/dg/udf-creating-a-lambda-sql-udf.html) must include the following additional file:
 
-- **lambda.yaml** - a CFN template containing the Lambda function.  The lambda function name should start with the prefix `f-`. The template may contain additional AWS services required by the lambda function and should contain a role which can be assumed by the lambda service and which grants access to those additional services (if applicable).  
+- **lambda.yaml** - a CFN template containing the Lambda function.  The lambda function name should match the redshift function name with '_' replaced with '-'  e.g. (f-upper-python-varchar). The template may contain additional AWS services required by the lambda function and should contain an IAM Role which can be assumed by the lambda service and which grants access to those additional services (if applicable).  In a production deployment, be sure to add resource restrictions to the Lambda IAM Role to ensure the permissions are scoped down.
+
+- **resources.yaml** - a CFN template containing external resources which may be referenced by the Lambda function.   These resources are for testing only.
 
 ### sql-udfs
 [SQL UDFs](https://docs.aws.amazon.com/redshift/latest/dg/udf-creating-a-scalar-sql-udf.html) do not require any additional files.
@@ -33,7 +35,7 @@ This script will orchestrate the deployment of the UDF to your AWS environment. 
 3. Creating the UDF function by executing the `function.sql` sql script using the `RedshiftRole` parameter (for Lambda functions).
 
 ```
-./deployFunction.sh -t lambda-udfs -f "f_upper_python(varchar)" -c $CLUSTER -d $DB -u $USER -n $SCHEMA -r $REDSHIFT_ROLE 
+./deployFunction.sh -t lambda-udfs -f "f_upper_python(varchar)" -c $CLUSTER -d $DB -u $USER -n $SCHEMA -r $REDSHIFT_ROLE
 
 ./deployFunction.sh -t python-udfs -f "f_ua_parser_family(varchar)" -c $CLUSTER -d $DB -u $USER -n $SCHEMA -r $REDSHIFT_ROLE -s $S3_LOC
 ```
