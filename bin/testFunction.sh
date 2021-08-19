@@ -87,8 +87,8 @@ if test -f "../$type/$function/resources.yaml"; then
   stackname=${stackname//)/}
   stackname=${stackname//_/-}
   stackname=${stackname//,/-}
-  if ! aws cloudformation deploy --template-file ../${type}/${function}/resources.yaml --stack-name ${stackname}-resrouces --no-fail-on-empty-changeset; then
-		aws cloudformation delete-stack --stack-name ${stackname}
+  if ! aws cloudformation deploy --template-file ../${type}/${function}/resources.yaml --stack-name ${stackname}-resrouces --no-fail-on-empty-changeset --capabilities CAPABILITY_IAM; then
+		aws cloudformation delete-stack --stack-name ${stackname}-resources
 		exit 1
 	fi
 fi
