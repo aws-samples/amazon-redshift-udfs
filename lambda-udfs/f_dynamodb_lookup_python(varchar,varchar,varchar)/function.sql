@@ -5,4 +5,4 @@ Purpose:
 2021-08-01: written by rjvgupta
 */
 CREATE OR REPLACE EXTERNAL FUNCTION f_dynamodb_lookup_python (varchar, varchar, varchar) RETURNS varchar STABLE
-LAMBDA 'f-dynamodb-lookup-python' IAM_ROLE ':RedshiftRole';
+LAMBDA 'f-dynamodb-lookup-python-varchar-varchar-varchar' IAM_ROLE ':RedshiftRole';
