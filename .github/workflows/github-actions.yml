@@ -29,7 +29,7 @@ jobs:
           for folder in $folders; do
               if [[ $folder == *-udfs/* ]]; then
                 IFS="/" read -ra PARTS <<< "$folder"
-                if ! [[ -z "${secrets.S3_KEY// }" ]]; then
+                if ! [[ -z "${{secrets.S3_KEY// }}" ]]; then
                   k="-k ${{ secrets.S3_KEY }}"
                 fi
                 ./deployFunction.sh -t ${PARTS[0]} -f "${PARTS[1]}" -s ${{ secrets.S3_BUCKET }} $k -r ${{ secrets.IAM_ROLE }} -c ${{ secrets.CLUSTER }} -d ${{ secrets.DB }} -u ${{ secrets.USER }} -n ${{ secrets.SCHEMA }}
