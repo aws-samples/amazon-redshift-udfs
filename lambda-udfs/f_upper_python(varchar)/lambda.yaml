@@ -32,7 +32,7 @@ Resources:
                     - logs:CreateLogStream
                     - logs:PutLogEvents
                   Resource:
-                    - !Sub "arn:aws:logs:${AWS::Region}:${AWS::AccountId}:log-group:/aws/lambda/f-upper-javascript-varchar"
+                    - !Sub "arn:aws:logs:${AWS::Region}:${AWS::AccountId}:log-group:/aws/lambda/*"
   LambdaUDFFunction:
      Type: "AWS::Lambda::Function"
      Properties:

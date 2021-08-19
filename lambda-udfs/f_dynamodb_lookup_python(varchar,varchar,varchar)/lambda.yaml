@@ -15,6 +15,7 @@ Resources:
       BillingMode: PAY_PER_REQUEST
   InitFunction:
     Type: AWS::Lambda::Function
+    DeletionPolicy: Retain
     Properties:
       Role: !GetAtt 'LambdaRole.Arn'
       Handler: index.handler
@@ -22,7 +23,9 @@ Resources:
       Timeout: 30
       Code:
         ZipFile: |
-          import boto3
+          import boto3, json, urllib3
+
+          http = urllib3.PoolManager()
           dynamodb = boto3.resource('dynamodb')
 
           def send(event, context, responseStatus, responseData):
@@ -60,9 +63,9 @@ Resources:
                 table.put_item(Item={'id':'4','fname':'Diego','lname':'Ramirez'})
                 table.put_item(Item={'id':'5','fname':'Mary','lname':'Major'})
                 table.put_item(Item={'id':'6','fname':'Richard','lname':'Roe'})
-                cfnresponse.send(event, context, 'SUCCESS', {'Data': 'Insert complete'})
+                send(event, context, 'SUCCESS', {'Data': 'Insert complete'})
               except Exception as e:
-                cfnresponse.send(event, context, 'FAILED', {'Data': 'Insert failed'})
+                send(event, context, 'FAILED', {'Data': 'Insert failed'})
   InitializeDynamoDB:
       Type: Custom::InitFunction
       DependsOn: DynamoDBTable
@@ -102,7 +105,7 @@ Resources:
                     - logs:CreateLogStream
                     - logs:PutLogEvents
                   Resource:
-                    - !Sub "arn:aws:logs:${AWS::Region}:${AWS::AccountId}:log-group:/aws/lambda/f-dynamodb-lookup-python-varchar-varchar-varchar*"
+                    - !Sub "arn:aws:logs:${AWS::Region}:${AWS::AccountId}:log-group:/aws/lambda/*"
                 -
                   Effect: Allow
                   Action:
