@@ -75,7 +75,7 @@ while getopts "t:f:s:k:l:r:c:d:u:n:h" opt; do
 		:) usage;;
 	esac
 done
-
+ 
 # validate required arguments
 notNull "$type" "Please provide the function type -t"
 notNull "$function" "Please provide the function name -f"
