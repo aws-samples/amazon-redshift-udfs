@@ -38,7 +38,6 @@ Resources:
                   Action:
                     - dynamodb:DescribeTable
                     - dynamodb:GetItem
-                    - dynamodb:PutItem
                   Resource:
                     - !Sub "arn:aws:dynamodb:${AWS::Region}:${AWS::AccountId}:table/*"
   LambdaUDFFunction:

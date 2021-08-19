@@ -1,6 +1,7 @@
 /*
 Purpose:
     This sample function demonstrates how to create/use lambda UDFs in python to use external services like dynamoDB.
+    https://aws.amazon.com/blogs/big-data/accessing-external-components-using-amazon-redshift-lambda-udfs/
 
 2021-08-01: written by rjvgupta
 */
