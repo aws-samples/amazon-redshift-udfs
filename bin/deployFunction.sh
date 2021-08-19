@@ -5,11 +5,12 @@ set -e
 #to-do: if lambda cfn, deploy, pass in parameters from env
 
 function usage {
-	echo "./deployFunction.sh -t <type> -f <function> -s <s3 location> -r <redshift role> -c <cluster> -d <database> -u <db user> -n <namespace>"
+	echo "./deployFunction.sh -t <type> -f <function> -s <s3 bucket> -k <s3 key> -r <redshift role> -c <cluster> -d <database> -u <db user> -n <namespace>"
 	echo
 	echo "where <type> is the type of function to be installed. e.g. python-udfs, lambda-udfs, sql-udfs"
 	echo "      <function> is the name of the function, including the parameters and enclosed in quotes e.g. \"f_bitwise_to_string(bigint,int)\""
-	echo "      <s3 location> (optional) is the location on S3 to upload the artifact to. Must be in format s3://bucket/prefix/"
+	echo "      <s3 bucket> (optional) is the bucket in S3 to upload the artifact to. "
+	echo "      <s3 key> (optional) is the key in S3 to upload the artifact to."
 	echo "      <redshift role> (optional) is the role which is attached to the Redshift cluster and has access to read from the s3 upload location (for python libs) and/or lambda execute permissions (for lambda fns)"
 	echo "      <cluster> is the Redshift cluster you will deploy the function to"
 	echo "      <database> is the database you will deploy the function to"
@@ -57,11 +58,12 @@ function notNull {
 checkDep "aws"
 
 # look up runtime arguments of the module name and the destination S3 Prefix
-while getopts "t:f:s:l:r:c:d:u:n:h" opt; do
+while getopts "t:f:s:k:l:r:c:d:u:n:h" opt; do
 	case $opt in
 		t) type="$OPTARG";;
 		f) function="$OPTARG";;
-		s) s3Loc="$OPTARG";;
+		s) s3Bucket="$OPTARG";;
+		k) s3Key="$OPTARG";;
 		r) redshiftRole="$OPTARG";;
 		c) cluster="$OPTARG";;
 		d) db="$OPTARG";;
@@ -82,13 +84,12 @@ notNull "$db" "Please provide the Redshift cluster db name -d"
 notNull "$user" "Please provide the Redshift cluster user name -u"
 notNull "$schema" "Please provide the Redshift cluster namespace (schema) -n"
 
+params=""
+
 if test -f "../$type/$function/package.json"; then
-	notNull "$s3Loc" "Please provide the S3 Location to store the library package -s"
-	if ! [[ $s3Loc == s3:\/\/* ]]; then
-  	echo "S3 Prefix must start with 's3://'"
-  	echo
-  	usage
-  fi
+	notNull "$s3Bucket" "Please provide the S3 Bucket to store the library package -s"
+	notNull "$s3Key" "Please provide the S3 Key to store the library package -s"
+	s3Loc="s3://$s3Bucket$s3Key"
 	cd ../$type/$function
 	npm install
 	zip -r $function.zip index.js node_modules
@@ -97,19 +98,16 @@ if test -f "../$type/$function/package.json"; then
 	rm package-lock.json
 	rm -rf node_modules
 	cd ../../bin
+	params="--parameter-overrides S3Bucket=$s3Bucket S3Key=$s3Key"
 fi
 
 if test -f "../$type/$function/requirements.txt"; then
   # check that the s3 prefix is in the right format
   # starts with 's3://'
-  notNull "$s3Loc" "Please provide the S3 Location to store the library package -s"
+	notNull "$s3Bucket" "Please provide the S3 Bucket to store the library package -s"
+	notNull "$s3Key" "Please provide the S3 Key to store the library package -s"
   notNull "$redshiftRole" "Please provide the Redshift role which is attached to the Redshift cluster and has access to read from the s3 upload location -r"
-
-  if ! [[ $s3Loc == s3:\/\/* ]]; then
-  	echo "S3 Prefix must start with 's3://'"
-  	echo
-  	usage
-  fi
+	s3Loc="s3://$s3Bucket$s3Key"
 
   while read dep; do
     echo Installing: $dep
@@ -123,7 +121,7 @@ if test -f "../$type/$function/lambda.yaml"; then
   stackname=${stackname//)/}
   stackname=${stackname//_/-}
   stackname=${stackname//,/-}
-  if ! aws cloudformation deploy --template-file ../${type}/${function}/lambda.yaml --stack-name ${stackname} --no-fail-on-empty-changeset --capabilities CAPABILITY_IAM; then
+  if ! aws cloudformation deploy --template-file ../${type}/${function}/lambda.yaml $params --stack-name ${stackname} --no-fail-on-empty-changeset --capabilities CAPABILITY_IAM; then
 		aws cloudformation delete-stack --stack-name ${stackname}
 		exit 1
 	fi
