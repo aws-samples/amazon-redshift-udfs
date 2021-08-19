@@ -3,7 +3,7 @@ set -eu
 # Install Pip Module as Redshift Library
 
 function usage {
-	echo "./installPipModuleAsRedshiftLibrary.sh -m <module> -s <s3 prefix> -r <iam role> -c <cluster> -d <database> -u <db user> "
+	echo "./libraryInstaller.sh -m <module> -s <s3 prefix> -r <iam role> -c <cluster> -d <database> -u <db user> "
 	echo
 	echo "where <module> is the name of the Pip module to be installed"
 	echo "      <s3 prefix> is the location on S3 to upload the artifact to. Must be in format s3://bucket/prefix/"

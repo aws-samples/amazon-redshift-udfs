@@ -1,0 +1,80 @@
+AWSTemplateFormatVersion: '2010-09-09'
+Resources:
+  MySQLDatabase:
+    Type: AWS::RDS::DBCluster
+    Properties:
+      DBInstanceClass: String
+      DBName: String
+      EngineMode: serverless
+      Engine: aurora-mysql
+  MySQLSecret:
+    Type: AWS::SecretsManager::Secret
+    Properties:
+      Name: f-mysql-lookup-nodejs-secret
+      Description: f-mysql-lookup-nodejs mysql secret
+      GenerateSecretString:
+        SecretStringTemplate: !Join ['', ['{ "username": "', 'mysql', '" }']]
+        GenerateStringKey: 'password'
+        PasswordLength: 30
+        ExcludeCharacters: '"@/\'
+  AuroraServerlessPostgresClusterSecretAttachment:
+    Type: AWS::SecretsManager::SecretTargetAttachment
+    Properties:
+      SecretId: !Ref MySQLSecret
+      TargetId: !Ref MySQLDatabase
+      TargetType: AWS::RDS::DBCluster
+  InitFunction:
+    Type: AWS::Lambda::Function
+    DeletionPolicy: Retain
+    Properties:
+      Role: !GetAtt 'InitRole.Arn'
+      Handler: index.handler
+      Runtime: python3.9
+      Timeout: 30
+      Code:
+        ZipFile: |
+          import boto3, json, urllib3
+
+          http = urllib3.PoolManager()
+          dynamodb = boto3.resource('dynamodb')
+
+          def send(event, context, responseStatus, responseData):
+            responseUrl = event['ResponseURL']
+            responseBody = {
+                'Status' : responseStatus,
+                'Reason' : "See the details in CloudWatch Log Stream: {}".format(context.log_stream_name),
+                'PhysicalResourceId' : context.log_stream_name,
+                'StackId' : event['StackId'],
+                'RequestId' : event['RequestId'],
+                'LogicalResourceId' : event['LogicalResourceId'],
+                'NoEcho' : False,
+                'Data' : responseData
+            }
+            json_responseBody = json.dumps(responseBody)
+            headers = {
+                'content-type' : '',
+                'content-length' : str(len(json_responseBody))
+            }
+            try:
+                response = http.request('PUT', responseUrl, headers=headers, body=json_responseBody)
+            except Exception as e:
+                print("send(..) failed executing http.request(..):", e)
+
+
+          def handler(event, context):
+            print("Received event: " + json.dumps(event, indent=2))
+
+            if event['RequestType'] == 'Delete':
+              send(event, context, 'SUCCESS', {'Data': 'Delete complete'})
+            else:
+              try:
+                /*todo: create table if non-existant, insert records*/
+              except Exception as e:
+                print(e)
+                send(event, context, 'FAILED', {'Data': 'Insert failed'})
+  InitializeMySQLDB:
+      Type: Custom::InitFunction
+      DependsOn: MySQLDatabase
+      Properties:
+        ServiceToken:
+           Fn::GetAtt: [ InitFunction , "Arn" ]

@@ -12,7 +12,7 @@ Each function is allocated a folder.  At minimal each function will have the the
 
 [Python UDFs](https://docs.aws.amazon.com/redshift/latest/dg/udf-creating-a-scalar-udf.html) may include the following additional file:
 
-- **requirements.txt** - If your function requires modules not available already in Redshift, a list of modules.  The modeules will be packaged, uploaded to S3, and mapped to a [library](https://docs.aws.amazon.com/redshift/latest/dg/r_CREATE_LIBRARY.html) in Redshift.  
+- **requirements.txt** - If your function requires modules not available already in Redshift, a list of modules.  The modules will be packaged, uploaded to S3, and mapped to a [library](https://docs.aws.amazon.com/redshift/latest/dg/r_CREATE_LIBRARY.html) in Redshift.  
 
 ### lambda-udfs
 
@@ -21,6 +21,10 @@ Each function is allocated a folder.  At minimal each function will have the the
 - **lambda.yaml** - a CFN template containing the Lambda function.  The lambda function name should match the redshift function name with '_' replaced with '-'  e.g. (f-upper-python-varchar). The template may contain additional AWS services required by the lambda function and should contain an IAM Role which can be assumed by the lambda service and which grants access to those additional services (if applicable).  In a production deployment, be sure to add resource restrictions to the Lambda IAM Role to ensure the permissions are scoped down.
 
 - **resources.yaml** - a CFN template containing external resources which may be referenced by the Lambda function.   These resources are for testing only.
+
+- **package.json** - (NodeJS Only) If your function requires modules not available already in Lambda, a list of modules.  The modules will be packaged, uploaded to S3, and mapped to your Lambda function. See (f_mysql_lookup_nodejs)[lambda-udfs/f_mysql_lookup_nodejs-varchar-varchar-varchar] for and example.  
+
+- **requirements.txt** - (Python Only) If your function requires modules not available already in Redshift, a list of modules.  The modules will be packaged, uploaded to S3, and mapped to your Lambda function.  See (f_mysql_lookup_python)[lambda-udfs/f_mysql_lookup_python-varchar-varchar-varchar] for and example.
 
 ### sql-udfs
 [SQL UDFs](https://docs.aws.amazon.com/redshift/latest/dg/udf-creating-a-scalar-sql-udf.html) do not require any additional files.
@@ -52,7 +56,9 @@ This script will test the UDF by
 ./testFunction.sh -t python-udfs -f "f_ua_parser_family(varchar)" -c $CLUSTER -d $DB -u $USER -n $SCHEMA
 ```
 
-## Pull Requests
+## Contributing / Pull Requests
+
+We would love your contributions.  See the [contributing](contributing.md) page for more details no creating a fork of the project and a pull request of your contribution.
 
 > Pull requests will be tested using a Github workflow which leverages the above testing scripts. Please execute these script prior to submitting a pull request to ensure the request is approved quickly.  When executed in the test enviornment the [RedshiftRole](#redshift-role) will be defined as follows. You can create a similar role in your local environment for testing.
 

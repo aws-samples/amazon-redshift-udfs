@@ -82,6 +82,22 @@ notNull "$db" "Please provide the Redshift cluster db name -d"
 notNull "$user" "Please provide the Redshift cluster user name -u"
 notNull "$schema" "Please provide the Redshift cluster namespace (schema) -n"
 
+if test -f "../$type/$function/package.json"; then
+	notNull "$s3Loc" "Please provide the S3 Location to store the library package -s"
+	if ! [[ $s3Loc == s3:\/\/* ]]; then
+  	echo "S3 Prefix must start with 's3://'"
+  	echo
+  	usage
+  fi
+	cd ../$type/$function/package.json
+	npm install
+	zip -r $function.zip index.js node_modules
+	aws s3 cp $function.zip $s3Loc
+	rm $function.zip
+	rm package-lock.json
+	rm -rf node_modules
+	cd ../../bin
+fi
 
 if test -f "../$type/$function/requirements.txt"; then
   # check that the s3 prefix is in the right format
