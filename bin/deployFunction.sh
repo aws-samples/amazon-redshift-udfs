@@ -89,7 +89,7 @@ if test -f "../$type/$function/package.json"; then
   	echo
   	usage
   fi
-	cd ../$type/$function/package.json
+	cd ../$type/$function
 	npm install
 	zip -r $function.zip index.js node_modules
 	aws s3 cp $function.zip $s3Loc
