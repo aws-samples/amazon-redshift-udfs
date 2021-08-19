@@ -88,7 +88,6 @@ params=""
 
 if test -f "../$type/$function/package.json"; then
 	notNull "$s3Bucket" "Please provide the S3 Bucket to store the library package -s"
-	notNull "$s3Key" "Please provide the S3 Key to store the library package -s"
 	s3Loc="s3://$s3Bucket$s3Key"
 	cd ../$type/$function
 	npm install
@@ -105,7 +104,6 @@ if test -f "../$type/$function/requirements.txt"; then
   # check that the s3 prefix is in the right format
   # starts with 's3://'
 	notNull "$s3Bucket" "Please provide the S3 Bucket to store the library package -s"
-	notNull "$s3Key" "Please provide the S3 Key to store the library package -s"
   notNull "$redshiftRole" "Please provide the Redshift role which is attached to the Redshift cluster and has access to read from the s3 upload location -r"
 	s3Loc="s3://$s3Bucket$s3Key"
 
