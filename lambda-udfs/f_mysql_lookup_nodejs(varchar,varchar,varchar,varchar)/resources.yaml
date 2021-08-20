@@ -3,26 +3,23 @@ Resources:
   MySQLDatabase:
     Type: AWS::RDS::DBCluster
     Properties:
-      DBName: f-mysql-lookup-nodejs-db
+      DatabaseName: lookupnodejs
       EngineMode: serverless
       Engine: aurora-mysql
       EnableHttpEndpoint: TRUE
+      MasterUserPassword: mysqlpassword
+      MasterUsername: mysqluser
+      ScalingConfiguration:
+        MaxCapacity : 1
+        MinCapacity : 1
   MySQLSecret:
     Type: AWS::SecretsManager::Secret
     Properties:
-      Name: f-mysql-lookup-nodejs-secret
+      Name: lookupnodejs
       Description: f-mysql-lookup-nodejs mysql secret
-      GenerateSecretString:
-        SecretStringTemplate: !Join ['', ['{ "username": "', 'mysql', '" }']]
-        GenerateStringKey: 'password'
-        PasswordLength: 30
-        ExcludeCharacters: '"@/\'
-  AuroraServerlessPostgresClusterSecretAttachment:
-    Type: AWS::SecretsManager::SecretTargetAttachment
-    Properties:
-      SecretId: !Ref MySQLSecret
-      TargetId: !Ref MySQLDatabase
-      TargetType: AWS::RDS::DBCluster
+      SecretString: !Sub
+        - '{ "username": "mysqluser", "password": "mysqlpassword", "host": "${Host}" }'
+        - { Host: !GetAtt [ MySQLDatabase, Endpoint.Address ] }
   InitRole:
     Type: AWS::IAM::Role
     Properties:
@@ -45,26 +42,24 @@ Resources:
               Statement:
                 -
                   Effect: Allow
-                  Action:
-                    - logs:CreateLogGroup
-                  Resource:
-                    - !Sub "arn:aws:logs:${AWS::Region}:${AWS::AccountId}:*"
+                  Action: logs:CreateLogGroup
+                  Resource: !Sub "arn:aws:logs:${AWS::Region}:${AWS::AccountId}:*"
                 -
                   Effect: Allow
                   Action:
                     - logs:CreateLogStream
                     - logs:PutLogEvents
-                  Resource:
-                    - !Sub "arn:aws:logs:${AWS::Region}:${AWS::AccountId}:log-group:/aws/lambda/*"
+                  Resource: !Sub "arn:aws:logs:${AWS::Region}:${AWS::AccountId}:log-group:/aws/lambda/*"
                 -
                   Effect: Allow
-                  Action:
-                    - rds-data:ExecuteStatement
-                  Resource:
-                    - !Sub "arn:aws:rds:${AWS::Region}:${AWS::AccountId}:cluster:*"
+                  Action: rds-data:ExecuteStatement
+                  Resource: !Sub "arn:aws:rds:${AWS::Region}:${AWS::AccountId}:cluster:*"
+                -
+                  Effect: Allow
+                  Action: secretsmanager:GetSecretValue
+                  Resource: !Sub "arn:aws:secretsmanager:${AWS::Region}:${AWS::AccountId}:secret:*"
   InitFunction:
     Type: AWS::Lambda::Function
-    DeletionPolicy: Retain
     Properties:
       Role: !GetAtt 'InitRole.Arn'
       Handler: index.handler
@@ -75,7 +70,7 @@ Resources:
           import boto3, json, urllib3
 
           http = urllib3.PoolManager()
-          rdsdata = boto3.resource('rds-data')
+          rdsdata = boto3.client('rds-data')
 
           def send(event, context, responseStatus, responseData):
             responseUrl = event['ResponseURL']
@@ -107,23 +102,27 @@ Resources:
               send(event, context, 'SUCCESS', {'Data': 'Delete complete'})
             else:
               try:
-                secretArn = dynamodb.Table(event['ResourceProperties']['SecretArn'])
-                resourceArn = dynamodb.Table(event['ResourceProperties']['ResourceArn'])
-                database =
+                secretArn = event['ResourceProperties']['SecretArn']
+                resourceArn = event['ResourceProperties']['ResourceArn']
+                sql="drop table if exists customers;"
+                rdsdata.execute_statement(database='lookupnodejs', sql=sql, resourceArn=resourceArn, secretArn=secretArn);
                 sql="create table customers(id varchar(10), fname varchar(100), lname varchar(100));"
-                rds.execute_statement(database='f-mysql-lookup-nodejs-db', sql=sql, resourceArn=resourceArn, secretArn=secretArn);
-                sql="insert into customer values ('1','John','Doe'),('2','Jane','Doe'),('3','Carlos','Salazar'),('4','Diego','Ramirez'),('5','Mary','Major'),('6','Richard','Roe'); "
-                rds.execute_statement(database='f-mysql-lookup-nodejs-db', sql=sql, resourceArn=resourceArn, secretArn=secretArn);
+                rdsdata.execute_statement(database='lookupnodejs', sql=sql, resourceArn=resourceArn, secretArn=secretArn);
+                sql="insert into customers values ('1','John','Doe'),('2','Jane','Doe'),('3','Carlos','Salazar'),('4','Diego','Ramirez'),('5','Mary','Major'),('6','Richard','Roe');"
+                rdsdata.execute_statement(database='lookupnodejs', sql=sql, resourceArn=resourceArn, secretArn=secretArn);
+                send(event, context, 'SUCCESS', {'Data': 'Insert complete'})
               except Exception as e:
                 print(e)
                 send(event, context, 'FAILED', {'Data': 'Insert failed'})
+
   InitializeMySQLDB:
       Type: Custom::InitFunction
+      DeletionPolicy: Retain
       DependsOn: MySQLDatabase
       Properties:
         ServiceToken:
           Fn::GetAtt: [ InitFunction , "Arn" ]
-        SecretArn:
-          Fn::GetAtt: [ MySQLSecret , "Arn" ]
-        ResourceArn:
-          Fn::GetAtt: [ MySQLDatabase, "Arn" ]
+        SecretArn: !Ref MySQLSecret
+        ResourceArn: !Sub
+          - 'arn:aws:rds:${AWS::Region}:${AWS::AccountId}:cluster:${db}'
+          - { db: !Ref MySQLDatabase}

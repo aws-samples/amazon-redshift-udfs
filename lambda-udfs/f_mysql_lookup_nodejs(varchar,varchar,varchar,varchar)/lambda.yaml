@@ -6,6 +6,12 @@ Parameters:
   S3Key:
     Description: Key containing the node.js packages
     Type: String
+  SecurityGroupId:
+    Description: the SG this function should run in to have connectivity to MySQL
+    Type: String
+  SubnetId:
+    Description: the Subnet this function should run in to have connectivity to MySQL
+    Type: String
 Resources:
   LambdaRole:
     Type: AWS::IAM::Role
@@ -46,13 +52,20 @@ Resources:
                     - secretsmanager:GetSecretValue
                   Resource:
                     - !Sub "arn:aws:secretsmanager:${AWS::Region}:${AWS::AccountId}:secret:*"
+      ManagedPolicyArns:
+        - arn:aws:iam::aws:policy/service-role/AWSLambdaVPCAccessExecutionRole
   LambdaUDFFunction:
      Type: "AWS::Lambda::Function"
      Properties:
        FunctionName: f-mysql-lookup-nodejs-varchar-varchar-varchar-varchar
        Role: !GetAtt 'LambdaRole.Arn'
        Handler: index.handler
-       Runtime: python3.9
+       Runtime: nodejs14.x
+       VpcConfig:
+        SecurityGroupIds:
+          - !Ref SecurityGroupId
+        SubnetIds:
+          - !Ref SubnetId
        Timeout: 300
        Code:
          S3Bucket: !Ref S3Bucket

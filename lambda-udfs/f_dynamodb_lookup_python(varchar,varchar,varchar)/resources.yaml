@@ -54,7 +54,6 @@ Resources:
                     - !Sub "arn:aws:dynamodb:${AWS::Region}:${AWS::AccountId}:table/*"
   InitFunction:
     Type: AWS::Lambda::Function
-    DeletionPolicy: Retain
     Properties:
       Role: !GetAtt 'InitRole.Arn'
       Handler: index.handler
@@ -110,6 +109,7 @@ Resources:
                 send(event, context, 'FAILED', {'Data': 'Insert failed'})
   InitializeDynamoDB:
       Type: Custom::InitFunction
+      DeletionPolicy: Retain
       DependsOn: DynamoDBTable
       Properties:
         ServiceToken:
