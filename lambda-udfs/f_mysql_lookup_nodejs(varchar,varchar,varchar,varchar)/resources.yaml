@@ -125,5 +125,4 @@ Resources:
           Fn::GetAtt: [ InitFunction , "Arn" ]
         SecretArn:
           Fn::GetAtt: [ MySQLSecret , "Arn" ]
-        ResourceArn:
-          Fn::GetAtt: !Ref MySQLDatabase
+        ResourceArn: !Ref MySQLDatabase
