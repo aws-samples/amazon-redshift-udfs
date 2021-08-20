@@ -2,9 +2,9 @@ var AWS = require('aws-sdk');
 const mysql = require('mysql2');
 
 exports.handler = async (event, context) => {
-
+  console.log(event);
   var secretsManager = new AWS.SecretsManager();
-  var secretId = event.arguments[0][4];
+  var secretId = event.arguments[0][2];
   const secret = await secretsManager.getSecretValue({
       SecretId: secretId
       }).promise();
@@ -18,7 +18,8 @@ exports.handler = async (event, context) => {
   let connectionConfig = {
     host: host,
     user: user,
-    password: password
+    password: password,
+    connectTimeout: 60000
   };
 
   var pool = await mysql.createPool(connectionConfig);
@@ -26,20 +27,12 @@ exports.handler = async (event, context) => {
 
   var table = event.arguments[0][0];
   var columnName = event.arguments[0][1];
-  var returnColumnName = event.arguments[0][3];
 
   var createStmt = 'create temporary table ' + table + '_jointemp (temp_seq int, '+ columnName + ' varchar(100)); ';
-  //adding try for serverless cold start
-  try {
-    await conn.query(createStmt);
-  }
-  catch(err) {
-    console.log(err);
-    setTimeout(() => {}, 10000);
-    await conn.query(createStmt);
-  }
+  await conn.query(createStmt);
 
-  var values = event.arguments.map((x, i) => "("+i+",'"+x[5]+"')");
+
+  var values = event.arguments.map((x, i) => "("+i+",'"+x[3]+"')");
   var insertStmt = 'insert into ' + table + '_jointemp(temp_seq, '+ columnName +') values ' + values.join(',') + ';';
   await conn.query(insertStmt);
 
