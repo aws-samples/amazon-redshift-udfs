@@ -33,7 +33,7 @@ jobs:
                 if ! [[ -z "${key// }" ]]; then
                   k="-k ${{ secrets.S3_KEY }}"
                 fi
-                ./deployFunction.sh -t ${PARTS[0]} -f "${PARTS[1]}" -s ${{ secrets.S3_BUCKET }} $k -r ${{ secrets.IAM_ROLE }} -c ${{ secrets.CLUSTER }} -d ${{ secrets.DB }} -u ${{ secrets.USER }} -n ${{ secrets.SCHEMA }} -g {{ secrets.SECURITY_GROUP }} -x {{ secrets.SUBNET }}
+                ./deployFunction.sh -t ${PARTS[0]} -f "${PARTS[1]}" -s ${{ secrets.S3_BUCKET }} $k -r ${{ secrets.IAM_ROLE }} -c ${{ secrets.CLUSTER }} -d ${{ secrets.DB }} -u ${{ secrets.USER }} -n ${{ secrets.SCHEMA }} -g ${{ secrets.SECURITY_GROUP }} -x ${{ secrets.SUBNET }}
                 ./testFunction.sh -t ${PARTS[0]} -f "${PARTS[1]}" -c ${{ secrets.CLUSTER }} -d ${{ secrets.DB }} -u ${{ secrets.USER }} -n ${{ secrets.SCHEMA }}
               else
                 echo Ignoring: $folder
