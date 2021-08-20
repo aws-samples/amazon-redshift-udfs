@@ -1,11 +1,5 @@
 AWSTemplateFormatVersion: '2010-09-09'
 Parameters:
-  S3Bucket:
-    Description: Bucket containing the node.js packages
-    Type: String
-  S3Key:
-    Description: Key containing the node.js packages
-    Type: String
   SecurityGroupId:
     Description: the SG this function should run in to have connectivity to MySQL
     Type: String

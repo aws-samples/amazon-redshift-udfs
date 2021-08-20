@@ -119,7 +119,7 @@ fi
 
 if test -f "../$type/$function/lambda.yaml"; then
 	notNull "$securityGroup" "Please provide the security group for the Lambda function with rules to access your external components -g"
-  notNull "$subnet" "Please provide the subnet for the Lambda functino with network connectivity to access your external components -x"
+  notNull "$subnet" "Please provide the subnet for the Lambda function with network connectivity to access your external components -x"
   template=$(<"../$type/$function/lambda.yaml")
   stackname=${function//(/-}
   stackname=${stackname//)/}
