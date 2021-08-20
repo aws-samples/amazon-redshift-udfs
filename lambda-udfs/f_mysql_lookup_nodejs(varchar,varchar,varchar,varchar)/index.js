@@ -35,7 +35,7 @@ exports.handler = async (event, context) => {
   }
   catch(err) {
     console.log(err);
-    setTimeout(() => {}, 5000);
+    setTimeout(() => {}, 10000);
     await conn.query(createStmt);
   }
 
