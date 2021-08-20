@@ -5,7 +5,7 @@ set -e
 #to-do: if lambda cfn, deploy, pass in parameters from env
 
 function usage {
-	echo "./deployFunction.sh -t <type> -f <function> -s <s3 bucket> -k <s3 key> -r <redshift role> -c <cluster> -d <database> -u <db user> -n <namespace>"
+	echo "./deployFunction.sh -t <type> -f <function> -s <s3 bucket> -k <s3 key> -r <redshift role> -c <cluster> -d <database> -u <db user> -n <namespace> -g <security group> -x subnet"
 	echo
 	echo "where <type> is the type of function to be installed. e.g. python-udfs, lambda-udfs, sql-udfs"
 	echo "      <function> is the name of the function, including the parameters and enclosed in quotes e.g. \"f_bitwise_to_string(bigint,int)\""
@@ -16,6 +16,8 @@ function usage {
 	echo "      <database> is the database you will deploy the function to"
 	echo "      <db user> is the db user who will create the function"
 	echo "      <namespace> is the db namespace (schema) where the function will be created"
+	echo "      <security group> is the db namespace (schema) where the function will be created"
+	echo "      <subnet> is the db namespace (schema) where the function will be created"
 	exit 0;
 }
 
@@ -58,7 +60,7 @@ function notNull {
 checkDep "aws"
 
 # look up runtime arguments of the module name and the destination S3 Prefix
-while getopts "t:f:s:k:l:r:c:d:u:n:h" opt; do
+while getopts "t:f:s:k:l:r:c:d:u:n:g:x:h" opt; do
 	case $opt in
 		t) type="$OPTARG";;
 		f) function="$OPTARG";;
@@ -69,13 +71,15 @@ while getopts "t:f:s:k:l:r:c:d:u:n:h" opt; do
 		d) db="$OPTARG";;
 		u) user="$OPTARG";;
 		n) schema="$OPTARG";;
+		g) securityGroup="$OPTARG";;
+		x) subnet="$OPTARG";;
 		h) usage;;
 		\?) echo "Invalid option: -"$OPTARG"" >&2
 			exit 1;;
 		:) usage;;
 	esac
 done
- 
+
 # validate required arguments
 notNull "$type" "Please provide the function type -t"
 notNull "$function" "Please provide the function name -f"
@@ -84,7 +88,7 @@ notNull "$db" "Please provide the Redshift cluster db name -d"
 notNull "$user" "Please provide the Redshift cluster user name -u"
 notNull "$schema" "Please provide the Redshift cluster namespace (schema) -n"
 
-params=""
+paramsBuckets=""
 
 if test -f "../$type/$function/package.json"; then
 	notNull "$s3Bucket" "Please provide the S3 Bucket to store the library package -s"
@@ -97,7 +101,7 @@ if test -f "../$type/$function/package.json"; then
 	rm package-lock.json
 	rm -rf node_modules
 	cd ../../bin
-	params="--parameter-overrides S3Bucket=$s3Bucket S3Key=$s3Key$function.zip"
+	paramsBuckets="S3Bucket=$s3Bucket S3Key=$s3Key$function.zip"
 fi
 
 if test -f "../$type/$function/requirements.txt"; then
@@ -114,12 +118,14 @@ if test -f "../$type/$function/requirements.txt"; then
 fi
 
 if test -f "../$type/$function/lambda.yaml"; then
+	notNull "$securityGroup" "Please provide the security group for the Lambda function with rules to access your external components -g"
+  notNull "$subnet" "Please provide the subnet for the Lambda functino with network connectivity to access your external components -x"
   template=$(<"../$type/$function/lambda.yaml")
   stackname=${function//(/-}
   stackname=${stackname//)/}
   stackname=${stackname//_/-}
   stackname=${stackname//,/-}
-  if ! aws cloudformation deploy --template-file ../${type}/${function}/lambda.yaml $params --stack-name ${stackname} --no-fail-on-empty-changeset --capabilities CAPABILITY_IAM; then
+  if ! aws cloudformation deploy --template-file ../${type}/${function}/lambda.yaml --parameter-overrides SecurityGroupId=${securityGroup} SubnetId=${subnet} ${paramsBuckets} --stack-name ${stackname} --no-fail-on-empty-changeset --capabilities CAPABILITY_IAM; then
 		aws cloudformation delete-stack --stack-name ${stackname}
 		exit 1
 	fi
