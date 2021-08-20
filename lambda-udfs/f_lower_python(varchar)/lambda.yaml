@@ -36,7 +36,7 @@ Resources:
   LambdaUDFFunction:
      Type: "AWS::Lambda::Function"
      Properties:
-       FunctionName: f-upper-python-varchar
+       FunctionName: f-lower-python-varchar
        Role: !GetAtt 'LambdaRole.Arn'
        Timeout: 300
        Code:
