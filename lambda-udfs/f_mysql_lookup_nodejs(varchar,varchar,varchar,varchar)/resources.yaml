@@ -9,6 +9,9 @@ Resources:
       EnableHttpEndpoint: TRUE
       MasterUserPassword: mysqlpassword
       MasterUsername: mysqluser
+      ScalingConfiguration:
+        MaxCapacity : 1
+        MinCapacity : 1
   MySQLSecret:
     Type: AWS::SecretsManager::Secret
     Properties:
@@ -107,6 +110,7 @@ Resources:
                 rdsdata.execute_statement(database='lookupnodejs', sql=sql, resourceArn=resourceArn, secretArn=secretArn);
                 sql="insert into customers values ('1','John','Doe'),('2','Jane','Doe'),('3','Carlos','Salazar'),('4','Diego','Ramirez'),('5','Mary','Major'),('6','Richard','Roe');"
                 rdsdata.execute_statement(database='lookupnodejs', sql=sql, resourceArn=resourceArn, secretArn=secretArn);
+                send(event, context, 'SUCCESS', {'Data': 'Insert complete'})
               except Exception as e:
                 print(e)
                 send(event, context, 'FAILED', {'Data': 'Insert failed'})
