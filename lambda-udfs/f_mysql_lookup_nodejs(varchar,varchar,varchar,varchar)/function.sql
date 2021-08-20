@@ -9,6 +9,6 @@ Purpose:
            p4 - join value
 
 2021-08-01: written by rjvgupta
-*/ 
+*/
 CREATE OR REPLACE EXTERNAL FUNCTION f_mysql_lookup_nodejs (varchar, varchar, varchar, varchar) RETURNS varchar STABLE
 LAMBDA 'f-mysql-lookup-nodejs-varchar-varchar-varchar-varchar' IAM_ROLE ':RedshiftRole';
