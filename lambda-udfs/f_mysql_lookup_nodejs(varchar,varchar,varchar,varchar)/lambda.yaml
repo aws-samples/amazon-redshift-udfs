@@ -61,7 +61,7 @@ Resources:
        Role: !GetAtt 'LambdaRole.Arn'
        Handler: index.handler
        Runtime: nodejs14.x
-       VPCConfig:
+       VpcConfig:
         SecurityGroupIds:
           - !Ref SecurityGroupId
         SubnetIds:
