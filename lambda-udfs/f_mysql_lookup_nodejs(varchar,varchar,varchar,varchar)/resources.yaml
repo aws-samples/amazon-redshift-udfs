@@ -14,19 +14,9 @@ Resources:
     Properties:
       Name: lookupnodejs
       Description: f-mysql-lookup-nodejs mysql secret
-      GenerateSecretString:
-        SecretStringTemplate: !Sub
-          - '{ "username": "mysqluser", "password": "mysqlpassword", "host": "${Host}" }'
-          - { Host: !GetAtt [ MySQLDatabase, Endpoint.Address ] }
-        GenerateStringKey: 'password'
-        PasswordLength: 30
-        ExcludeCharacters: '"@/\'
-  AuroraServerlessPostgresClusterSecretAttachment:
-    Type: AWS::SecretsManager::SecretTargetAttachment
-    Properties:
-      SecretId: !Ref MySQLSecret
-      TargetId: !Ref MySQLDatabase
-      TargetType: AWS::RDS::DBCluster
+      SecretString: !Sub
+        - '{ "username": "mysqluser", "password": "mysqlpassword", "host": "${Host}" }'
+        - { Host: !GetAtt [ MySQLDatabase, Endpoint.Address ] }
   InitRole:
     Type: AWS::IAM::Role
     Properties:
