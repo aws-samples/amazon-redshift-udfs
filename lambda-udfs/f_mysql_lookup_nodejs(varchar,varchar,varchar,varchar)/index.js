@@ -29,7 +29,15 @@ exports.handler = async (event, context) => {
   var returnColumnName = event.arguments[0][3];
 
   var createStmt = 'create temporary table ' + table + '_jointemp (temp_seq int, '+ columnName + ' varchar(100)); ';
-  await conn.query(createStmt);
+  //adding try for serverless cold start
+  try {
+    await conn.query(createStmt);
+  }
+  catch(err) {
+    console.log(err);
+    setTimeout(() => {}, 5000);
+    await conn.query(createStmt);
+  }
 
   var values = event.arguments.map((x, i) => "("+i+",'"+x[5]+"')");
   var insertStmt = 'insert into ' + table + '_jointemp(temp_seq, '+ columnName +') values ' + values.join(',') + ';';
