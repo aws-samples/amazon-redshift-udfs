@@ -47,8 +47,6 @@ Resources:
                     - dynamodb:GetItem
                   Resource:
                     - !Sub "arn:aws:dynamodb:${AWS::Region}:${AWS::AccountId}:table/*"
-      ManagedPolicyArns:
-        - arn:aws:iam::aws:policy/service-role/AWSLambdaVPCAccessExecutionRole
   LambdaUDFFunction:
      Type: "AWS::Lambda::Function"
      Properties:
@@ -56,11 +54,6 @@ Resources:
        Role: !GetAtt 'LambdaRole.Arn'
        Handler: index.handler
        Runtime: python3.9
-       VpcConfig:
-         SecurityGroupIds:
-           - !Ref SecurityGroupId
-         SubnetIds:
-           - !Ref SubnetId
        Timeout: 300
        Code:
          ZipFile: |
