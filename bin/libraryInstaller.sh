@@ -1,5 +1,5 @@
 #!/bin/bash
-set -eu
+set -e
 # Install Pip Module as Redshift Library
 
 function usage {
@@ -116,18 +116,17 @@ execQuery()
   done
 	if [ "$status" == "FAILED" ]; then
     aws redshift-data describe-statement --id $id
-    exit 1
+    return 1
   else
     echo $id:$status
-		exit 0
   fi
 }
 
-
-for file in "$TMPDIR/.$module/*.whl"
+files=`ls ${TMPDIR}/.${module}/*.whl`
+for depname in `basename -s .whl $files`
 do
 	#depname=${file%.*}
- 	depname=`basename -s .whl $file`
+ 	#depname=`basename -s .whl $file`
 	echo $depname
 	aws s3 cp "$TMPDIR/.$module/$depname.whl" "$s3Prefix/$depname.zip"
 	sql="CREATE OR REPLACE LIBRARY ${depname%%-*} LANGUAGE plpythonu FROM '$s3Prefix/$depname.zip' WITH CREDENTIALS AS 'aws_iam_role=$s3Role'; "

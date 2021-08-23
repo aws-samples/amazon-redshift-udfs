@@ -19,7 +19,7 @@ jobs:
       - run: |
           set -e
           folders=""
-          files=`jq -r '.[]' <<<'${{ steps.files.outputs.all }}'`
+          files=`jq -r '.[]' <<<'${{ steps.files.outputs.added_modified }}'`
 
           for file in ${files[@]}; do
             folders="$folders $(dirname $file)"
