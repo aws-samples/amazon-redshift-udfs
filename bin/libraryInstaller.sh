@@ -1,5 +1,5 @@
 #!/bin/bash
-set -ex
+set -e
 # Install Pip Module as Redshift Library
 
 function usage {
