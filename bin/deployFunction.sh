@@ -37,7 +37,6 @@ execQuery()
     exit 1
   else
     echo $id:$status
-    exit 0
   fi
 }
 
