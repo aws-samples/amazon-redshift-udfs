@@ -1,2 +1,0 @@
-ua_parser
-user_agents
