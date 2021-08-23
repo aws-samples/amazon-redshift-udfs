@@ -116,10 +116,9 @@ execQuery()
   done
 	if [ "$status" == "FAILED" ]; then
     aws redshift-data describe-statement --id $id
-    exit 1
+    return 1
   else
     echo $id:$status
-		exit 0
   fi
 }
 
