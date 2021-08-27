@@ -41,18 +41,18 @@ execQuery()
 }
 
 function checkDep {
-	which $1 >> /dev/null
-	if [ $? -ne 0 ]; then
-		echo "Unable to find required dependency $1"
-		exit -1
-	fi
+  which $1 >> /dev/null
+  if [ $? -ne 0 ]; then
+    echo "Unable to find required dependency $1"
+    exit -1
+  fi
 }
 
 function notNull {
-	if [ "$1x" == "x" ]; then
-		echo $2
-		exit -1
-	fi
+  if [ "$1x" == "x" ]; then
+    echo $2
+    exit -1
+  fi
 }
 
 # make sure we have pip and the aws cli installed
@@ -60,23 +60,23 @@ checkDep "aws"
 
 # look up runtime arguments of the module name and the destination S3 Prefix
 while getopts "t:f:s:k:l:r:c:d:u:n:g:x:h" opt; do
-	case $opt in
-		t) type="$OPTARG";;
-		f) function="$OPTARG";;
-		s) s3Bucket="$OPTARG";;
-		k) s3Key="$OPTARG";;
-		r) redshiftRole="$OPTARG";;
-		c) cluster="$OPTARG";;
-		d) db="$OPTARG";;
-		u) user="$OPTARG";;
-		n) schema="$OPTARG";;
-		g) securityGroup="$OPTARG";;
-		x) subnet="$OPTARG";;
-		h) usage;;
-		\?) echo "Invalid option: -"$OPTARG"" >&2
-			exit 1;;
-		:) usage;;
-	esac
+  case $opt in
+    t) type="$OPTARG";;
+    f) function="$OPTARG";;
+    s) s3Bucket="$OPTARG";;
+    k) s3Key="$OPTARG";;
+    r) redshiftRole="$OPTARG";;
+    c) cluster="$OPTARG";;
+    d) db="$OPTARG";;
+    u) user="$OPTARG";;
+    n) schema="$OPTARG";;
+    g) securityGroup="$OPTARG";;
+    x) subnet="$OPTARG";;
+    h) usage;;
+    \?) echo "Invalid option: -"$OPTARG"" >&2
+      exit 1;;
+    :) usage;;
+  esac
 done
 
 # validate required arguments
@@ -117,7 +117,7 @@ if test -f "../$type/$function/requirements.txt"; then
 fi
 
 if test -f "../$type/$function/lambda.yaml"; then
-	notNull "$securityGroup" "Please provide the security group for the Lambda function with rules to access your external components -g"
+  notNull "$securityGroup" "Please provide the security group for the Lambda function with rules to access your external components -g"
   notNull "$subnet" "Please provide the subnet for the Lambda function with network connectivity to access your external components -x"
   template=$(<"../$type/$function/lambda.yaml")
   stackname=${function//(/-}
@@ -125,9 +125,9 @@ if test -f "../$type/$function/lambda.yaml"; then
   stackname=${stackname//_/-}
   stackname=${stackname//,/-}
   if ! aws cloudformation deploy --template-file ../${type}/${function}/lambda.yaml --parameter-overrides SecurityGroupId=${securityGroup} SubnetId=${subnet} ${paramsBuckets} --stack-name ${stackname} --no-fail-on-empty-changeset --capabilities CAPABILITY_IAM; then
-		aws cloudformation delete-stack --stack-name ${stackname}
-		exit 1
-	fi
+    aws cloudformation delete-stack --stack-name ${stackname}
+    exit 1
+  fi
 fi
 
 
