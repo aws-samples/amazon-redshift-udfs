@@ -1,5 +1,5 @@
 # Amazon Redshift UDFs
-A collection of user-defined functions (UDFs) for Amazon Redshift. The intent of this collection is to provide examples for defining python UDFs as well as useful functions which extend Amazon Redshift capabilities as well as support migrations from legacy DB platforms.
+A collection of user-defined functions (UDFs) for Amazon Redshift. The intent of this collection is to provide examples for defining python UDFs as well as useful functions which extend Amazon Redshift capabilities and support migrations from legacy DB platforms.
 
 ## Contents
 Each function is allocated a folder.  At minimal each function will have the the following files which will be used by the [deployFunction.sh](#deployFunctionsh) script and [testFunction.sh](#testFunctionsh) scripts:
@@ -22,9 +22,7 @@ Each function is allocated a folder.  At minimal each function will have the the
 
 - **resources.yaml** - a CFN template containing external resources which may be referenced by the Lambda function.   These resources are for testing only.
 
-- **package.json** - (NodeJS Only) If your function requires modules not available already in Lambda, a list of modules.  The modules will be packaged, uploaded to S3, and mapped to your Lambda function. See (f_mysql_lookup_nodejs)[lambda-udfs/f_mysql_lookup_nodejs-varchar-varchar-varchar] for and example.  
-
-- **requirements.txt** - (Python Only) If your function requires modules not available already in Redshift, a list of modules.  The modules will be packaged, uploaded to S3, and mapped to your Lambda function.  See (f_mysql_lookup_python)[lambda-udfs/f_mysql_lookup_python-varchar-varchar-varchar] for and example.
+- **package.json** - (NodeJS Only) If your function requires modules not available already in Lambda, a list of modules.  The modules will be packaged, uploaded to S3, and mapped to your Lambda function. See [f_mysql_lookup_nodejs](lambda-udfs/f_mysql_lookup_nodejs-varchar-varchar-varchar) for and example.  
 
 ### sql-udfs
 [SQL UDFs](https://docs.aws.amazon.com/redshift/latest/dg/udf-creating-a-scalar-sql-udf.html) do not require any additional files.
@@ -35,8 +33,9 @@ Located in the `bin` directory are tools to deploy and test your UDF functions.
 ### deployFunction.sh
 This script will orchestrate the deployment of the UDF to your AWS environment. This includes
 1. Looping through modules in a `requirements.txt` file (if present) and installing them using the `libraryInstall.sh` script by uploading the packages to the `$S3_LOC` and creating the library in Redshift using the `$REDSHIFT_ROLE`.
-2. If deploying a lambda UDF, deploying a CloudFormation template `lambda.yaml` (if present) passing in the `LambdaRole` parameter.
-3. Creating the UDF function by executing the `function.sql` sql script using the `RedshiftRole` parameter (for Lambda functions).
+2. If deploying a lambda UDF, using the `package.json` file (if present) to install the dependent javascript libraries and packaging them along with the Lambda function code.
+3. If deploying a lambda UDF, deploying a CloudFormation template `lambda.yaml`.
+4. Creating the UDF function by executing the `function.sql` sql script.  If deploying a lambda UDF, replaceing the `:RedshiftRole` parameter.
 
 ```
 ./deployFunction.sh -t lambda-udfs -f "f_upper_python(varchar)" -c $CLUSTER -d $DB -u $USER -n $SCHEMA -r $REDSHIFT_ROLE
@@ -58,7 +57,7 @@ This script will test the UDF by
 
 ## Contributing / Pull Requests
 
-We would love your contributions.  See the [contributing](contributing.md) page for more details no creating a fork of the project and a pull request of your contribution.
+We would love your contributions.  See the [contributing](contributing.md) page for more details on creating a fork of the project and a pull request of your contribution.
 
 > Pull requests will be tested using a Github workflow which leverages the above testing scripts. Please execute these script prior to submitting a pull request to ensure the request is approved quickly.  When executed in the test enviornment the [RedshiftRole](#redshift-role) will be defined as follows. You can create a similar role in your local environment for testing.
 
