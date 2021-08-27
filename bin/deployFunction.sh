@@ -90,25 +90,25 @@ notNull "$schema" "Please provide the Redshift cluster namespace (schema) -n"
 paramsBuckets=""
 
 if test -f "../$type/$function/package.json"; then
-	notNull "$s3Bucket" "Please provide the S3 Bucket to store the library package -s"
-	s3Loc="s3://$s3Bucket$s3Key"
-	cd ../$type/$function
-	npm install
-	zip -r $function.zip index.js node_modules
-	aws s3 cp $function.zip $s3Loc
-	rm $function.zip
-	rm package-lock.json
-	rm -rf node_modules
-	cd ../../bin
-	paramsBuckets="S3Bucket=$s3Bucket S3Key=$s3Key$function.zip"
+  notNull "$s3Bucket" "Please provide the S3 Bucket to store the library package -s"
+  s3Loc="s3://$s3Bucket$s3Key"
+  cd ../$type/$function
+  npm install
+  zip -r $function.zip index.js node_modules
+  aws s3 cp $function.zip $s3Loc
+  rm $function.zip
+  rm package-lock.json
+  rm -rf node_modules
+  cd ../../bin
+  paramsBuckets="S3Bucket=$s3Bucket S3Key=$s3Key$function.zip"
 fi
 
 if test -f "../$type/$function/requirements.txt"; then
   # check that the s3 prefix is in the right format
   # starts with 's3://'
-	notNull "$s3Bucket" "Please provide the S3 Bucket to store the library package -s"
+  notNull "$s3Bucket" "Please provide the S3 Bucket to store the library package -s"
   notNull "$redshiftRole" "Please provide the Redshift role which is attached to the Redshift cluster and has access to read from the s3 upload location -r"
-	s3Loc="s3://$s3Bucket$s3Key"
+  s3Loc="s3://$s3Bucket$s3Key"
 
   while read dep; do
     echo Installing: $dep
