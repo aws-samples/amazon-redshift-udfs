@@ -1,0 +1,10 @@
+'Jane Doe', NULL, 'P'
+'Jane Doe', NULL, 'F'
+'Jane Doe', NULL, 'N'
+'Jane Doe', NULL, NULL
+'jdoe@org.com', 'email', 'P'
+'jdoe@org.com', 'email', 'F'
+'jdoe@org.com', 'email', 'N'
+'123-45-6789', 'ssn', 'P'
+'123-45-6789', 'ssn', 'F'
+'123-45-6789', 'ssn', 'N'

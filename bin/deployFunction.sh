@@ -9,15 +9,15 @@ function usage {
 	echo
 	echo "where <type> is the type of function to be installed. e.g. python-udfs, lambda-udfs, sql-udfs"
 	echo "      <function> is the name of the function, including the parameters and enclosed in quotes e.g. \"f_bitwise_to_string(bigint,int)\""
-	echo "      <s3 bucket> (optional) is the bucket in S3 to upload the artifact to. "
-	echo "      <s3 key> (optional) is the key in S3 to upload the artifact to."
-	echo "      <redshift role> (optional) is the role which is attached to the Redshift cluster and has access to read from the s3 upload location (for python libs) and/or lambda execute permissions (for lambda fns)"
 	echo "      <cluster> is the Redshift cluster you will deploy the function to"
 	echo "      <database> is the database you will deploy the function to"
 	echo "      <db user> is the db user who will create the function"
 	echo "      <namespace> is the db namespace (schema) where the function will be created"
-	echo "      <security group> is the db namespace (schema) where the function will be created"
-	echo "      <subnet> is the db namespace (schema) where the function will be created"
+	echo "      <s3 bucket> (optional) is the bucket in S3 to upload the artifact to."
+	echo "      <s3 key> (optional) is the key in S3 to upload the artifact to."
+	echo "      <redshift role> (optional) is the role which is attached to the Redshift cluster and has access to read from the s3 upload location (for python libs) and/or lambda execute permissions (for lambda fns)"
+	echo "      <security group> (optional) is security the security group the lambda function will run in "
+	echo "      <subnet> (optional) is the subnet the lambda function will run in"
 	exit 0;
 }
 

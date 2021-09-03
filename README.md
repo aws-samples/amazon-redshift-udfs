@@ -41,6 +41,8 @@ This script will orchestrate the deployment of the UDF to your AWS environment. 
 ./deployFunction.sh -t lambda-udfs -f "f_upper_python(varchar)" -c $CLUSTER -d $DB -u $USER -n $SCHEMA -r $REDSHIFT_ROLE
 
 ./deployFunction.sh -t python-udfs -f "f_ua_parser_family(varchar)" -c $CLUSTER -d $DB -u $USER -n $SCHEMA -r $REDSHIFT_ROLE -s $S3_LOC
+
+./deployFunction.sh -t sql-udfs -f "f_mask_varchar(varchar,varchar,varchar)" -c $CLUSTER -d $DB -u $USER -n $SCHEMA
 ```
 
 ### testFunction.sh
@@ -53,6 +55,8 @@ This script will test the UDF by
 ./testFunction.sh -t lambda-udfs -f "f_upper_python(varchar)" -c $CLUSTER -d $DB -u $USER -n $SCHEMA
 
 ./testFunction.sh -t python-udfs -f "f_ua_parser_family(varchar)" -c $CLUSTER -d $DB -u $USER -n $SCHEMA
+
+./testFunction.sh -t sql-udfs -f "f_mask_varchar(varchar,varchar,varchar)" -c $CLUSTER -d $DB -u $USER -n $SCHEMA
 ```
 
 ## Contributing / Pull Requests
