@@ -88,10 +88,15 @@ notNull "$user" "Please provide the Redshift cluster user name -u"
 notNull "$schema" "Please provide the Redshift cluster namespace (schema) -n"
 
 paramsBuckets=""
+paramsVPC=""
+
+if test -z "$subnet"; then
+	paramsVPC="SecurityGroupId=${securityGroup} SubnetId=${subnet}"
+fi
 
 if test -f "../$type/$function/package.json"; then
   notNull "$s3Bucket" "Please provide the S3 Bucket to store the library package -s"
-  s3Loc="s3://$s3Bucket$s3Key"
+  s3Loc="s3://$s3Bucket/$s3Key"
   cd ../$type/$function
   npm install
   zip -r $function.zip index.js node_modules
@@ -108,23 +113,42 @@ if test -f "../$type/$function/requirements.txt"; then
   # starts with 's3://'
   notNull "$s3Bucket" "Please provide the S3 Bucket to store the library package -s"
   notNull "$redshiftRole" "Please provide the Redshift role which is attached to the Redshift cluster and has access to read from the s3 upload location -r"
-  s3Loc="s3://$s3Bucket$s3Key"
-
+  s3Loc="s3://$s3Bucket/$s3Key"
   while read dep; do
     echo Installing: $dep
+		checkDep "pip3"
     ./libraryInstaller.sh -m $dep -s $s3Loc -r $redshiftRole -c $cluster -d $db -u $user
   done < ../$type/$function/requirements.txt
+	paramsBuckets="S3Bucket=$s3Bucket S3Key=$s3Key$function.zip"
+fi
+
+if test -f "../$type/$function/pom.xml"; then
+  # check that the s3 prefix is in the right format
+  # starts with 's3://'
+  notNull "$s3Bucket" "Please provide the S3 Bucket to store the library package -s"
+  notNull "$redshiftRole" "Please provide the Redshift role which is attached to the Redshift cluster and has access to read from the s3 upload location -r"
+  s3Loc="s3://$s3Bucket/$s3Key"
+	checkDep "mvn"
+	cd ../$type/$function
+  #mvn --batch-mode --update-snapshots verify
+	#rm -rf target
+	mvn package
+	packagename=${function//(/_}
+  packagename=${packagename//)/}
+	aws s3 cp "target/$packagename-1.0.0.jar" "$s3Loc$packagename-1.0.0.jar"
+	rm -rf target
+	rm dependency-reduced-pom.xml
+	cd ../../bin
+	paramsBuckets="S3Bucket=$s3Bucket S3Key=$s3Key$packagename-1.0.0.jar"
 fi
 
 if test -f "../$type/$function/lambda.yaml"; then
-  notNull "$securityGroup" "Please provide the security group for the Lambda function with rules to access your external components -g"
-  notNull "$subnet" "Please provide the subnet for the Lambda function with network connectivity to access your external components -x"
   template=$(<"../$type/$function/lambda.yaml")
   stackname=${function//(/-}
   stackname=${stackname//)/}
   stackname=${stackname//_/-}
   stackname=${stackname//,/-}
-  if ! aws cloudformation deploy --template-file ../${type}/${function}/lambda.yaml --parameter-overrides SecurityGroupId=${securityGroup} SubnetId=${subnet} ${paramsBuckets} --stack-name ${stackname} --no-fail-on-empty-changeset --capabilities CAPABILITY_IAM; then
+  if ! aws cloudformation deploy --template-file ../${type}/${function}/lambda.yaml --parameter-overrides ${paramsVPC} ${paramsBuckets} --stack-name ${stackname} --no-fail-on-empty-changeset --capabilities CAPABILITY_IAM; then
     aws cloudformation delete-stack --stack-name ${stackname}
     exit 1
   fi

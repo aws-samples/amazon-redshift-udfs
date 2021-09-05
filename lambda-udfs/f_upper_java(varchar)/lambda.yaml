@@ -1,0 +1,53 @@
+AWSTemplateFormatVersion: '2010-09-09'
+Parameters:
+  S3Bucket:
+    Description: Bucket containing the java packages
+    Type: String
+  S3Key:
+    Description: Key containing the java packages
+    Type: String
+Resources:
+  LambdaRole:
+    Type: AWS::IAM::Role
+    Properties:
+      AssumeRolePolicyDocument:
+          Version: 2012-10-17
+          Statement:
+            -
+              Effect: Allow
+              Principal:
+                Service:
+                  - lambda.amazonaws.com
+              Action:
+                - sts:AssumeRole
+      Path: /
+      Policies:
+          -
+            PolicyName: CloudwatchLogs
+            PolicyDocument:
+              Version: 2012-10-17
+              Statement:
+                -
+                  Effect: Allow
+                  Action:
+                    - logs:CreateLogGroup
+                  Resource:
+                    - !Sub "arn:aws:logs:${AWS::Region}:${AWS::AccountId}:*"
+                -
+                  Effect: Allow
+                  Action:
+                    - logs:CreateLogStream
+                    - logs:PutLogEvents
+                  Resource:
+                    - !Sub "arn:aws:logs:${AWS::Region}:${AWS::AccountId}:log-group:/aws/lambda/*"
+  LambdaUDFFunction:
+    Type: "AWS::Lambda::Function"
+    Properties:
+      FunctionName: f-upper-java-varchar
+      Role: !GetAtt 'LambdaRole.Arn'
+      Timeout: 100
+      Code:
+        S3Bucket: !Ref S3Bucket
+        S3Key: !Ref S3Key
+      Handler: f_upper_java_varchar.Handler::handleRequest
+      Runtime: java11

@@ -24,6 +24,12 @@ Each function is allocated a folder.  At minimal each function will have the the
 
 - **package.json** - (NodeJS Only) If your function requires modules not available already in Lambda, a list of modules.  The modules will be packaged, uploaded to S3, and mapped to your Lambda function. See [f_mysql_lookup_nodejs](lambda-udfs/f_mysql_lookup_nodejs-varchar-varchar-varchar) for and example.  
 
+- **index.js** (NodeJS Only) your javascript handler code.  See [f_upper_nodejs](lambda-udfs/f_upper_nodejs-varchar) for and example.  
+
+- **pom.xml** - (Java Only) Lists out dependencies as well as the name of your handler function. See [f_upper_java](lambda-udfs/f_upper_java-varchar) for and example.  See [Maven Documentation](https://maven.apache.org/guides/introduction/introduction-to-the-pom.html) for more details on writing a pom.xml file.
+
+- **src/main/java/<function>/Handler.java** - (Java Only) your java handler code. See [f_upper_java](lambda-udfs/f_upper_java-varchar) for and example.  
+
 ### sql-udfs
 [SQL UDFs](https://docs.aws.amazon.com/redshift/latest/dg/udf-creating-a-scalar-sql-udf.html) do not require any additional files.
 
@@ -33,9 +39,10 @@ Located in the `bin` directory are tools to deploy and test your UDF functions.
 ### deployFunction.sh
 This script will orchestrate the deployment of the UDF to your AWS environment. This includes
 1. Looping through modules in a `requirements.txt` file (if present) and installing them using the `libraryInstall.sh` script by uploading the packages to the `$S3_LOC` and creating the library in Redshift using the `$REDSHIFT_ROLE`.
-2. If deploying a lambda UDF, using the `package.json` file (if present) to install the dependent javascript libraries and packaging them along with the Lambda function code.
-3. If deploying a lambda UDF, deploying a CloudFormation template `lambda.yaml`.
-4. Creating the UDF function by executing the `function.sql` sql script.  If deploying a lambda UDF, replaceing the `:RedshiftRole` parameter.
+2. If deploying a nodeJS lambda UDF, using `package.json` to run `npm install` packaging the code and uploading the `zip` file to the `$S3_LOC`.
+3. If deploying a Java lambda UDF, using `pom.xml` to run `mvn package` packaging the code and uploading the `jar` to the `$S3_LOC`.
+4. If deploying a lambda UDF, using `lambda.yaml` to run `aws cloudformation deploy` and build the needed resources.
+5. Creating the UDF function in Redshift by executing the `function.sql` sql script.  If deploying a lambda UDF, replacing the `:RedshiftRole` parameter.
 
 ```
 ./deployFunction.sh -t lambda-udfs -f "f_upper_python(varchar)" -c $CLUSTER -d $DB -u $USER -n $SCHEMA -r $REDSHIFT_ROLE

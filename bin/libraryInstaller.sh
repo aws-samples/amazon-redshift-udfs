@@ -15,13 +15,6 @@ function usage {
 	exit 0;
 }
 
-function checkDep {
-	which $1 >> /dev/null
-	if [ $? -ne 0 ]; then
-		echo "Unable to find required dependency $1"
-		exit -1
-	fi
-}
 
 function notNull {
 	if [ "$1x" == "x" ]; then
@@ -29,10 +22,6 @@ function notNull {
 		exit -1
 	fi
 }
-
-# make sure we have pip and the aws cli installed
-checkDep "aws"
-checkDep "pip3"
 
 # make sure we have wheel installed into pip
 pip3 show wheel &> /dev/null
@@ -69,19 +58,6 @@ if ! [[ $s3Prefix == s3:\/\/* ]]; then
 	echo
 	usage
 fi
-
-# ends with slash
-#if ! [[ $s3Prefix =~ .*\/$ ]]; then
-#	s3Prefix="$s3Prefix/"
-#fi
-
-# check if this is a valid module in pip
-#pip3 search $module &> /dev/null
-
-#if [ $? -ne 0 ]; then
-#	echo "Unable to find module $module in pip."
-#	exit -1
-#fi
 
 # found the module - install to a local hidden directory
 echo "Installing $module with pip and uploading to $s3Prefix"
