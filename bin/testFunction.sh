@@ -9,7 +9,7 @@ user=$5
 schema=$6
 
 function usage {
-	echo "./deployFunction.sh -t <type> -f <function> -s <s3 location> -l <lambda role> -r <redshift role> -c <cluster> -d <database> -u <db user> "
+	echo "./deployFunction.sh -t <type> -f <function> -c <cluster> -d <database> -u <db user> "
 	echo
 	echo "where <type> is the type of function to be installed. e.g. python-udfs, lambda-udfs, sql-udfs"
   echo "      <function> is the name of the function, including the parameters and enclosed in quotes e.g. \"f_bitwise_to_string(bigint,int)\""

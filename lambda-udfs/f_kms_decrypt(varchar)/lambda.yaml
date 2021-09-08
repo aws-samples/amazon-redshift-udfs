@@ -1,0 +1,77 @@
+AWSTemplateFormatVersion: '2010-09-09'
+Resources:
+  LambdaRole:
+    Type: AWS::IAM::Role
+    Properties:
+      AssumeRolePolicyDocument:
+          Version: 2012-10-17
+          Statement:
+            -
+              Effect: Allow
+              Principal:
+                Service:
+                  - lambda.amazonaws.com
+              Action:
+                - sts:AssumeRole
+      Path: /
+      Policies:
+          -
+            PolicyName: CloudwatchLogs
+            PolicyDocument:
+              Version: 2012-10-17
+              Statement:
+                -
+                  Effect: Allow
+                  Action:
+                    - logs:CreateLogGroup
+                  Resource:
+                    - !Sub "arn:aws:logs:${AWS::Region}:${AWS::AccountId}:*"
+                -
+                  Effect: Allow
+                  Action:
+                    - logs:CreateLogStream
+                    - logs:PutLogEvents
+                  Resource:
+                    - !Sub "arn:aws:logs:${AWS::Region}:${AWS::AccountId}:log-group:/aws/lambda/*"
+                -
+                  Effect: Allow
+                  Action:
+                    - kms:Decrypt
+                  Resource:
+                    - !Sub "arn:aws:kms:${AWS::Region}:${AWS::AccountId}:key/*"
+      ManagedPolicyArns:
+        - arn:aws:iam::aws:policy/service-role/AWSLambdaVPCAccessExecutionRole
+  LambdaUDFFunction:
+     Type: "AWS::Lambda::Function"
+     Properties:
+       FunctionName: f-kms-decrypt-varchar
+       Role: !GetAtt 'LambdaRole.Arn'
+       Timeout: 300
+       Code:
+         ZipFile: |
+          import json, boto3, os, base64
+          kms = boto3.client('kms')
+
+          def handler(event, context):
+              ret = dict()
+              res = []
+              for argument in event['arguments']:
+                  try:
+                      columnValue = argument[0]
+                      if (columnValue == None):
+                          response = None
+                      else:
+                          plaintext = kms.decrypt(CiphertextBlob=base64.b64decode(columnValue))
+                          response = plaintext["Plaintext"].decode('utf-8')
+                      res.append(response)
+                  except Exception as e:
+                      print (str(e))
+                      res.append(None)
+              ret['success'] = True
+              ret['results'] = res
+              return json.dumps(ret)
+
+       Handler: index.handler
+       Runtime: python3.7
+     DependsOn:
+       - LambdaRole

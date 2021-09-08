@@ -1,0 +1,18 @@
+AWSTemplateFormatVersion: '2010-09-09'
+Resources:
+  KMSKey:
+    Type: "AWS::KMS::Key"
+    Properties:
+      KeyPolicy:
+        Version: '2012-10-17'
+        Statement:
+        - Effect: Allow
+          Principal:
+            AWS: !Sub 'arn:aws:iam::${AWS::AccountId}:root'
+          Action: 'kms:*'
+          Resource: '*'
+  KMSKeyAlias:
+    Type: AWS::KMS::Alias
+    Properties:
+      AliasName: alias/f-kms-encrypt
+      TargetKeyId: !Ref KMSKey
