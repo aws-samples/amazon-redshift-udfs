@@ -28,7 +28,7 @@ Each function is allocated a folder.  At minimal each function will have the the
 
 - **pom.xml** - (Java Only) Lists out dependencies as well as the name of your handler function. See [f_upper_java](lambda-udfs/f_upper_java-varchar) for and example.  See [Maven Documentation](https://maven.apache.org/guides/introduction/introduction-to-the-pom.html) for more details on writing a pom.xml file.
 
-- **src/main/java/<function>/Handler.java** - (Java Only) your java handler code. See [f_upper_java](lambda-udfs/f_upper_java-varchar) for and example.  
+- **src/main/java/`function`/Handler.java** - (Java Only) your java handler code. See [f_upper_java](lambda-udfs/f_upper_java-varchar) for and example.  
 
 ### sql-udfs
 [SQL UDFs](https://docs.aws.amazon.com/redshift/latest/dg/udf-creating-a-scalar-sql-udf.html) do not require any additional files.
