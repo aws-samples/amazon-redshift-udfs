@@ -13,7 +13,7 @@ Purpose:
         if 'N' - no masking, will return source value
         if 'F' - the data should be fully masked
         if 'P' - the data should be partially masked
-
+test
 2021-09-03: written by rjvgupta
 */
 create or replace function f_mask_bigint (src bigint, class varchar, priv varchar)
