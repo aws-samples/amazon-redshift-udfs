@@ -3,10 +3,10 @@ set -e
 # Install Pip Module as Redshift Library
 
 function usage {
-	echo "./libraryInstaller.sh -m <module> -s <s3 prefix> -r <iam role> -c <cluster> -d <database> -u <db user> "
+	echo "./libraryInstaller.sh -m <module> -s <s3 location> -r <iam role> -c <cluster> -d <database> -u <db user> "
 	echo
 	echo "where <module> is the name of the Pip module to be installed"
-	echo "      <s3 prefix> is the location on S3 to upload the artifact to. Must be in format s3://bucket/prefix/"
+	echo "      <s3 location> is the location on S3 to upload the artifact to. Must be in format s3://bucket/prefix"
 	echo "      <s3 role> is the role which is attached to the Redshift cluster and has access to read from the s3 upload location"
 	echo "      <cluster> is the Redshift cluster you will deploy the function to"
 	echo "      <database> is the database you will deploy the function to"
@@ -81,6 +81,7 @@ fi
 
 execQuery()
 {
+	echo $4
   output=`aws redshift-data execute-statement --cluster-identifier $1 --database $2 --db-user $3 --sql "$4"`
   id=`echo $output | jq -r .Id`
 

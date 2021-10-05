@@ -57,6 +57,7 @@ function notNull {
 
 # make sure we have pip and the aws cli installed
 checkDep "aws"
+checkDep "jq"
 
 # look up runtime arguments of the module name and the destination S3 Prefix
 while getopts "t:f:s:k:l:r:c:d:u:n:g:x:h" opt; do
@@ -113,11 +114,18 @@ if test -f "../$type/$function/requirements.txt"; then
   # starts with 's3://'
   notNull "$s3Bucket" "Please provide the S3 Bucket to store the library package -s"
   notNull "$redshiftRole" "Please provide the Redshift role which is attached to the Redshift cluster and has access to read from the s3 upload location -r"
-  s3Loc="s3://$s3Bucket/$s3Key"
+
+	if [ -z "$s3Key" ]; then
+		s3Loc="s3://$s3Bucket"
+	else
+		s3Loc="s3://$s3Bucket/$s3Key"
+	fi
+
+	checkDep "pip3"
+
   while read dep; do
     echo Installing: $dep
-		checkDep "pip3"
-    ./libraryInstaller.sh -m $dep -s $s3Loc -r $redshiftRole -c $cluster -d $db -u $user
+    echo $(./libraryInstaller.sh -m $dep -s $s3Loc -r $redshiftRole -c $cluster -d $db -u $user)
   done < ../$type/$function/requirements.txt
 	paramsBuckets="S3Bucket=$s3Bucket S3Key=$s3Key$function.zip"
 fi
