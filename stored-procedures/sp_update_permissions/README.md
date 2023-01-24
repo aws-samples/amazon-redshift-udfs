@@ -1,4 +1,4 @@
-# Redshift sp_update_permissions stored procedure
+# sp_update_permissions
 
 Stored procedure that reads user, group and role permission matrix from Amazon S3 and updates authorisation in Redshift accordingly. It helps startups and small to medium organisations that haven't integrated Amazon Redshift with an identity provider to streamline security measures and acceess control for their data warehouse built with Amazon Redshift. This SP can be used for bulk update of permissions for principals mentioned above, at schema, table, column and row level. 
 
