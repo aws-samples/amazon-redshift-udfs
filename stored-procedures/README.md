@@ -1,5 +1,5 @@
 # Redshift Stored Procedures
-Sample and Usefull Stored Procedures
+Sample and useful Stored Procedures
 
 | Procedure                                                | Description                                                                           |
 | ---------------------------------------------------------| --------------------------------------------------------------------------------------|
