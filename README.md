@@ -1,8 +1,11 @@
 # Amazon Redshift UDFs
-A collection of user-defined functions (UDFs) for Amazon Redshift. The intent of this collection is to provide examples for defining python UDFs as well as useful functions which extend Amazon Redshift capabilities and support migrations from legacy DB platforms.
+A collection of stored procedures and user-defined functions (UDFs) for Amazon Redshift. The intent of this collection is to provide examples for defining useful functions which extend Amazon Redshift capabilities and support migrations from legacy DB platforms.
 
-## Contents
-Each function is allocated a folder.  At minimal each function will have the the following files which will be used by the [deployFunction.sh](#deployFunctionsh) script and [testFunction.sh](#testFunctionsh) scripts:
+## Stored Procedures
+Each procedure is allocated a folder.  At minimal each procedure will have a <procedure_name>.sql file which you may use to deploy the procedure.  Optionally, it may contain a README.md file for instructions on how to use the procedure and additional files used for test the procedure.
+
+## UDFs
+Each function is allocated a folder.  At minimal each function will have the following files which will be used by the [deployFunction.sh](#deployFunctionsh) script and [testFunction.sh](#testFunctionsh) scripts:
 
 - **function.sql** - the SQL script to be run in the Redshift DB which creates the UDF.  If a Lambda function, use the string `:RedshiftRole` for the IAM role to be passed in by the deployment script.
 - **input.csv** - a list of sample input parameters to the function, delimited by comma (,) and where strings are denoted with single-quotes.
@@ -72,8 +75,10 @@ We would love your contributions.  See the [contributing](contributing.md) page 
 
 > Pull requests will be tested using a Github workflow which leverages the above testing scripts. Please execute these script prior to submitting a pull request to ensure the request is approved quickly.  When executed in the test enviornment the [RedshiftRole](#redshift-role) will be defined as follows. You can create a similar role in your local environment for testing.
 
+##Appendix
+
 ### Redshift Role
-These privileges ensure the UDF can invoke the Lambda Function as well as access the uploaded `*.whl` files located in s3.  
+For Lambda UDFs, These privileges ensure UDFs can invoke the Lambda Function as well as access the uploaded `*.whl` files located in s3.  
 ```json
 {
     "Version": "2012-10-17",
