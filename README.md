@@ -2,7 +2,7 @@
 A collection of stored procedures and user-defined functions (UDFs) for Amazon Redshift. The intent of this collection is to provide examples for defining useful functions which extend Amazon Redshift capabilities and support migrations from legacy DB platforms.
 
 ## Stored Procedures
-Each procedure is allocated a folder.  At minimal each procedure will have a <procedure_name>.sql file which you may use to deploy the procedure.  Optionally, it may contain a README.md file for instructions on how to use the procedure and additional files used for test the procedure.
+Each procedure is allocated a folder.  At minimal each procedure will have a <procedure_name>.sql file which you may use to deploy the procedure.  Optionally, it may contain a README.md file for instructions on how to use the procedure and additional files used to test the procedure.
 
 ## UDFs
 Each function is allocated a folder.  At minimal each function will have the following files which will be used by the [deployFunction.sh](#deployFunctionsh) script and [testFunction.sh](#testFunctionsh) scripts:
