@@ -1,0 +1,2 @@
+1|revoke|user1|user|function|f_sql_greater (float, float)|execute
+2|grant|group1|group|function|f_sql_greater (float, float)|execute

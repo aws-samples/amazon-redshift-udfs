@@ -1,0 +1,2 @@
+1|grant|user1|user|table|test_user_management.sales|SELECT(buyer_id, price_paid) 
+2|grant|user1|user|function|f_sql_greater (float, float)|execute

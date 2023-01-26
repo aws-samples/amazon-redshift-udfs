@@ -1,0 +1,4 @@
+1|revoke|user1|user|table|test_user_management.sales|SELECT(buyer_id, price_paid) 
+2|revoke|group1|group|table|test_user_management.sales|SELECT
+1|grant|group1|group|table|ALL TABLES IN SCHEMA test_user_management|SELECT
+2|grant|role1|role|table|test_user_management.sales|SELECT

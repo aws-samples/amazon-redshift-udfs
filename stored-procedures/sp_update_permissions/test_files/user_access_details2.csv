@@ -1,0 +1,4 @@
+1|grant|user1|user|schema|test_user_management|usage
+2|revoke|user1|user|table|test_user_management.sales|select
+3|grant|group1|group|schema|test_user_management|usage
+4|grant|group1|group|table|test_user_management.sales|select

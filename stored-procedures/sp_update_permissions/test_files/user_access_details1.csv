@@ -1,0 +1,2 @@
+1|grant|user1|user|schema|test_user_management|usage
+2|grant|user1|user|table|test_user_management.sales|select
