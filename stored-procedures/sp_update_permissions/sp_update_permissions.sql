@@ -1,4 +1,4 @@
-CREATE OR REPLACE PROCEDURE update_permissions(external_schema_name IN VARCHAR(100), external_db_name IN varchar(100), external_table_name IN VARCHAR(100), iam_role_arn IN VARCHAR(250), s3_path IN VARCHAR(1000))
+CREATE OR REPLACE PROCEDURE sp_update_permissions(external_schema_name IN VARCHAR(100), external_db_name IN varchar(100), external_table_name IN VARCHAR(100), iam_role_arn IN VARCHAR(250), s3_path IN VARCHAR(1000))
 AS $$
 DECLARE
     drop_schema_query VARCHAR(2000);
