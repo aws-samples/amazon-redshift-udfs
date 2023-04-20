@@ -5,6 +5,7 @@ Sample and useful Stored Procedures
 | ---------------------------------------------------------| --------------------------------------------------------------------------------------|
 | [`sp_analyze_minimal.sql`](./sp_analyze_minimal)           | Analyze **one** column of a table. To be used on a staging table right after loading  |
 | [`sp_check_primary_key.sql`](./sp_check_primary_key)       | Check the integrity of the PRIMARY KEY declared on a table                            |
+| [`sp_check_foreign_key.sql`](./sp_check_foreign_key)       | Check the integrity of the FOREIGN KEY declared on a table and column                 |
 | [`sp_connect_by_prior.sql`](./sp_connect_by_prior)         | Calculate levels in a nested hierarchy tree                                           |
 | [`sp_controlled_access.sql`](./sp_controlled_access)       | Provide controlled access to data without granting permission on the table/view       |
 | [`sp_pivot_for.sql`](./sp_pivot_for)                       | Transpose row values into columns                                                     |
