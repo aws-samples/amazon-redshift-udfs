@@ -74,7 +74,6 @@ You are ready to move to the next steps if your query returns the rows from the 
 
 
 ## Usage
-
 To execute the stored procedure, replace input parameters in the command below with the names you used in pre-requisites steps:
 
 ```sql
@@ -83,8 +82,7 @@ CALL sp_update_permissions('[external_schema_name]', '[external_table_name]');
 ```
 If you didn't change schema and table names, the command should be:
 ```sql
-CALL sp_update_permissions('access_management', 'redshift_access_details');
-
+CALL sp_update_permissions('access_management', 'redshift_access_details','[iam_role_arn]');
 ```
 
 ## Test
