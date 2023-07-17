@@ -1,16 +1,12 @@
-CREATE OR REPLACE PROCEDURE update_permissions(external_schema_name IN VARCHAR(100), external_table_name IN VARCHAR(100))
+CREATE OR REPLACE PROCEDURE public.sp_update_permissions(external_schema_name varchar, external_table_name varchar)
 AS $$
 DECLARE
-    drop_schema_query VARCHAR(2000);
-    create_external_schema_query VARCHAR(2000);
     get_authorization_rows_query VARCHAR(2000);
-    create_external_table_query VARCHAR(2000);
     authorization_query VARCHAR(2000);
     rows RECORD;
 
 BEGIN
-
-    -- "Get authorisations" query. This is the Spectrum table reading data from the latest file stored in S3
+    -- Get authorisations query. This is the Spectrum table reading data from the latest file stored in S3
     get_authorization_rows_query = 'SELECT * FROM ' || external_schema_name || '.' || external_table_name || ';';
 
     -- Loop through rows in the file
@@ -114,4 +110,5 @@ BEGIN
  
     END LOOP;
 END;
+
 $$ LANGUAGE plpgsql;
