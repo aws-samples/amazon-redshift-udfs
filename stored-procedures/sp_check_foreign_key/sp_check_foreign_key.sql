@@ -28,6 +28,7 @@ $$
 DECLARE
     sql                 VARCHAR(MAX) := '';
     record              RECORD;
+    mixed_case_count    INT;
     pk_table            VARCHAR(256);
     pk_column           VARCHAR(256);
     inconsistency_count INTEGER      := 0;
@@ -35,6 +36,15 @@ DECLARE
 BEGIN
     IF check_table = '' OR log_table = '' OR check_column = '' THEN
         RAISE EXCEPTION 'Parameters `check_table`, `log_table`, `check_column` cannot be empty.';
+    END IF;
+
+    sql := 'SELECT COUNT(*) ' ||
+           'FROM information_schema.columns ' ||
+           'WHERE table_name = ''' || LOWER(check_table) || ''' AND column_name != ''' || LOWER(check_column) ||
+           ''' AND LOWER(column_name) = ''' || LOWER(check_column) || ''';';
+    EXECUTE sql INTO mixed_case_count;
+    IF mixed_case_count > 0 THEN
+        RAISE EXCEPTION 'There exists another column with the same identifier in different case. The procedure cannot run.';
     END IF;
 
     -- Retrieve the primary key column and table for that foreign key for the table
