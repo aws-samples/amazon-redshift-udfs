@@ -1,0 +1,94 @@
+AWSTemplateFormatVersion: '2010-09-09'
+Resources:
+  LambdaRole:
+    Type: AWS::IAM::Role
+    Properties:
+      AssumeRolePolicyDocument:
+          Version: 2012-10-17
+          Statement:
+            -
+              Effect: Allow
+              Principal:
+                Service:
+                  - lambda.amazonaws.com
+              Action:
+                - sts:AssumeRole
+      Path: /
+      Policies:
+          -
+            PolicyName: CloudwatchLogs
+            PolicyDocument:
+              Version: 2012-10-17
+              Statement:
+                -
+                  Effect: Allow
+                  Action:
+                    - logs:CreateLogGroup
+                  Resource:
+                    - !Sub "arn:aws:logs:${AWS::Region}:${AWS::AccountId}:*"
+                -
+                  Effect: Allow
+                  Action:
+                    - logs:CreateLogStream
+                    - logs:PutLogEvents
+                  Resource:
+                    - !Sub "arn:aws:logs:${AWS::Region}:${AWS::AccountId}:log-group:/aws/lambda/*"
+  LambdaLevenshteinDistance:
+    Type: "AWS::Lambda::Function"
+    Properties:
+      FunctionName: fn_lambda_levenshtein_distance
+      Role: !GetAtt 'LambdaRole.Arn'
+      Timeout: 600
+      Code:
+        ZipFile: |
+          import json
+
+          def levenshtein_distance(a, len_a, b, len_b):
+              d = [[0] * (len_b + 1) for i in range(len_a + 1)]  
+
+              for i in range(1, len_a + 1):
+                d[i][0] = i
+
+              for j in range(1, len_b + 1):
+                d[0][j] = j
+
+              for j in range(1, len_b + 1):
+                for i in range(1, len_a + 1):
+                  if a[i - 1] == b[j - 1]:
+                    cost = 0
+                  else:
+                    cost = 1
+                  d[i][j] = min(d[i - 1][j] + 1,      # deletion
+                                d[i][j - 1] + 1,      # insertion
+                                d[i - 1][j - 1] + cost) # substitution   
+              return d[len_a][len_b]
+
+          def distance(a, b):
+            len_a, len_b = len(a), len(b)
+            if len_a == 0:
+              return len_b
+            elif len_b == 0:
+              return len_a
+            else:
+              return levenshtein_distance(a, len_a, b, len_b)
+
+          def lambda_handler(event, context):
+            ret = dict()
+            res = []
+            for argument in event['arguments']:
+              try: 
+                s1=str(argument[0])
+                s2=str(argument[1])
+                for argument in event['arguments']:
+                  s1=str(argument[0])
+                  s2=str(argument[1])
+                  res.append(distance(s1, s2))
+              except Exception as e:
+                print (str(e))
+                ret['error_msg'] = str(e)
+                ret['sucess'] = False
+              ret['sucess'] = True
+              ret['results'] = res
+              return json.dumps(ret)
+      Handler: index.lambda_handler
+      Runtime: python3.7
