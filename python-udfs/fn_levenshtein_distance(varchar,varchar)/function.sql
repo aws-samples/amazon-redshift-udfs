@@ -23,7 +23,14 @@ def levenshtein_distance(a, len_a, b, len_b):
     return d[len_a][len_b]
 
 def distance(a, b):
-	len_a, len_b = len(a), len(b)
+	if a is None:
+		len_a = 0
+	else:
+		len_a = len(a)
+	if b is None:
+		len_b = 0
+	else:
+		len_b = len(b)
 	if len_a == 0:
 		return len_b
 	elif len_b == 0:
