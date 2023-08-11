@@ -89,9 +89,10 @@ notNull "$user" "Please provide the Redshift cluster user name -u"
 notNull "$schema" "Please provide the Redshift cluster namespace (schema) -n"
 
 paramsBuckets=""
-paramsVPC=""
 
 if test -z "$subnet"; then
+	paramsVPC=""
+else
 	paramsVPC="SecurityGroupId=${securityGroup} SubnetId=${subnet}"
 fi
 
