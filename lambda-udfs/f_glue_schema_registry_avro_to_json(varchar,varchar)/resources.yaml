@@ -1,0 +1,26 @@
+AWSTemplateFormatVersion: '2010-09-09'
+Resources:
+  GlueSchemaRegistry:
+    Type: AWS::Glue::Registry
+    Properties:
+      Name: AvroLambdaUDF
+  AvroSchema:
+    Type: AWS::Glue::Schema
+    Properties: 
+      Compatibility: BACKWARD
+      DataFormat: AVRO
+      Name: lambda_udf_stream
+      Registry: 
+        Arn:
+          !Ref GlueSchemaRegistry
+      SchemaDefinition: |
+        {
+            "type": "record",
+            "name": "User",
+            "namespace": "example.avro",
+            "fields": [
+                {"type": "string", "name": "name"},
+                {"type": ["int", "null"], "name": "favorite_number"},
+                {"type": ["string", "null"], "name": "favorite_color"}
+            ]
+        }

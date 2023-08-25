@@ -1,0 +1,150 @@
+AWSTemplateFormatVersion: '2010-09-09'
+Parameters:
+  SecurityGroupId:
+    Description: the SG this function should run in to have connectivity to Redshift
+    Type: String
+  SubnetId:
+    Description: the Subnet this function should run in to have connectivity to Redshift
+    Type: String
+  S3Bucket:
+    Description: the S3 Bucket containing the Lambda layer
+    Type: String
+  S3Key:
+    Description: the S3 Key containing the Lambda layer
+    Type: String
+Resources:
+  LambdaRole:
+    Type: AWS::IAM::Role
+    Properties:
+      AssumeRolePolicyDocument:
+          Version: 2012-10-17
+          Statement:
+            -
+              Effect: Allow
+              Principal:
+                Service:
+                  - lambda.amazonaws.com
+              Action:
+                - sts:AssumeRole
+      Path: /
+      ManagedPolicyArns:
+        - !Sub "arn:${AWS::Partition}:iam::aws:policy/service-role/AWSLambdaVPCAccessExecutionRole"
+      Policies:
+          -
+            PolicyName: CloudwatchLogs
+            PolicyDocument:
+              Version: 2012-10-17
+              Statement:
+                -
+                  Effect: Allow
+                  Action:
+                    - logs:CreateLogGroup
+                  Resource:
+                    - !Sub "arn:${AWS::Partition}:logs:${AWS::Region}:${AWS::AccountId}:*"
+                -
+                  Effect: Allow
+                  Action:
+                    - logs:CreateLogStream
+                    - logs:PutLogEvents
+                  Resource:
+                    - !Sub "arn:${AWS::Partition}:logs:${AWS::Region}:${AWS::AccountId}:log-group:/aws/lambda/*"
+                -
+                  Effect: Allow
+                  Action:
+                    - glue:GetSchemaVersion
+                  Resource:
+                    - !Sub "arn:${AWS::Partition}:glue:${AWS::Region}:${AWS::AccountId}:registry/AvroLambdaUDF"
+                    - !Sub "arn:${AWS::Partition}:glue:${AWS::Region}:${AWS::AccountId}:schema/AvroLambdaUDF/*"
+  AvroLayer:
+    Type: AWS::Lambda::LayerVersion
+    Properties: 
+      CompatibleRuntimes: 
+        - python3.9
+      Content: 
+        S3Bucket: !Ref S3Bucket
+        S3Key: !Ref S3Key
+      Description: Python 3.9 Avro library
+      LayerName: avro
+  LambdaUDFFunction:
+     Type: "AWS::Lambda::Function"
+     Properties:
+       FunctionName: f-glue-schema-registry-avro-to-json-varchar-varchar
+       Role: !GetAtt 'LambdaRole.Arn'
+       Handler: index.handler
+       Runtime: python3.9
+       Timeout: 300
+       Layers:
+        - !Ref AvroLayer
+       VpcConfig:
+        SecurityGroupIds:
+          - !Ref SecurityGroupId
+        SubnetIds:
+          - !Ref SubnetId
+       Environment:
+        Variables:
+          GLUE_REGISTRY_NAME: AvroLambdaUDF
+       Code:
+         ZipFile: |
+          import functools
+          import io
+          import json
+          import os
+
+          import avro.io
+          import avro.schema
+          import boto3
+
+          glue = boto3.client("glue")
+          REGISTRY_NAME = os.environ["GLUE_REGISTRY_NAME"]
+
+
+          @functools.lru_cache(maxsize=32)
+          def _get_schema(stream_name: str) -> avro.schema.Schema:
+              """Get an Avro schema from the registry by stream name.
+
+              :param stream_name: The stream name for the schema to request
+              :returns: The Avro schema object
+              """
+              schema_id = {"RegistryName": REGISTRY_NAME, "SchemaName": stream_name}
+              schema_resp = glue.get_schema_version(
+                  SchemaId=schema_id,
+                  SchemaVersionNumber={"LatestVersion": True},
+              )
+              schema = schema_resp["SchemaDefinition"]
+              return avro.schema.parse(schema)
+
+
+          def _avro_to_json(stream_name: str, data: str) -> str:
+              """Decode a single Hex-encoded Avro datum using the schema associated with the stream name.
+
+              :param stream_name: The stream name for the data
+              :param data: The Hex-encoded Avro binary data
+              :returns: A JSON encoded version of the data
+              """
+              schema = _get_schema(stream_name)
+              data_bytes = io.BytesIO(bytes.fromhex(data))
+              decoder = avro.io.BinaryDecoder(data_bytes)
+              reader = avro.io.DatumReader(schema)
+              decoded = reader.read(decoder)
+              return json.dumps(decoded)
+
+
+          def handler(event, context):
+              try:
+                  results = []
+                  for stream_name, data in event["arguments"]:
+                      results.append(_avro_to_json(stream_name, data))
+                  return json.dumps(
+                      {
+                          "success": True,
+                          "num_records": event["num_records"],
+                          "results": results,
+                      }
+                  )
+              except Exception as e:
+                  return json.dumps(
+                      {
+                          "success": False,
+                          "error_msg": f"Error processing Lambda event. Error: {e}. Event: {event}",
+                      }
+                  )
