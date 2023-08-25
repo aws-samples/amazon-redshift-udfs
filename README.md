@@ -41,7 +41,9 @@ Located in the `bin` directory are tools to deploy and test your UDF functions.
 
 ### deployFunction.sh
 This script will orchestrate the deployment of the UDF to your AWS environment. This includes
-1. Looping through modules in a `requirements.txt` file (if present) and installing them using the `libraryInstall.sh` script by uploading the packages to the `$S3_LOC` and creating the library in Redshift using the `$REDSHIFT_ROLE`.
+1. Looping through modules in a `requirements.txt` file (if present) 
+    * For Python UDFs, installs dependencies using the `libraryInstall.sh` script by uploading the packages to the `$S3_LOC` and creating the library in Redshift using the `$REDSHIFT_ROLE`.
+    * For Lambda UDFs, installs dependencies as a Lambda layer which is referenced in the Lambda CloudFormation using the S3Bucket and S3Key parameters (-s and -k, respectively)
 2. If deploying a nodeJS lambda UDF, using `package.json` to run `npm install` packaging the code and uploading the `zip` file to the `$S3_LOC`.
 3. If deploying a Java lambda UDF, using `pom.xml` to run `mvn package` packaging the code and uploading the `jar` to the `$S3_LOC`.
 4. If deploying a lambda UDF, using `lambda.yaml` to run `aws cloudformation deploy` and build the needed resources.

@@ -122,13 +122,19 @@ if test -f "../$type/$function/requirements.txt"; then
 		s3Loc="s3://$s3Bucket/$s3Key"
 	fi
 
-	checkDep "pip3"
-
-  while read dep; do
-    echo Installing: $dep
-    echo $(./libraryInstaller.sh -m $dep -s $s3Loc -r $redshiftRole -c $cluster -d $db -u $user)
-  done < ../$type/$function/requirements.txt
-	paramsBuckets="S3Bucket=$s3Bucket S3Key=$s3Key$function.zip"
+  if [ "${type}" == "lambda-udfs" ]; then 
+    echo "Building layer"
+    notNull "$s3Key" "Please provide S3 key for Lambda layer with -k"
+    ./layerInstaller.sh -s $s3Loc -r "../$type/$function/requirements.txt" -f $function
+    paramsBuckets="S3Bucket=$s3Bucket S3Key=$s3Key"
+  else
+    checkDep "pip3"
+    while read dep; do
+      echo Installing: $dep
+      ./libraryInstaller.sh -m $dep -s $s3Loc -r $redshiftRole -c $cluster -d $db -u $user
+    done < ../$type/$function/requirements.txt
+    paramsBuckets="S3Bucket=$s3Bucket S3Key=$s3Key$function.zip"
+  fi
 fi
 
 if test -f "../$type/$function/pom.xml"; then
