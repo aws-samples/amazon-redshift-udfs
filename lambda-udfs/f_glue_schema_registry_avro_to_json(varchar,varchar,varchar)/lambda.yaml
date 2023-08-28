@@ -68,7 +68,7 @@ Resources:
   LambdaUDFFunction:
      Type: "AWS::Lambda::Function"
      Properties:
-       FunctionName: f-glue-schema-registry-avro-to-json-varchar-varchar
+       FunctionName: f-glue-schema-registry-avro-to-json-varchar-varchar-varchar
        Role: !GetAtt 'LambdaRole.Arn'
        Handler: index.handler
        Runtime: python3.9
@@ -80,9 +80,6 @@ Resources:
           - !Ref SecurityGroupId
         SubnetIds:
           - !Ref SubnetId
-       Environment:
-        Variables:
-          GLUE_REGISTRY_NAME: AvroLambdaUDF
        Code:
          ZipFile: |
           import functools
@@ -95,33 +92,32 @@ Resources:
           import boto3
 
           glue = boto3.client("glue")
-          REGISTRY_NAME = os.environ["GLUE_REGISTRY_NAME"]
 
 
           @functools.lru_cache(maxsize=32)
-          def _get_schema(stream_name: str) -> avro.schema.Schema:
+          def _get_schema(registry_name: str, stream_name: str) -> avro.schema.Schema:
               """Get an Avro schema from the registry by stream name.
 
               :param stream_name: The stream name for the schema to request
               :returns: The Avro schema object
               """
-              schema_id = {"RegistryName": REGISTRY_NAME, "SchemaName": stream_name}
               schema_resp = glue.get_schema_version(
-                  SchemaId=schema_id,
+                  SchemaId={"RegistryName": registry_name, "SchemaName": stream_name},
                   SchemaVersionNumber={"LatestVersion": True},
               )
               schema = schema_resp["SchemaDefinition"]
               return avro.schema.parse(schema)
 
 
-          def _avro_to_json(stream_name: str, data: str) -> str:
+          def _avro_to_json(registry_name: str, stream_name: str, data: str) -> str:
               """Decode a single Hex-encoded Avro datum using the schema associated with the stream name.
 
+              :param registry_name: The Glue Schema Registry name for the schema
               :param stream_name: The stream name for the data
               :param data: The Hex-encoded Avro binary data
               :returns: A JSON encoded version of the data
               """
-              schema = _get_schema(stream_name)
+              schema = _get_schema(registry_name, stream_name)
               data_bytes = io.BytesIO(bytes.fromhex(data))
               decoder = avro.io.BinaryDecoder(data_bytes)
               reader = avro.io.DatumReader(schema)
@@ -132,8 +128,8 @@ Resources:
           def handler(event, context):
               try:
                   results = []
-                  for stream_name, data in event["arguments"]:
-                      results.append(_avro_to_json(stream_name, data))
+                  for registry_name, stream_name, data in event["arguments"]:
+                      results.append(_avro_to_json(registry_name, stream_name, data))
                   return json.dumps(
                       {
                           "success": True,

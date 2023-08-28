@@ -6,8 +6,8 @@ Purpose:
 
 2023-08-25: written by mmehrten
 */ 
-CREATE OR REPLACE EXTERNAL FUNCTION f_glue_schema_registry_avro_to_json (varchar, varchar) 
+CREATE OR REPLACE EXTERNAL FUNCTION f_glue_schema_registry_avro_to_json (varchar, varchar, varchar) 
 RETURNS varchar 
 IMMUTABLE
-LAMBDA 'f-glue-schema-registry-avro-to-json-varchar-varchar' 
+LAMBDA 'f-glue-schema-registry-avro-to-json-varchar-varchar-varchar' 
 IAM_ROLE ':RedshiftRole';
