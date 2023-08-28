@@ -53,8 +53,8 @@ Resources:
                   Action:
                     - glue:GetSchemaVersion
                   Resource:
-                    - !Sub "arn:${AWS::Partition}:glue:${AWS::Region}:${AWS::AccountId}:registry/AvroLambdaUDF"
-                    - !Sub "arn:${AWS::Partition}:glue:${AWS::Region}:${AWS::AccountId}:schema/AvroLambdaUDF/*"
+                    - !Sub "arn:${AWS::Partition}:glue:${AWS::Region}:${AWS::AccountId}:registry/*"
+                    - !Sub "arn:${AWS::Partition}:glue:${AWS::Region}:${AWS::AccountId}:schema/*/*"
   AvroLayer:
     Type: AWS::Lambda::LayerVersion
     Properties: 
@@ -62,7 +62,7 @@ Resources:
         - python3.9
       Content: 
         S3Bucket: !Ref S3Bucket
-        S3Key: !Ref S3Key
+        S3Key: !Sub "${S3Key}/avro_1.11.2.zip"
       Description: Python 3.9 Avro library
       LayerName: avro
   LambdaUDFFunction:

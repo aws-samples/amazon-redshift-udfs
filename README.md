@@ -9,6 +9,7 @@ Each function is allocated a folder.  At minimal each function will have the fol
 
 - **function.sql** - the SQL script to be run in the Redshift DB which creates the UDF.  If a Lambda function, use the string `:RedshiftRole` for the IAM role to be passed in by the deployment script.
 - **input.csv** - a list of sample input parameters to the function, delimited by comma (,) and where strings are denoted with single-quotes.
+  - MUST end in a trailing newline
 - **output.csv** - a list of expected output values from the function.
 
 ### python-udfs
@@ -22,6 +23,8 @@ Each function is allocated a folder.  At minimal each function will have the fol
 [Lambda UDFs](https://docs.aws.amazon.com/redshift/latest/dg/udf-creating-a-lambda-sql-udf.html) may include the following additional file:
 
 - **lambda.yaml** - [REQUIRED] a CFN template containing the Lambda function.  The lambda function name should match the redshift function name with '_' replaced with '-'  e.g. (f-upper-python-varchar). The template may contain additional AWS services required by the lambda function and should contain an IAM Role which can be assumed by the lambda service and which grants access to those additional services (if applicable).  In a production deployment, be sure to add resource restrictions to the Lambda IAM Role to ensure the permissions are scoped down.
+    * Each dependency in the `requirements.txt` file needs a corresponding Layer definition in the `lambda.yaml` CloudFormation template
+    * See [the Glue Schema Registry UDF](https://github.com/aws-samples/amazon-redshift-udfs/tree/master/lambda-udfs/f_glue_schema_registry_avro_to_json(varchar,varchar)/lambda.yaml) as an example
 
 - **resources.yaml** - a CFN template containing external resources which may be referenced by the Lambda function.   These resources are for testing only.
 
@@ -44,6 +47,9 @@ This script will orchestrate the deployment of the UDF to your AWS environment. 
 1. Looping through modules in a `requirements.txt` file (if present) 
     * For Python UDFs, installs dependencies using the `libraryInstall.sh` script by uploading the packages to the `$S3_LOC` and creating the library in Redshift using the `$REDSHIFT_ROLE`.
     * For Lambda UDFs, installs dependencies as a Lambda layer which is referenced in the Lambda CloudFormation using the S3Bucket and S3Key parameters (-s and -k, respectively)
+      * Lambda Layers will be built with a separate S3 archive for each dependency in the `requirements.txt` file, with version information in the S3 key
+      * We recommend using `==` dependencies to exactly specify the version required for your UDF dependencies
+    * NOTE: `requirements.txt` must end in a trailing newline
 2. If deploying a nodeJS lambda UDF, using `package.json` to run `npm install` packaging the code and uploading the `zip` file to the `$S3_LOC`.
 3. If deploying a Java lambda UDF, using `pom.xml` to run `mvn package` packaging the code and uploading the `jar` to the `$S3_LOC`.
 4. If deploying a lambda UDF, using `lambda.yaml` to run `aws cloudformation deploy` and build the needed resources.

@@ -124,8 +124,9 @@ if test -f "../$type/$function/requirements.txt"; then
 
   if [ "${type}" == "lambda-udfs" ]; then 
     echo "Building layer"
-    notNull "$s3Key" "Please provide S3 key for Lambda layer with -k"
-    ./layerInstaller.sh -s $s3Loc -r "../$type/$function/requirements.txt" -f $function
+    cat ../$type/$function/requirements.txt | while read dep; do
+      ./layerInstaller.sh -s "${s3Loc}" -r "${dep}" -f "${function}"
+    done
     paramsBuckets="S3Bucket=$s3Bucket S3Key=$s3Key"
   else
     checkDep "pip3"

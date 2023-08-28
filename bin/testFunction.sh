@@ -12,11 +12,11 @@ function usage {
 	echo "./deployFunction.sh -t <type> -f <function> -c <cluster> -d <database> -u <db user> "
 	echo
 	echo "where <type> is the type of function to be installed. e.g. python-udfs, lambda-udfs, sql-udfs"
-  echo "      <function> is the name of the function, including the parameters and enclosed in quotes e.g. \"f_bitwise_to_string(bigint,int)\""
+	echo "      <function> is the name of the function, including the parameters and enclosed in quotes e.g. \"f_bitwise_to_string(bigint,int)\""
 	echo "      <cluster> is the Redshift cluster you will deploy the function to"
 	echo "      <database> is the database you will deploy the function to"
 	echo "      <db user> is the db user who will create the function"
-  echo "      <schema> is the db schema where the function will be created"
+	echo "      <schema> is the db schema where the function will be created"
 
 	exit 0;
 }
@@ -64,7 +64,7 @@ while getopts "t:f:s:l:r:c:d:u:n:h" opt; do
 		c) cluster="$OPTARG";;
 		d) db="$OPTARG";;
 		u) user="$OPTARG";;
-    n) schema="$OPTARG";;
+		n) schema="$OPTARG";;
 		h) usage;;
 		\?) echo "Invalid option: -"$OPTARG"" >&2
 			exit 1;;
@@ -128,5 +128,6 @@ echo "$sql;$sql1"
 output=`execQuery $cluster $db $user $schema "$sql" "$sql1"`
 echo $output | jq -r '.Records | .[] | [.[0].stringValue] | .[]' > output.csv
 diff output.csv "../$type/$function/output.csv"
+echo "Test passed. Result from Redshift: "
 cat output.csv
 rm output.csv
