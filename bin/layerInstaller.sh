@@ -59,6 +59,7 @@ fi
 TMPDIR=.tmp
 if [ ! -d "$TMPDIR" ]; then
   mkdir $TMPDIR
+  chmod 2755 $TMPDIR
 fi
 cd "${TMPDIR}"
 
