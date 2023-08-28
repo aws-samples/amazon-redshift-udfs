@@ -8,25 +8,24 @@ Each procedure is allocated a folder.  At minimal each procedure will have a <pr
 Each function is allocated a folder.  At minimal each function will have the following files which will be used by the [deployFunction.sh](#deployFunctionsh) script and [testFunction.sh](#testFunctionsh) scripts:
 
 - **function.sql** - the SQL script to be run in the Redshift DB which creates the UDF.  If a Lambda function, use the string `:RedshiftRole` for the IAM role to be passed in by the deployment script.
-- **input.csv** - a list of sample input parameters to the function, delimited by comma (,) and where strings are denoted with single-quotes.
-  - MUST end in a trailing newline
+- **input.csv** - a list of sample input parameters to the function, delimited by comma (,) and where strings are denoted with single-quotes.  Note: file MUST have a trailing newline character.
 - **output.csv** - a list of expected output values from the function.
 
 ### python-udfs
 
 [Python UDFs](https://docs.aws.amazon.com/redshift/latest/dg/udf-creating-a-scalar-udf.html) may include the following additional file:
 
-- **requirements.txt** - If your function requires modules not available already in Redshift, a list of modules.  The modules will be packaged, uploaded to S3, and mapped to a [library](https://docs.aws.amazon.com/redshift/latest/dg/r_CREATE_LIBRARY.html) in Redshift.  
+- **requirements.txt** - If your function requires modules not available already in Redshift, a list of modules.  The modules will be packaged, uploaded to S3, and mapped to a [library](https://docs.aws.amazon.com/redshift/latest/dg/r_CREATE_LIBRARY.html) in Redshift.  Note: file MUST havea a trailing newline.
 
 ### lambda-udfs
 
 [Lambda UDFs](https://docs.aws.amazon.com/redshift/latest/dg/udf-creating-a-lambda-sql-udf.html) may include the following additional file:
 
-- **lambda.yaml** - [REQUIRED] a CFN template containing the Lambda function.  The lambda function name should match the redshift function name with '_' replaced with '-'  e.g. (f-upper-python-varchar). The template may contain additional AWS services required by the lambda function and should contain an IAM Role which can be assumed by the lambda service and which grants access to those additional services (if applicable).  In a production deployment, be sure to add resource restrictions to the Lambda IAM Role to ensure the permissions are scoped down.
-    * Each dependency in the `requirements.txt` file needs a corresponding Layer definition in the `lambda.yaml` CloudFormation template
-    * See [the Glue Schema Registry UDF](https://github.com/aws-samples/amazon-redshift-udfs/tree/master/lambda-udfs/f_glue_schema_registry_avro_to_json(varchar,varchar)/lambda.yaml) as an example
+- **lambda.yaml** - [REQUIRED] a CFN template containing the Lambda function.  The lambda function name should match the redshift function name with '_' replaced with '-'  e.g. (f-upper-python-varchar). The template may contain additional AWS services required by the lambda function and should contain an IAM Role which can be assumed by the lambda service and which grants access to those additional services (if applicable).  These samples will use "*" for IAM resource policies.  In a production deployment, modify IAM Role policies to scope down access.
 
-- **resources.yaml** - a CFN template containing external resources which may be referenced by the Lambda function.   These resources are for testing only.
+- **resources.yaml** - a CFN template containing external resources which may be referenced by the Lambda function. These resources are for testing only.
+
+- **requirements.txt** - (Python Only) If your function requires modules not available already in the Lambda Python container.  The modules will be packaged, uploaded to S3, and corresponding Lambda layers will be created. See [the Glue Schema Registry UDF](https://github.com/aws-samples/amazon-redshift-udfs/tree/master/lambda-udfs/f_glue_schema_registry_avro_to_json(varchar,varchar)/lambda.yaml) as an example. Note: file MUST havea a trailing newline.
 
 - **package.json** - (NodeJS Only) If your function requires modules not available already in Lambda, a list of modules.  The modules will be packaged, uploaded to S3, and mapped to your Lambda function. See [f_mysql_lookup_nodejs](lambda-udfs/f_mysql_lookup_nodejs-varchar-varchar-varchar) for and example.  
 
@@ -46,10 +45,7 @@ Located in the `bin` directory are tools to deploy and test your UDF functions.
 This script will orchestrate the deployment of the UDF to your AWS environment. This includes
 1. Looping through modules in a `requirements.txt` file (if present) 
     * For Python UDFs, installs dependencies using the `libraryInstall.sh` script by uploading the packages to the `$S3_LOC` and creating the library in Redshift using the `$REDSHIFT_ROLE`.
-    * For Lambda UDFs, installs dependencies as a Lambda layer which is referenced in the Lambda CloudFormation using the S3Bucket and S3Key parameters (-s and -k, respectively)
-      * Lambda Layers will be built with a separate S3 archive for each dependency in the `requirements.txt` file, with version information in the S3 key
-      * We recommend using `==` dependencies to exactly specify the version required for your UDF dependencies
-    * NOTE: `requirements.txt` must end in a trailing newline
+    * For Lambda UDFs, installs dependencies as Lambda layers which are referenced in the Lambda CloudFormation using the S3Bucket and S3Key parameters (-s and -k, respectively).
 2. If deploying a nodeJS lambda UDF, using `package.json` to run `npm install` packaging the code and uploading the `zip` file to the `$S3_LOC`.
 3. If deploying a Java lambda UDF, using `pom.xml` to run `mvn package` packaging the code and uploading the `jar` to the `$S3_LOC`.
 4. If deploying a lambda UDF, using `lambda.yaml` to run `aws cloudformation deploy` and build the needed resources.
