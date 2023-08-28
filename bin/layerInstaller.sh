@@ -56,6 +56,12 @@ if [ ! -z "${dependencyVersion}" ]; then
 	archiveName="${s3Path}/${dependencyName}_${dependencyVersion}.zip"
 fi
 
+TMPDIR=.tmp
+if [ ! -d "$TMPDIR" ]; then
+  mkdir $TMPDIR
+fi
+cd "${TMPDIR}"
+
 echo "Building Lambda layer inside Docker container..."
 mkdir -p "python/lib/python${python_version}/site-packages"
 echo "${requirement}" > requirements.txt
@@ -67,11 +73,12 @@ docker run \
 
 echo "Built, zipping layer contents..."
 zip -r "${function}.zip" python > /dev/null
+cd -
 
 echo "Zipped, publishing to ${archiveName}..."
-aws s3 cp "${function}.zip" "${archiveName}"
+aws s3 cp "${TMPDIR}/${function}.zip" "${archiveName}"
 
 echo "Published, cleaning up..."
-rm -r python/ "${function}.zip" requirements.txt
+rm -rf "${TMPDIR}"
 
 echo "Complete."
