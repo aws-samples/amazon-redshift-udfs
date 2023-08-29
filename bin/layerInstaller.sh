@@ -66,8 +66,10 @@ cd "${TMPDIR}"
 echo "Building Lambda layer inside Docker container..."
 mkdir -p "python/lib/python${python_version}/site-packages"
 echo "${requirement}" > requirements.txt
+export UID
 docker run \
     -v "$PWD":/var/task \
+	--user $UID:$UID \
     "public.ecr.aws/sam/build-python${python_version}" \
     /bin/sh \
     -c "pip install -r requirements.txt -t python/lib/python${python_version}/site-packages/; exit"
