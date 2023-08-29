@@ -81,9 +81,10 @@ fi
 
 execQuery()
 {
-	echo $4
+  echo $4
   output=`aws redshift-data execute-statement --cluster-identifier $1 --database $2 --db-user $3 --sql "$4"`
   id=`echo $output | jq -r .Id`
+  notNull "$id" "Error running execute-statement"
 
   status="SUBMITTED"
   while [ "$status" != "FINISHED" ] && [ "$status" != "FAILED" ]

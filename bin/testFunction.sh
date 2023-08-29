@@ -24,6 +24,7 @@ function usage {
 execQuery() {
   output=`aws redshift-data batch-execute-statement --cluster-identifier $1 --database $2 --db-user $3 --sql "set search_path to $4; $5" "$6"`
   id=`echo $output | jq -r .Id`
+  notNull "$id" "Error running batch-execute-statement"
   status="SUBMITTED"
   while [ "$status" != "FINISHED" ] && [ "$status" != "FAILED" ]
   do
