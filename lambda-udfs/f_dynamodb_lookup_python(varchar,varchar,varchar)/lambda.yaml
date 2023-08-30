@@ -68,19 +68,19 @@ Resources:
 
 
             def handler(event, context):
-                response = {"success": False, "num_records": event["num_records"]}
+                redshift_response = {"success": False, "num_records": event["num_records"]}
                 try:
                     result = []
                     for table_name, column_name, column_value in event["arguments"]:
                         table = dynamodb.Table(table_name)
                         try:
-                            response = table.get_item(Key={column_name: column_value})
-                            result.append(json.dumps(response["Item"], cls=DecimalEncoder))
+                            ddb_response = table.get_item(Key={column_name: column_value})
+                            result.append(json.dumps(ddb_response["Item"], cls=DecimalEncoder))
                         except Exception as e:
                             print(f"Error retrieving from DDB: {e}")
                             result.append(None)
-                    response["success"] = True
-                    response["results"] = result
+                    redshift_response["success"] = True
+                    redshift_response["results"] = result
                 except Exception as e:
-                    response["error_msg"] = str(e)
-                return json.dumps(response)
+                    redshift_response["error_msg"] = str(e)
+                return json.dumps(redshift_response)
