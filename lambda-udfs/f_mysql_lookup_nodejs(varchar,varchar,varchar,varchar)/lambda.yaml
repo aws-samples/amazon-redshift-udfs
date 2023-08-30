@@ -53,7 +53,7 @@ Resources:
                   Resource:
                     - !Sub "arn:${AWS::Partition}:secretsmanager:${AWS::Region}:${AWS::AccountId}:secret:*"
       ManagedPolicyArns:
-        - arn:${AWS::Partition}:iam::aws:policy/service-role/AWSLambdaVPCAccessExecutionRole
+        - !Sub "arn:${AWS::Partition}:iam::aws:policy/service-role/AWSLambdaVPCAccessExecutionRole"
   LambdaUDFFunction:
      Type: "AWS::Lambda::Function"
      Properties:
