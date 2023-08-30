@@ -57,30 +57,37 @@ Resources:
        Timeout: 300
        Code:
          ZipFile: |
+            import decimal
             import json
+
             import boto3
-            dynamodb = boto3.resource('dynamodb')
+
+            dynamodb = boto3.resource("dynamodb")
+
+
+            class DecimalEncoder(json.JSONEncoder):
+                """Handle JSON encoding of Decimal data (necessary because TypeDeserializer defaults to Decimal for floating point values)."""
+
+                def default(self, o):
+                    if isinstance(o, decimal.Decimal):
+                        return str(o)
+                    return super(DecimalEncoder, self).default(o)
+
 
             def handler(event, context):
-             print("Received event: " + json.dumps(event, indent=2))
-             ret = dict()
-             try:
-              tableName = event["arguments"][0][0]
-              columnName = event["arguments"][0][1]
-
-              table = dynamodb.Table(tableName)
-              table.item_count
-              res = []
-              for argument in event['arguments']:
-               try:
-                columnValue = argument[2]
-                response = table.get_item(Key={columnName: columnValue })
-                res.append(json.dumps(response["Item"]))
-               except:
-                res.append(None)
-              ret['success'] = True
-              ret['results'] = res
-             except Exception as e:
-              ret['success'] = False
-              ret['error_msg'] = str(e)
-             return json.dumps(ret)
+                response = {"success": False, "num_records": event["num_records"]}
+                try:
+                    result = []
+                    for table_name, column_name, column_value in event["arguments"]:
+                        table = dynamodb.Table(table_name)
+                        try:
+                            response = table.get_item(Key={column_name: column_value})
+                            result.append(json.dumps(response["Item"], cls=DecimalEncoder))
+                        except Exception as e:
+                            print(f"Error retrieving from DDB: {e}")
+                            result.append(None)
+                    response["success"] = True
+                    response["results"] = result
+                except Exception as e:
+                    response["error_msg"] = str(e)
+                return json.dumps(response)

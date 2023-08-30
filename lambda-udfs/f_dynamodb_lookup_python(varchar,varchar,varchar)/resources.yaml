@@ -97,12 +97,12 @@ Resources:
             else:
               try:
                 table = dynamodb.Table(event['ResourceProperties']['DynamoTableName'])
-                table.put_item(Item={'id':'1','fname':'John','lname':'Doe'})
-                table.put_item(Item={'id':'2','fname':'Jane','lname':'Doe'})
-                table.put_item(Item={'id':'3','fname':'Carlos','lname':'Salazar'})
-                table.put_item(Item={'id':'4','fname':'Diego','lname':'Ramirez'})
-                table.put_item(Item={'id':'5','fname':'Mary','lname':'Major'})
-                table.put_item(Item={'id':'6','fname':'Richard','lname':'Roe'})
+                table.put_item(Item={'id':'1','fname':'John','lname':'Doe','size':2})
+                table.put_item(Item={'id':'2','fname':'Jane','lname':'Doe','size':3})
+                table.put_item(Item={'id':'3','fname':'Carlos','lname':'Salazar','size':5})
+                table.put_item(Item={'id':'4','fname':'Diego','lname':'Ramirez','size':7})
+                table.put_item(Item={'id':'5','fname':'Mary','lname':'Major','size':11})
+                table.put_item(Item={'id':'6','fname':'Richard','lname':'Roe','size':13})
                 send(event, context, 'SUCCESS', {'Data': 'Insert complete'})
               except Exception as e:
                 print(e)

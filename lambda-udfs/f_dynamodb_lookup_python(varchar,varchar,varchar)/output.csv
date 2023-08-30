@@ -1,6 +1,6 @@
 null
-{"lname": "Doe", "id": "1", "fname": "John"}
-{"lname": "Doe", "id": "2", "fname": "Jane"}
-{"lname": "Salazar", "id": "3", "fname": "Carlos"}
-{"lname": "Ramirez", "id": "4", "fname": "Diego"}
+{"size": "2", "lname": "Doe", "id": "1", "fname": "John"}
+{"size": "3", "lname": "Doe", "id": "2", "fname": "Jane"}
+{"size": "5", "lname": "Salazar", "id": "3", "fname": "Carlos"}
+{"size": "7", "lname": "Ramirez", "id": "4", "fname": "Diego"}
 null
