@@ -128,7 +128,11 @@ sql1="select $name(${params:1})::varchar from #$name order by seq;"
 echo "$sql;$sql1"
 output=`execQuery $cluster $db $user $schema "$sql" "$sql1"`
 echo $output | jq -r '.Records | .[] | [.[0].stringValue] | .[]' > output.csv
-diff output.csv "../$type/$function/output.csv"
-echo "Test passed. Result from Redshift: "
-cat output.csv
-rm output.csv
+if test -f "../$type/$function/output.csv"; then
+  diff output.csv "../$type/$function/output.csv"
+  echo "Test passed. Result from Redshift: "
+  cat output.csv
+  rm output.csv
+else 
+  echo "Test skipped because output may vary based on your deployment."  
+fi
