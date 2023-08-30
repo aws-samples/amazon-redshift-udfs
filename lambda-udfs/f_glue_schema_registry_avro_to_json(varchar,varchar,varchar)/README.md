@@ -3,6 +3,8 @@
 This sample function demonstrates how to create/use lambda UDFs in Python to convert Avro encoded data into JSON for use in Redshift SUPER data type using the Glue Schema Registry.
 Blog link TODO.
 
+![Example Architecture](https://github.com/aws-samples/amazon-redshift-udfs/blob/master/lambda-udfs/f_glue_schema_registry_avro_to_json(varchar%2Cvarchar%2Cvarchar)/example.png)
+
 ## Arguments: 
 1.  `registry_name`: The Glue Schema Registry name for the schema
 2.  `schema_name`: The schema name for the data to retrieve from the registry

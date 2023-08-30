@@ -1,0 +1,98 @@
+AWSTemplateFormatVersion: '2010-09-09'
+Resources:
+  LambdaRole:
+    Type: AWS::IAM::Role
+    Properties:
+      AssumeRolePolicyDocument:
+          Version: 2012-10-17
+          Statement:
+            -
+              Effect: Allow
+              Principal:
+                Service:
+                  - lambda.amazonaws.com
+              Action:
+                - sts:AssumeRole
+      Path: /
+      Policies:
+          -
+            PolicyName: CloudwatchLogs
+            PolicyDocument:
+              Version: 2012-10-17
+              Statement:
+                -
+                  Effect: Allow
+                  Action:
+                    - logs:CreateLogGroup
+                  Resource:
+                    - !Sub "arn:${AWS::Partition}:logs:${AWS::Region}:${AWS::AccountId}:*"
+                -
+                  Effect: Allow
+                  Action:
+                    - logs:CreateLogStream
+                    - logs:PutLogEvents
+                  Resource:
+                    - !Sub "arn:${AWS::Partition}:logs:${AWS::Region}:${AWS::AccountId}:log-group:/aws/lambda/*"
+  LambdaUDFFunction:
+     Type: "AWS::Lambda::Function"
+     Properties:
+       FunctionName: f-unmarshall-dynamodb-stream-data-varchar
+       Role: !GetAtt 'LambdaRole.Arn'
+       Handler: index.handler
+       Runtime: python3.9
+       Timeout: 300
+       Code:
+         ZipFile: |
+          import decimal
+          import json
+          from typing import Dict
+
+          from boto3.dynamodb.types import TypeDeserializer
+
+          deserializer = TypeDeserializer()
+
+
+          class DecimalEncoder(json.JSONEncoder):
+              """Handle JSON encoding of Decimal data (necessary because TypeDeserializer defaults to Decimal for floating point values)."""
+
+              def default(self, o):
+                  if isinstance(o, decimal.Decimal):
+                      return str(o)
+                  return super(DecimalEncoder, self).default(o)
+
+
+          def _ddb_to_json(data: Dict, prop: str) -> Dict:
+              """Convert DynamoDB encoded data into normal JSON.
+
+              :param data: A mapping of {"key": {dynamo db encoded data}}
+              :param prop: The key to convert from the input data (e.g. Keys or NewImage from DynamoDB Streams)
+              """
+              if prop not in data:
+                  return {}
+              return deserializer.deserialize({"M": data[prop]})
+
+
+          def parse_dynamodb(dynamodb_json_string: str) -> str:
+              """Parse the "dynamodb" key from a DynamoDB Streams message into a Spark struct with JSON encoded keys / image.
+
+              Converts from DynamoDB record encoding to normal JSON encoding.
+              """
+              data = json.loads(dynamodb_json_string)
+              data["dynamodb"]["Keys"] = _ddb_to_json(data["dynamodb"], "Keys")
+              data["dynamodb"]["NewImage"] = _ddb_to_json(data["dynamodb"], "NewImage")
+              data["dynamodb"]["OldImage"] = _ddb_to_json(data["dynamodb"], "OldImage")
+              return json.dumps(data, cls=DecimalEncoder)
+
+
+          def handler(event, context):
+              try:
+                  return json.dumps({
+                      "success": True,
+                      "num_records": event["num_records"],
+                      "results": [parse_dynamodb(record[0]) for record in event["arguments"]],
+                  })
+              except Exception as e:
+                  return json.dumps({
+                      "success": False,
+                      "error_msg": f"Error processing Lambda event. Error: {e}",
+                  })
