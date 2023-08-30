@@ -1,11 +1,4 @@
 AWSTemplateFormatVersion: '2010-09-09'
-Parameters:
-  SecurityGroupId:
-    Description: the SG this function should run in to have connectivity to MySQL
-    Type: String
-  SubnetId:
-    Description: the Subnet this function should run in to have connectivity to MySQL
-    Type: String
 Resources:
   LambdaRole:
     Type: AWS::IAM::Role
