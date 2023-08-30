@@ -9,7 +9,7 @@ Each function is allocated a folder.  At minimal each function will have the fol
 
 - **function.sql** - the SQL script to be run in the Redshift DB which creates the UDF.  If a Lambda function, use the string `:RedshiftRole` for the IAM role to be passed in by the deployment script.
 - **input.csv** - a list of sample input parameters to the function, delimited by comma (,) and where strings are denoted with single-quotes.  Note: file MUST have a trailing newline character.
-- **output.csv** - a list of expected output values from the function. Note: This file can be excluded when the UDF will not return a consistent output between deployments or runs.  For example, see f_kms_decrypt & f_kms_encrypt.
+- **output.csv** - a list of expected output values from the function. Note: This file can be excluded when the UDF will not return a consistent output between deployments or runs.  See [f_kms_decrypt](lambda-udfs/f_kms_decrypt-varchar) & [f_kms_encrypt](lambda-udfs/f_kms_encrypt-varchar-varchar) for an example.
 
 ### python-udfs
 
