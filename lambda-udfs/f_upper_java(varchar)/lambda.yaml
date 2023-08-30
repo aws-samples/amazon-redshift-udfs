@@ -32,14 +32,14 @@ Resources:
                   Action:
                     - logs:CreateLogGroup
                   Resource:
-                    - !Sub "arn:aws:logs:${AWS::Region}:${AWS::AccountId}:*"
+                    - !Sub "arn:${AWS::Partition}:logs:${AWS::Region}:${AWS::AccountId}:*"
                 -
                   Effect: Allow
                   Action:
                     - logs:CreateLogStream
                     - logs:PutLogEvents
                   Resource:
-                    - !Sub "arn:aws:logs:${AWS::Region}:${AWS::AccountId}:log-group:/aws/lambda/*"
+                    - !Sub "arn:${AWS::Partition}:logs:${AWS::Region}:${AWS::AccountId}:log-group:/aws/lambda/*"
   LambdaUDFFunction:
     Type: "AWS::Lambda::Function"
     Properties:
