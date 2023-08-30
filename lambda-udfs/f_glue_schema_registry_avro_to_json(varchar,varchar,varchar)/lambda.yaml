@@ -1,11 +1,5 @@
 AWSTemplateFormatVersion: '2010-09-09'
 Parameters:
-  SecurityGroupId:
-    Description: the SG this function should run in to have connectivity to Redshift
-    Type: String
-  SubnetId:
-    Description: the Subnet this function should run in to have connectivity to Redshift
-    Type: String
   S3Bucket:
     Description: the S3 Bucket containing the Lambda layer
     Type: String
@@ -77,11 +71,6 @@ Resources:
        Timeout: 300
        Layers:
         - !Ref AvroLayer
-       VpcConfig:
-        SecurityGroupIds:
-          - !Ref SecurityGroupId
-        SubnetIds:
-          - !Ref SubnetId
        Code:
          ZipFile: |
           import functools

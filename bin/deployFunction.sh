@@ -31,6 +31,7 @@ execQuery()
   do
     sleep 1
     status=`aws redshift-data describe-statement --id $id | jq -r .Status`
+    notNull "$status" "Error running describe-statement"
   done
   if [ "$status" == "FAILED" ]; then
     aws redshift-data describe-statement --id $id

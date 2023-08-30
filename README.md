@@ -38,6 +38,14 @@ Each function is allocated a folder.  At minimal each function will have the fol
 ### sql-udfs
 [SQL UDFs](https://docs.aws.amazon.com/redshift/latest/dg/udf-creating-a-scalar-sql-udf.html) do not require any additional files.
 
+## Networking Considerations
+Lambda functions can be deployed in a VPC if they need access to resources
+within the private network. In this case, you may need to add network 
+connectivity (e.g. VPC Endpoints) to allow communication to AWS services.
+If your Lambda function is deployed in a VPC and uses AWS services (e.g. S3, 
+DDB, Glue, etc.) in its code, please define the VPC Endpoint resources in
+your `resources.yaml` file. 
+
 ## Deployment & Testing
 Located in the `bin` directory are tools to deploy and test your UDF functions.  
 
