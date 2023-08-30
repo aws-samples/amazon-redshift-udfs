@@ -1,11 +1,4 @@
 AWSTemplateFormatVersion: '2010-09-09'
-Parameters:
-  SecurityGroupId:
-    Description: the SG this function should run in to have connectivity to MySQL
-    Type: String
-  SubnetId:
-    Description: the Subnet this function should run in to have connectivity to MySQL
-    Type: String
 Resources:
   LambdaRole:
     Type: AWS::IAM::Role
@@ -32,21 +25,21 @@ Resources:
                   Action:
                     - logs:CreateLogGroup
                   Resource:
-                    - !Sub "arn:aws:logs:${AWS::Region}:${AWS::AccountId}:*"
+                    - !Sub "arn:${AWS::Partition}:logs:${AWS::Region}:${AWS::AccountId}:*"
                 -
                   Effect: Allow
                   Action:
                     - logs:CreateLogStream
                     - logs:PutLogEvents
                   Resource:
-                    - !Sub "arn:aws:logs:${AWS::Region}:${AWS::AccountId}:log-group:/aws/lambda/*"
+                    - !Sub "arn:${AWS::Partition}:logs:${AWS::Region}:${AWS::AccountId}:log-group:/aws/lambda/*"
                 -
                   Effect: Allow
                   Action:
                     - dynamodb:DescribeTable
                     - dynamodb:GetItem
                   Resource:
-                    - !Sub "arn:aws:dynamodb:${AWS::Region}:${AWS::AccountId}:table/*"
+                    - !Sub "arn:${AWS::Partition}:dynamodb:${AWS::Region}:${AWS::AccountId}:table/*"
   LambdaUDFFunction:
      Type: "AWS::Lambda::Function"
      Properties:

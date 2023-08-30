@@ -43,21 +43,21 @@ Resources:
                 -
                   Effect: Allow
                   Action: logs:CreateLogGroup
-                  Resource: !Sub "arn:aws:logs:${AWS::Region}:${AWS::AccountId}:*"
+                  Resource: !Sub "arn:${AWS::Partition}:logs:${AWS::Region}:${AWS::AccountId}:*"
                 -
                   Effect: Allow
                   Action:
                     - logs:CreateLogStream
                     - logs:PutLogEvents
-                  Resource: !Sub "arn:aws:logs:${AWS::Region}:${AWS::AccountId}:log-group:/aws/lambda/*"
+                  Resource: !Sub "arn:${AWS::Partition}:logs:${AWS::Region}:${AWS::AccountId}:log-group:/aws/lambda/*"
                 -
                   Effect: Allow
                   Action: rds-data:ExecuteStatement
-                  Resource: !Sub "arn:aws:rds:${AWS::Region}:${AWS::AccountId}:cluster:*"
+                  Resource: !Sub "arn:${AWS::Partition}:rds:${AWS::Region}:${AWS::AccountId}:cluster:*"
                 -
                   Effect: Allow
                   Action: secretsmanager:GetSecretValue
-                  Resource: !Sub "arn:aws:secretsmanager:${AWS::Region}:${AWS::AccountId}:secret:*"
+                  Resource: !Sub "arn:${AWS::Partition}:secretsmanager:${AWS::Region}:${AWS::AccountId}:secret:*"
   InitFunction:
     Type: AWS::Lambda::Function
     Properties:
@@ -124,5 +124,5 @@ Resources:
           Fn::GetAtt: [ InitFunction , "Arn" ]
         SecretArn: !Ref MySQLSecret
         ResourceArn: !Sub
-          - 'arn:aws:rds:${AWS::Region}:${AWS::AccountId}:cluster:${db}'
+          - 'arn:${AWS::Partition}:rds:${AWS::Region}:${AWS::AccountId}:cluster:${db}'
           - { db: !Ref MySQLDatabase}
