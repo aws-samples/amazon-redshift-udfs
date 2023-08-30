@@ -8,14 +8,14 @@ Each procedure is allocated a folder.  At minimal each procedure will have a <pr
 Each function is allocated a folder.  At minimal each function will have the following files which will be used by the [deployFunction.sh](#deployFunctionsh) script and [testFunction.sh](#testFunctionsh) scripts:
 
 - **function.sql** - the SQL script to be run in the Redshift DB which creates the UDF.  If a Lambda function, use the string `:RedshiftRole` for the IAM role to be passed in by the deployment script.
-- **input.csv** - a list of sample input parameters to the function, delimited by comma (,) and where strings are denoted with single-quotes.  Note: file MUST have a trailing newline character.
-- **output.csv** - a list of expected output values from the function. Note: This file can be excluded when the UDF will not return a consistent output between deployments or runs.  See [f_kms_decrypt](lambda-udfs/f_kms_decrypt-varchar) & [f_kms_encrypt](lambda-udfs/f_kms_encrypt-varchar-varchar) for an example.
+- **input.csv** - a list of sample input parameters to the function, delimited by comma (,) and where strings are denoted with single-quotes.  Note: input.csv file MUST have a trailing newline character.
+- **output.csv** - a list of expected output values from the function. Note: Output.csv file can be excluded when the UDF will not return a consistent output between deployments or runs, but an output.csv.sample file should be created for users to understand what to expect.  See [f_kms_decrypt](lambda-udfs/f_kms_decrypt\(varchar\)) & [f_kms_encrypt](lambda-udfs/f_kms_encrypt\(varchar,varchar\)) for an example.
 
 ### python-udfs
 
 [Python UDFs](https://docs.aws.amazon.com/redshift/latest/dg/udf-creating-a-scalar-udf.html) may include the following additional file:
 
-- **requirements.txt** - If your function requires modules not available already in Redshift, a list of modules.  The modules will be packaged, uploaded to S3, and mapped to a [library](https://docs.aws.amazon.com/redshift/latest/dg/r_CREATE_LIBRARY.html) in Redshift.  Note: file MUST have a trailing newline.
+- **requirements.txt** - If your function requires modules not available already in Redshift, a list of modules.  The modules will be packaged, uploaded to S3, and mapped to a [library](https://docs.aws.amazon.com/redshift/latest/dg/r_CREATE_LIBRARY.html) in Redshift.  Note: requirements.txt file MUST have a trailing newline.
 
 ### lambda-udfs
 
@@ -25,15 +25,15 @@ Each function is allocated a folder.  At minimal each function will have the fol
 
 - **resources.yaml** - a CFN template containing external resources which may be referenced by the Lambda function. These resources are for testing only.
 
-- **requirements.txt** - (Python Only) If your function requires modules not available already in the Lambda Python container.  These modules will be packaged and uploaded to S3.  You will need to include a [AWS::Lambda::LayerVersion](https://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-lambda-layerversion.html) resource for each module in your lambda.yaml file.  It will need to reference the module and version number. See [the Glue Schema Registry UDF](https://github.com/aws-samples/amazon-redshift-udfs/tree/master/lambda-udfs/f_glue_schema_registry_avro_to_json(varchar,varchar)/lambda.yaml) as an example. Note: file MUST have a trailing newline.
+- **requirements.txt** - (Python Only) If your function requires modules not available already in the Lambda Python container.  These modules will be packaged and uploaded to S3.  You will need to include a [AWS::Lambda::LayerVersion](https://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-lambda-layerversion.html) resource for each module in your lambda.yaml file.  It will need to reference the module and version number. See [f_glue_schema_registry_avro_to_json](lambda-udfs/f_glue_schema_registry_avro_to_json\(varchar,varchar\)/lambda.yaml) as an example. Note: requirements.txt file MUST have a trailing newline.
 
-- **package.json** - (NodeJS Only) If your function requires modules not available already in Lambda, a list of modules.  The modules will be packaged, uploaded to S3, and mapped to your Lambda function. See [f_mysql_lookup_nodejs](lambda-udfs/f_mysql_lookup_nodejs-varchar-varchar-varchar) for and example.  
+- **package.json** - (NodeJS Only) If your function requires modules not available already in Lambda, a list of modules.  The modules will be packaged, uploaded to S3, and mapped to your Lambda function. See [f_mysql_lookup_nodejs](lambda-udfs/f_mysql_lookup_nodejs\(varchar,varchar,varchar,varchar\)) for and example.  
 
-- **index.js** (NodeJS Only) your javascript handler code.  See [f_upper_nodejs](lambda-udfs/f_upper_nodejs-varchar) for and example.  
+- **index.js** (NodeJS Only) your javascript handler code.  See [f_upper_nodejs](lambda-udfs/f_upper_nodejs\(varchar\)) for and example.  
 
-- **pom.xml** - (Java Only) Lists out dependencies as well as the name of your handler function. See [f_upper_java](lambda-udfs/f_upper_java-varchar) for and example.  See [Maven Documentation](https://maven.apache.org/guides/introduction/introduction-to-the-pom.html) for more details on writing a pom.xml file.
+- **pom.xml** - (Java Only) Lists out dependencies as well as the name of your handler function. See [f_upper_java](lambda-udfs/f_upper_java\(varchar\)) for and example.  See [Maven Documentation](https://maven.apache.org/guides/introduction/introduction-to-the-pom.html) for more details on writing a pom.xml file.
 
-- **src/main/java/`function`/Handler.java** - (Java Only) your java handler code. See [f_upper_java](lambda-udfs/f_upper_java-varchar) for and example.  
+- **src/main/java/`function`/Handler.java** - (Java Only) your java handler code. See [f_upper_java](lambda-udfs/f_upper_java\(varchar\)) for and example.  
 
 ### sql-udfs
 [SQL UDFs](https://docs.aws.amazon.com/redshift/latest/dg/udf-creating-a-scalar-sql-udf.html) do not require any additional files.
