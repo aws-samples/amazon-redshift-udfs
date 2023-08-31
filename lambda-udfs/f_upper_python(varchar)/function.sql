@@ -1,6 +1,6 @@
 /*
 Purpose:
-    This sample function demonstrates how to create/use lambda UDFs in python
+    This sample function demonstrates how to create/use lambda UDFs in python.
 
 2021-08-01: written by rjvgupta
 */
