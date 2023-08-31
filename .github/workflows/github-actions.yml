@@ -35,7 +35,7 @@ jobs:
           function=""
           for folder in $folders; do
               IFS="/" read -ra PARTS <<< "$folder"
-              if [ $folder == *-udfs/* ] && [$function != ${PARTS[1]}]; then
+              if [ $folder == *-udfs/* ] && [$function -ne ${PARTS[1]}]; then
                 type=${PARTS[0]}
                 function=${PARTS[1]}
                 key=${{ secrets.S3_KEY }}
