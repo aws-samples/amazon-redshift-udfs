@@ -105,6 +105,7 @@ OIFS=$IFS
 IFS=','
 for arg in $args
 do
+  if [ "${arg}" == "varchar" ]; then arg="varchar(max)"; fi
   fields="$fields,p$i $arg"
   params="$params,p$i"
   ((i=i+1))
@@ -124,7 +125,7 @@ while read row; do
 done <"../$type/$function/input.csv"
 
 sql="$sql${rows%?}"
-sql1="select $name(${params:1})::varchar from #$name order by seq;"
+sql1="select $name(${params:1})::varchar(max) from #$name order by seq;"
 echo "$sql;$sql1"
 output=`execQuery $cluster $db $user $schema "$sql" "$sql1"`
 echo $output | jq -r '.Records | .[] | [.[0].stringValue] | .[]' > output.csv
