@@ -1,0 +1,25 @@
+{
+    "Version": "2012-10-17",
+    "Statement": [
+        {
+            "Sid": "ReadStream",
+            "Effect": "Allow",
+            "Action": [
+                "kinesis:DescribeStreamSummary",
+                "kinesis:GetShardIterator",
+                "kinesis:GetRecords",
+                "kinesis:DescribeStream"
+            ],
+            "Resource": "arn:aws:kinesis:*:123443211234:stream/*"
+        },
+        {
+            "Sid": "ListStream",
+            "Effect": "Allow",
+            "Action": [
+                "kinesis:ListStreams",
+                "kinesis:ListShards"
+            ],
+            "Resource": "*"
+        }
+    ]
+}
