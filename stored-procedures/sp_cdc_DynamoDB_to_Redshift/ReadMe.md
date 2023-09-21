@@ -41,6 +41,17 @@ On Redshift there is no need to write custom parsing procedures for each table.
     - This will create necessary schema and materialized view to capture data from DynamoDB.
   - Execute procedure below to create tables needed for replication process.
     - call public.sp\_ddb\_to\_redshift\_setup\_process\_tables(). Verify list of tables in the procedure is created by refreshing schema.
+    - Please see below table name and how it is used in the process.  
+       public.metadata_etl.	This table to control the current batch that is running with start time and end time
+       public.dynamodb_kds_mv_staging.	Ingesting Materialized View data into staging table in the right format and audit fields
+       public.dynamodb_kds_mv_staging_batch. 	Select data to be processed based on last execution. Filters the new data from data already processed 
+       public.dynamodb_kds_staging_cdc.  Select data to be processed based on last execution. Filters the new data from data already processed 
+       public.dynamodb_kds_staging_cdc_unique.	Removes duplicates if there are multiple records for same unique key by selecting most recent record
+       public.metadata_dd_table_columns.	Stores table name, column name and data types
+       public.metadata_dd_table_keys.	Stores table name, column name and if a column is a key or not
+       public.metadata_dd_table_columns_hist.	Stores list of distinct columns for each table to compare with new data
+       public.temp_table_pivot_data.	Temporary table to unnest and format data to prepare for DML operations
+       
     
 ### Ongoing process
 - Procedure to replicate data -   Execute below procedure on demand or schedule:
