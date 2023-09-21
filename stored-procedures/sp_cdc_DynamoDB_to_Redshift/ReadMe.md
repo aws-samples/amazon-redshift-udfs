@@ -14,6 +14,7 @@ At high level the steps are
 - The streaming data gets ingested as a JSON payload. This JSON data is processed into Redshift tables via a Stored Procedure. 
 
 DynamoDB can stream multiple tables into a single stream. So, there will be one stream processed by Redshift to apply changes.
+On Redshift there is no need to write custom parsing procedures for each table.
 
 
 ### Pre-Requisites
