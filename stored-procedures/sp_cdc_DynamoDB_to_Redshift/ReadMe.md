@@ -1,6 +1,11 @@
-﻿CDC changes from DynamoDB table to Redshift table:
+﻿# CDC changes from DynamoDB table to Redshift table:
 
-The solutions below enable data replication between DynamoDB and Redshift in a generic way where schema changes are handled by Redshift process. A scheduled process keeps DynamoDB table and corresponding Redshift table in sync both in data and structure. Additional analytics processes can be built on these base tables as use case demands.
+## Introduction
+
+The solutions enables data replication between DynamoDB and Redshift.
+This process makes it easier to replicate multiple table with out the need for coding replication for each table.
+Schema changes are detected and handled in the Redshift process to keep it in sync with DynamoDB.
+Also provides the ability to control cdc work load scheduling for better cluster management.
 
 At high level the steps are 
 
@@ -11,38 +16,44 @@ At high level the steps are
 DynamoDB can stream multiple tables into a single stream. So, there will be one stream processed by Redshift to apply changes.
 
 
-Steps:
-
+### Pre-Requisites
 - Create Kinesis Data Stream. (Example name: *redshift\_cdc*) 
-- Create a Dynamo DB table and enable data streaming to Kinesis Data Stream created in step 1. 
-- Create an IAM role with ability to read KDS streams and attach it to Redshift cluster. (Sample Role in the folder policy.json. Example name: *my\_streaming\_role*)
+- Create a Dynamo DB table(s) and enable data streaming to Kinesis Data Stream created. 
+- Create an IAM role with ability to read KDS streams and attach it to Redshift cluster. 
+  (Sample Role details below. Example name: *my\_streaming\_role*)
+  
+### Setup
 - Create Redshift process. 
   - Create Stored Procedure on Redshift Cluster either in QEv2 or via any SQL tool. Create procedures as per the sp\_cdc\_DynamoDB\_to\_Redshift.sql file. 
   - Verify below procedures are created
-    - sp\_create\_table\_varchar\_max(varchar)
-    - sp\_cursor\_loop\_alter\_tables()
-    - sp\_cursor\_loop\_create\_tables()
-    - sp\_cursor\_loop\_process\_merge\_tables()
-    - sp\_ddb\_to\_redshift\_incremental\_refresh\_cdc()
-    - sp\_ddb\_to\_redshift\_setup\_process\_tables()
-    - sp\_ddb\_to\_redshift\_setup\_schema\_mv(varchar,varchar,varchar)
-    - sp\_delete\_table\_key\_data()
-    - sp\_merge\_table\_key\_data()
+    - sp\_create\_table\_varchar\_max(varchar). Routine to create table if it does not exists.
+    - sp\_cursor\_loop\_alter\_tables(). Routine to alter table if schema changes are detected.
+    - sp\_cursor\_loop\_create\_tables(). Routine to create table when multiple new table are in cdc.
+    - sp\_cursor\_loop\_process\_merge\_tables(). Routine to merge data to target Redshift table.
+    - sp\_ddb\_to\_redshift\_incremental\_refresh\_cdc(). Main routine to execute on demand or schedule.
+    - sp\_ddb\_to\_redshift\_setup\_process\_tables(). Setup routine to create tables needed for ongoing replication process.
+    - sp\_ddb\_to\_redshift\_setup\_schema\_mv(varchar,varchar,varchar). Setup routine to create materialized view and schema.
+    - sp\_delete\_table\_key\_data(). Routine to handle deleted records.
+    - sp\_merge\_table\_key\_data(). Routine to handle updates.
   - Execute procedure below to create materialized view and schema replacing with IAM role, Account\_Number and KDS name. one time process.
     - call public.sp\_ddb\_to\_redshift\_setup\_schema\_mv(*'my\_streaming\_role','123456781234','redshift\_cdc')*;
     - This will create necessary schema and materialized view to capture data from DynamoDB.
   - Execute procedure below to create tables needed for replication process. one time process.
-    - call public.sp\_ddb\_to\_redshift\_setup\_process\_tables();
+    - call public.sp\_ddb\_to\_redshift\_setup\_process\_tables(). Verify list of tables in the procedure is created by refreshing schema.
+    
+### Ongoing process
 - Procedure to replicate data -   Execute below procedure on demand or schedule:
 
-call public.sp\_ddb\_to\_redshift\_incremental\_refresh\_cdc();
+*call public.sp\_ddb\_to\_redshift\_incremental\_refresh\_cdc();*
 
-Verify table and data by running a query on Redshift cluster for the tables. It should have captured data since DynamoDB table started streaming into Kinesis Data Stream
+Verify table and data by running a query on Redshift cluster for the tables to be replicated.
+It should have captured data since DynamoDB table started streaming into Kinesis Data Stream.
+
+Refer query [scheduling process in redshift query editor v2](https://docs.aws.amazon.com/redshift/latest/mgmt/query-editor-schedule-query.html) for query scheduling steps.
 
 
 
-
-Notes:
+### Notes
 
 - This is for CDC only for an existing table. In production scenario you may want to do a full copy/load via S3 and then use this process for ongoing changes.
 - For a new table this can capture data from initial changes if process is configured prior to new data.
@@ -50,3 +61,34 @@ Notes:
 - A new column is added to target table (dist\_Key) to track keys and distribution.
 - Target data table has all columns defined and stored as **varchar** to accommodate any future changes to attributes. 
 
+
+## Sample IAM role
+
+Sample IAM role will look like this.
+'''
+{
+"Version": "2012-10-17",
+"Statement": [
+{
+"Sid": "ReadStream",
+"Effect": "Allow",
+"Action": [
+"kinesis:DescribeStreamSummary",
+"kinesis:GetShardIterator",
+"kinesis:GetRecords",
+"kinesis:DescribeStream"
+],
+"Resource": "arn:aws:kinesis:*:123443211234:stream/*"
+},
+{
+"Sid": "ListStream",
+"Effect": "Allow",
+"Action": [
+"kinesis:ListStreams",
+"kinesis:ListShards"
+],
+"Resource": "*"
+}
+]
+}
+'''
