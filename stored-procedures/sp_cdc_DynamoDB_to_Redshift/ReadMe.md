@@ -39,7 +39,7 @@ On Redshift there is no need to write custom parsing procedures for each table.
   - Execute procedure below to create materialized view and schema replacing with IAM role, Account\_Number and KDS name. one time process.
     - call public.sp\_ddb\_to\_redshift\_setup\_schema\_mv(*'my\_streaming\_role','123456781234','redshift\_cdc')*;
     - This will create necessary schema and materialized view to capture data from DynamoDB.
-  - Execute procedure below to create tables needed for replication process. one time process.
+  - Execute procedure below to create tables needed for replication process.
     - call public.sp\_ddb\_to\_redshift\_setup\_process\_tables(). Verify list of tables in the procedure is created by refreshing schema.
     
 ### Ongoing process
