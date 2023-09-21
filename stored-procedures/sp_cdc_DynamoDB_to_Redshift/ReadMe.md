@@ -2,8 +2,8 @@
 
 ## Introduction
 
-The solution enables change data capture(CDC) replication between DynamoDB and Redshift.
-This process makes it easier to replicate multiple table with out the need for coding replication for each table.
+The solution enables change data capture (CDC) replication between DynamoDB and Redshift.
+This process makes it easier to replicate multiple table without the need for coding replication for each table.
 Schema changes are detected and handled in the Redshift process to keep it in sync with DynamoDB.
 Also provides the ability to control multiple table cdc work load by scheduling for better cluster resource management.
 
