@@ -27,9 +27,9 @@ On Redshift there is no need to write custom parsing procedures for each table.
 - Create Redshift process. 
   - Create Stored Procedure on Redshift Cluster either in QEv2 or via any SQL tool. Create procedures as per the sp\_cdc\_DynamoDB\_to\_Redshift.sql file. 
   - Verify below procedures are created
-    - sp\_create\_table\_varchar\_max(varchar). Routine to create table if it does not exists.
+    - sp\_create\_table\_varchar\_max(varchar). Routine to create table if it does not exist.
     - sp\_cursor\_loop\_alter\_tables(). Routine to alter table if schema changes are detected.
-    - sp\_cursor\_loop\_create\_tables(). Routine to create table when multiple new table are in cdc.
+    - sp\_cursor\_loop\_create\_tables(). Routine to create table when multiple new tables are in CDC.
     - sp\_cursor\_loop\_process\_merge\_tables(). Routine to merge data to target Redshift table.
     - sp\_ddb\_to\_redshift\_incremental\_refresh\_cdc(). Main routine to execute on demand or schedule.
     - sp\_ddb\_to\_redshift\_setup\_process\_tables(). Setup routine to create tables needed for ongoing replication process.
