@@ -101,6 +101,6 @@ Sample IAM role will look like this.
       ],
       "Resource": "*"
     }
- ]
+  ]
 }
 ```
