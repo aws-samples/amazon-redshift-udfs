@@ -77,30 +77,30 @@ Refer query [scheduling process in redshift query editor v2](https://docs.aws.am
 ## Sample IAM role
 
 Sample IAM role will look like this.
-'''
+```
 {
-"Version": "2012-10-17",
-"Statement": [
-{
-"Sid": "ReadStream",
-"Effect": "Allow",
-"Action": [
-"kinesis:DescribeStreamSummary",
-"kinesis:GetShardIterator",
-"kinesis:GetRecords",
-"kinesis:DescribeStream"
-],
-"Resource": "arn:aws:kinesis:*:123443211234:stream/*"
-},
-{
-"Sid": "ListStream",
-"Effect": "Allow",
-"Action": [
-"kinesis:ListStreams",
-"kinesis:ListShards"
-],
-"Resource": "*"
+  "Version": "2012-10-17",
+  "Statement": [
+    {
+     "Sid": "ReadStream",
+     "Effect": "Allow",
+       "Action": [
+          "kinesis:DescribeStreamSummary",
+          "kinesis:GetShardIterator",
+          "kinesis:GetRecords",
+          "kinesis:DescribeStream"
+        ],
+    "Resource": "arn:aws:kinesis:*:123443211234:stream/*"
+    },
+    {
+      "Sid": "ListStream",
+      "Effect": "Allow",
+      "Action": [
+        "kinesis:ListStreams",
+        "kinesis:ListShards"
+      ],
+      "Resource": "*"
+    }
+ ]
 }
-]
-}
-'''
+```
