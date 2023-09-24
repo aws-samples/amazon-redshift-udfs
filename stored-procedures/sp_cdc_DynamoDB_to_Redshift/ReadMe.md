@@ -20,8 +20,10 @@ On Redshift there is no need to write custom parsing procedures for each table.
 ### Pre-Requisites
 - Create Kinesis Data Stream. (Example name: *redshift\_cdc*) 
 - Create a Dynamo DB table(s) and enable data streaming to Kinesis Data Stream created. 
-- Create an IAM role with ability to read KDS streams and attach it to Redshift cluster. 
-  (Sample Role details below. Example name: *my\_streaming\_role*)
+- Create an IAM role with ability to read KDS streams and attach it to Redshift cluster. (Example name: *my_streaming_role*)
+
+
+
   
 ### Setup
 - Create Redshift process. 
@@ -98,7 +100,7 @@ What happens when a source table column is renamed?
 
 
 
-## Sample IAM role
+#### Sample IAM role
 
 Sample IAM role will look like this.
 ```
