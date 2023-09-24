@@ -71,7 +71,31 @@ Refer query [scheduling process in redshift query editor v2](https://docs.aws.am
 - For a new table this can capture data from initial changes if process is configured prior to new data.
 - You can run CDC with multiple tables pointing to same Kinesis Data Stream.
 - A new column is added to target table (dist\_Key) to track keys and distribution.
-- Target data table has all columns defined and stored as **varchar** to accommodate any future changes to attributes. 
+- Target data table has all columns defined and stored as **varchar** to accommodate any future changes to attributes.
+
+### Frequently Asked Questions
+
+Can this process be used for non DynamDb Json sources?
+
+    Not at this time. But the framework of process is reusable for other JSON data ingestion. 
+    This requires extending parts of the process to handle other Json formats.
+What happens when multiple updates happen to a single key item within the window of refresh?
+
+    Only last image of the record will be processed ignoring other duplicate CDC entries.
+
+Can this process run CDC for multiple table sources?
+
+    The process will handle As long as these multiple DynamoDB tables are streaming changes to same Kinesis Data Stream.
+
+How data is stored in Materialized View?
+
+    Data is stored in SUPER data type column in JSON format.
+
+What happens when a source table column is renamed?
+
+    Change record is processed as if a new column is added. 
+    Target table in Redshift will have both columns and old column will have NULL values.
+
 
 
 ## Sample IAM role
