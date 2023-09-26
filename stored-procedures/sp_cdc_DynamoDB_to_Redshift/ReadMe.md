@@ -130,3 +130,21 @@ Sample IAM role will look like this.
   ]
 }
 ```
+
+
+
+#### Observations from CDC (change data capture) performance testing between DynamoDB and Redshift.
+1. Not all records showed up in the KDS stream / Materialized View right away - Sometime it took two iterations.It is important to design KDS for throughput and latency.
+2. Single record update is not that different from group of records.
+3. Providing a minute for KDS to catch up and then run this process is recommended and 
+4. Update/Delete/New record changes are running in the same time window and has no considerable difference between type of CDC image in terms of processing times.
+5. Initial execution is slower than next runs. This should normalize if this process is running every 15 mins on schedule.
+6. Better suited for Near - Real time use cases with 15 min window.
+
+| Scenario | Iteration 1 | Iteration 2 | Iteration 3 | Iteration 4 |
+| --- | --- | --- | --- | --- |
+| Multiple tables pushing data to a single  stream(5 tables)  | 38 sec | 15 sec | 43 sec | 29 sec |
+| Number of updates processed in one  iteration(200) | 65 sec | 14 sec | 28 sec | 19 sec |
+| Single record updated/added	 | 20 sec | 3 sec | 9 sec | 28 sec |
+| Number of inserts processed in one  iteration(200)	 | 9 sec | 31 sec | 25 sec | 12 sec |
+
