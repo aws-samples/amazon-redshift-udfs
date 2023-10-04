@@ -1,7 +1,6 @@
 # f_glue_schema_registry_avro_to_json(varchar,varchar,varchar)
 
-This sample function demonstrates how to create/use lambda UDFs in Python to convert Avro encoded data into JSON for use in Redshift SUPER data type using the Glue Schema Registry.
-Blog link TODO.
+This sample function demonstrates how to create/use lambda UDFs in Python to convert Avro encoded data into JSON for use in Redshift SUPER data type using the Glue Schema Registry (refer to [Non-JSON ingestion using Amazon Kinesis Data Streams, Amazon MSK, and Amazon Redshift Streaming Ingestion](https://aws.amazon.com/blogs/big-data/non-json-ingestion-using-amazon-kinesis-data-streams-amazon-msk-and-amazon-redshift-streaming-ingestion/).
 
 ![Example Architecture](https://github.com/aws-samples/amazon-redshift-udfs/blob/master/lambda-udfs/f_glue_schema_registry_avro_to_json(varchar%2Cvarchar%2Cvarchar)/example.png)
 
@@ -16,7 +15,7 @@ The data encoded as JSON
 ## Example usage:
 This example demonstrates creating a materialized view with SUPER data converted from Avro that's 
 published to a Kinesis stream. This uses the "Assumed schema" approach, as described in the
-[blog post](link_todo):
+[blog post](https://aws.amazon.com/blogs/big-data/non-json-ingestion-using-amazon-kinesis-data-streams-amazon-msk-and-amazon-redshift-streaming-ingestion/):
 
 ```
 -- Step 1 
