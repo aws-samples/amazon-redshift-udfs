@@ -1,0 +1,84 @@
+AWSTemplateFormatVersion: '2010-09-09'
+Resources:
+  LambdaRole:
+    Type: AWS::IAM::Role
+    Properties:
+      AssumeRolePolicyDocument:
+          Version: 2012-10-17
+          Statement:
+            -
+              Effect: Allow
+              Principal:
+                Service:
+                  - lambda.amazonaws.com
+              Action:
+                - sts:AssumeRole
+      Path: /
+      Policies:
+          -
+            PolicyName: CloudwatchLogs
+            PolicyDocument:
+              Version: 2012-10-17
+              Statement:
+                -
+                  Effect: Allow
+                  Action:
+                    - logs:CreateLogGroup
+                  Resource:
+                    - !Sub "arn:${AWS::Partition}:logs:${AWS::Region}:${AWS::AccountId}:*"
+                -
+                  Effect: Allow
+                  Action:
+                    - logs:CreateLogStream
+                    - logs:PutLogEvents
+                  Resource:
+                    - !Sub "arn:${AWS::Partition}:logs:${AWS::Region}:${AWS::AccountId}:log-group:/aws/lambda/*"
+                -
+                  Effect: Allow
+                  Action:
+                    - bedrock:InvokeModel
+                  Resource:
+                    - !Sub "arn:${AWS::Partition}:bedrock:${AWS::Region}:${AWS::AccountId}:model/*"
+  LambdaUDFFunction:
+     Type: "AWS::Lambda::Function"
+     Properties:
+       FunctionName: f-titan-embedding-varchar
+       Role: !GetAtt 'LambdaRole.Arn'
+       Handler: index.handler
+       Runtime: python3.9
+       Timeout: 300
+       Code:
+         ZipFile: |
+            import boto3
+            import json
+
+            bedrock_runtime = boto3.client(service_name="bedrock-runtime")
+
+            def generate_embeddings(text=None):
+                input_data = {"inputText": text}
+
+                response = bedrock_runtime.invoke_model(
+                    body=body,
+                    modelId="amazon.titan-embed-image-v1",
+                    accept="application/json",
+                    contentType="application/json"
+                )
+                response_body = json.loads(response.get("body").read())
+                finish_reason = response_body.get("message")
+                return response_body.get("embedding")
+
+            def handler(event, context):
+                redshift_response = {"success": False, "num_records": event["num_records"]}
+                try:
+                    result = []
+                    for text in event["arguments"]:
+                        try:
+                            result.append(generate_embeddings(text))
+                        except Exception as e:
+                            print(f"Error: {e}")
+                            result.append(None)
+                    redshift_response["success"] = True
+                    redshift_response["results"] = result
+                except Exception as e:
+                    redshift_response["error_msg"] = str(e)
+                return json.dumps(redshift_response)
