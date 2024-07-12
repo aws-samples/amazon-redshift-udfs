@@ -4,7 +4,7 @@ Purpose: This function use numpy to determine the similary between two vectors.
 2021-08-08: written by rjvgupta
 */
 --
-CREATE OR REPLACE FUNCTION f_cosine_similarity (v1 VARCHAR, v2)
+CREATE OR REPLACE FUNCTION f_cosine_similarity (v1 VARCHAR, v2 VARCHAR)
 RETURNS VARCHAR IMMUTABLE AS $$
   import numpy as np
   from numpy.linalg import norm
