@@ -4,5 +4,5 @@ Purpose:
 
 2024-07-11: written by rjvgupta
 */ 
-CREATE OR REPLACE EXTERNAL FUNCTION f_titan_embedding (varchar) RETURNS varchar STABLE
+CREATE OR REPLACE EXTERNAL FUNCTION f_titan_embedding (varchar) RETURNS varchar(max) STABLE
 LAMBDA 'f-titan-embedding-varchar' IAM_ROLE ':RedshiftRole';

@@ -38,7 +38,7 @@ Resources:
                   Action:
                     - bedrock:InvokeModel
                   Resource:
-                    - !Sub "arn:${AWS::Partition}:bedrock:${AWS::Region}:${AWS::AccountId}:model/*"
+                    - !Sub "arn:${AWS::Partition}:bedrock:${AWS::Region}::foundation-model/amazon.titan-embed-image-v1"
   LambdaUDFFunction:
      Type: "AWS::Lambda::Function"
      Properties:
@@ -49,36 +49,45 @@ Resources:
        Timeout: 300
        Code:
          ZipFile: |
-            import boto3
-            import json
+          import boto3, json, sys
+          bedrock_runtime = boto3.client(service_name="bedrock-runtime")
 
-            bedrock_runtime = boto3.client(service_name="bedrock-runtime")
-
-            def generate_embeddings(text=None):
-                input_data = {"inputText": text}
-
-                response = bedrock_runtime.invoke_model(
-                    body=body,
-                    modelId="amazon.titan-embed-image-v1",
-                    accept="application/json",
-                    contentType="application/json"
-                )
-                response_body = json.loads(response.get("body").read())
-                finish_reason = response_body.get("message")
-                return response_body.get("embedding")
-
-            def handler(event, context):
-                redshift_response = {"success": False, "num_records": event["num_records"]}
-                try:
-                    result = []
-                    for text in event["arguments"]:
-                        try:
-                            result.append(generate_embeddings(text))
-                        except Exception as e:
-                            print(f"Error: {e}")
-                            result.append(None)
-                    redshift_response["success"] = True
-                    redshift_response["results"] = result
-                except Exception as e:
-                    redshift_response["error_msg"] = str(e)
-                return json.dumps(redshift_response)
+          def generate_embeddings(text=None):
+              try:
+                  input_data = {"inputText": text}
+                  response = bedrock_runtime.invoke_model(
+                      body=json.dumps(input_data),
+                      modelId="amazon.titan-embed-image-v1",
+                      accept="application/json",
+                      contentType="application/json"
+                  )
+                  response = response.get("body").read().decode('utf-8')
+                  response_json = json.loads(response)
+                  return response_json.get("embedding")
+                  
+              except Exception as e:
+                  exc_type, exc_obj, exc_tb = sys.exc_info()
+                  print(exc_type, exc_tb.tb_lineno)
+                  print('Error: '+ str(e))
+                  return ''
+                  
+          def handler(event, context):
+              print(event)
+              redshift_response = {"success": False, "num_records": event["num_records"]}
+              try:
+                  result = []
+                  for row in event["arguments"]:
+                      try:
+                          embedding = generate_embeddings(row[0])
+                          result.append(json.dumps(embedding))
+                      except Exception as e:
+                          print(f"Error: {e}")
+                          result.append(None)
+                  redshift_response["success"] = True
+                  redshift_response["results"] = result
+              except Exception as e:
+                  redshift_response["error_msg"] = str(e)
+                  print('Error: '+ str(e))
+                  exc_type, exc_obj, exc_tb = sys.exc_info()
+                  print(exc_type, exc_tb.tb_lineno)
+              return json.dumps(redshift_response)
