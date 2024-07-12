@@ -14,9 +14,9 @@ jobs:
       - name: Configure AWS credentials
         uses: aws-actions/configure-aws-credentials@v1
         with:
-          aws-access-key-id: ${{ secrets.AWS_ID }}
+          aws-access-key-id: ${{ vars.AWS_ID }}
           aws-secret-access-key: ${{ secrets.AWS_KEY }}
-          aws-region: ${{ secrets.REGION }}
+          aws-region: ${{ vars.REGION }}
       - id: files
         uses: jitterbit/get-changed-files@v1
         with:
@@ -42,8 +42,8 @@ jobs:
                 if ! [[ -z "${key// }" ]]; then
                   k="-k ${{ secrets.S3_KEY }}"
                 fi
-                ./deployFunction.sh -t $type -f "$function" -s ${{ secrets.S3_BUCKET }} $k -r ${{ secrets.IAM_ROLE }} -c ${{ secrets.CLUSTER }} -d ${{ secrets.DB }} -u ${{ secrets.USER }} -n ${{ secrets.SCHEMA }} -g ${{ secrets.SECURITY_GROUP }} -x ${{ secrets.SUBNET }}
-                ./testFunction.sh -t $type -f "$function" -c ${{ secrets.CLUSTER }} -d ${{ secrets.DB }} -u ${{ secrets.USER }} -n ${{ secrets.SCHEMA }}
+                ./deployFunction.sh -t $type -f "$function" -s ${{ vars.S3_BUCKET }} $k -r ${{ vars.IAM_ROLE }} -c ${{ vars.CLUSTER }} -d ${{ vars.DB }} -u ${{ vars.USER }} -n ${{ vars.SCHEMA }} -g ${{ vars.SECURITY_GROUP }} -x ${{ vars.SUBNET }}
+                ./testFunction.sh -t $type -f "$function" -c ${{ vars.CLUSTER }} -d ${{ vars.DB }} -u ${{ vars.USER }} -n ${{ vars.SCHEMA }}
               else
                 echo Ignoring: $folder
               fi
