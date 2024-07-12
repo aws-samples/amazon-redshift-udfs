@@ -81,6 +81,9 @@ while getopts "t:f:s:k:l:r:c:d:u:n:g:x:h" opt; do
   esac
 done
 
+echo $s3Bucket
+echo $s3Key
+
 # validate required arguments
 notNull "$type" "Please provide the function type -t"
 notNull "$function" "Please provide the function name -f"
