@@ -1,10 +1,10 @@
 AWSTemplateFormatVersion: '2010-09-09'
 Parameters:
   S3Bucket:
-    Description: the S3 Bucket containing the Lambda layer.
+    Description: the S3 Bucket containing the Lambda layer
     Type: String
   S3Key:
-    Description: the S3 Key containing the Lambda layer.
+    Description: the S3 Key containing the Lambda layer
     Type: String
 Conditions:
   NoS3Prefix: !Equals [!Ref S3Key, '']
