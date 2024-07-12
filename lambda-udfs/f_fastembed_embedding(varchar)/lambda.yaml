@@ -55,7 +55,7 @@ Resources:
   LambdaUDFFunction:
      Type: "AWS::Lambda::Function"
      Properties:
-       FunctionName: f-titan-embedding-varchar
+       FunctionName: f-fastembed-embedding-varchar
        Role: !GetAtt 'LambdaRole.Arn'
        Handler: index.handler
        Runtime: python3.9
