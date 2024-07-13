@@ -38,9 +38,9 @@ jobs:
               if [[ $folder == *-udfs/* ]] && [[ $function != ${PARTS[1]} ]]; then
                 type=${PARTS[0]}
                 function=${PARTS[1]}
-                key=${{ secrets.S3_KEY }}
+                key=${{ vars.S3_KEY }}
                 if ! [[ -z "${key// }" ]]; then
-                  k="-k ${{ secrets.S3_KEY }}"
+                  k="-k ${{ vars.S3_KEY }}"
                 fi
                 ./deployFunction.sh -t $type -f "$function" -s ${{ vars.S3_BUCKET }} $k -r ${{ vars.IAM_ROLE }} -c ${{ vars.CLUSTER }} -d ${{ vars.DB }} -u ${{ vars.USER }} -n ${{ vars.SCHEMA }} -g ${{ vars.SECURITY_GROUP }} -x ${{ vars.SUBNET }}
                 ./testFunction.sh -t $type -f "$function" -c ${{ vars.CLUSTER }} -d ${{ vars.DB }} -u ${{ vars.USER }} -n ${{ vars.SCHEMA }}

@@ -1,1 +1,1 @@
-fastembed
+fastembed==0.3.3

@@ -78,6 +78,7 @@ docker run \
 	--user $UID:$UID \
     "public.ecr.aws/sam/build-python${python_version}" \
     /bin/sh \
+	-c "pip install --upgrade pip" \
     -c "pip install -r requirements.txt -t python/lib/python${python_version}/site-packages/; exit"
 
 echo "Built, zipping layer contents..."
