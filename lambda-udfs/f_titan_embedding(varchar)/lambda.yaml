@@ -57,7 +57,7 @@ Resources:
                   input_data = {"inputText": text}
                   response = bedrock_runtime.invoke_model(
                       body=json.dumps(input_data),
-                      modelId="amazon.titan-embed-image-v1",
+                      modelId="amazon.titan-embed-text-v1",
                       accept="application/json",
                       contentType="application/json"
                   )
