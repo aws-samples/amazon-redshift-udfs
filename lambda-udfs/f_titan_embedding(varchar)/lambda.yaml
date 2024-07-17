@@ -38,7 +38,7 @@ Resources:
                   Action:
                     - bedrock:InvokeModel
                   Resource:
-                    - !Sub "arn:${AWS::Partition}:bedrock:${AWS::Region}::foundation-model/amazon.titan-embed-image-v1"
+                    - !Sub "arn:${AWS::Partition}:bedrock:${AWS::Region}::foundation-model/amazon.titan-embed-text-v1"
   LambdaUDFFunction:
      Type: "AWS::Lambda::Function"
      Properties:
