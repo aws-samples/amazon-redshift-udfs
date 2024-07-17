@@ -177,7 +177,7 @@ if test -f "../$type/$function/lambda.yaml"; then
   stackname=${stackname//)/}
   stackname=${stackname//_/-}
   stackname=${stackname//,/-}
-  if test -z "$paramsVPC" -o test -z "$paramsBuckets";
+  if [test -z "$paramsVPC" -o test -z "$paramsBuckets"]; thne
     paramOverrides="--parameter-overrides $paramsVPC $paramsBuckets"
   else
     paramOverrides=""
