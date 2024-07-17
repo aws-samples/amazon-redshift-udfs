@@ -177,10 +177,10 @@ if test -f "../$type/$function/lambda.yaml"; then
   stackname=${stackname//)/}
   stackname=${stackname//_/-}
   stackname=${stackname//,/-}
-  if [test -z "$paramsVPC" -o test -z "$paramsBuckets"]; thne
-    paramOverrides="--parameter-overrides $paramsVPC $paramsBuckets"
-  else
+  if test -z "$paramsVPC" && test -z "$paramsBuckets"; then
     paramOverrides=""
+  else
+    paramOverrides="--parameter-overrides $paramsVPC $paramsBuckets"
   fi
   echo aws cloudformation deploy --template-file ../${type}/${function}/lambda.yaml ${paramsOverrides} --stack-name ${stackname} --no-fail-on-empty-changeset --capabilities CAPABILITY_IAM
   if ! aws cloudformation deploy --template-file ../${type}/${function}/lambda.yaml ${paramsOverrides} --stack-name ${stackname} --no-fail-on-empty-changeset --capabilities CAPABILITY_IAM; then
