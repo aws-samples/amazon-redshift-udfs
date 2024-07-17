@@ -177,8 +177,13 @@ if test -f "../$type/$function/lambda.yaml"; then
   stackname=${stackname//)/}
   stackname=${stackname//_/-}
   stackname=${stackname//,/-}
-  echo aws cloudformation deploy --template-file ../${type}/${function}/lambda.yaml --parameter-overrides ${paramsVPC} ${paramsBuckets} --stack-name ${stackname} --no-fail-on-empty-changeset --capabilities CAPABILITY_IAM
-  if ! aws cloudformation deploy --template-file ../${type}/${function}/lambda.yaml --parameter-overrides ${paramsVPC} ${paramsBuckets} --stack-name ${stackname} --no-fail-on-empty-changeset --capabilities CAPABILITY_IAM; then
+  if test -z "$paramsVPC" -o test -z "$paramsBuckets";
+    paramOverrides="--parameter-overrides $paramsVPC $paramsBuckets"
+  else
+    paramOverrides=""
+  fi
+  echo aws cloudformation deploy --template-file ../${type}/${function}/lambda.yaml ${paramsOverrides} --stack-name ${stackname} --no-fail-on-empty-changeset --capabilities CAPABILITY_IAM
+  if ! aws cloudformation deploy --template-file ../${type}/${function}/lambda.yaml ${paramsOverrides} --stack-name ${stackname} --no-fail-on-empty-changeset --capabilities CAPABILITY_IAM; then
     aws cloudformation delete-stack --stack-name ${stackname}
     exit 1
   fi
