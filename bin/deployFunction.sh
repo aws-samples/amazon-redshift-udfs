@@ -81,18 +81,6 @@ while getopts "t:f:s:k:l:r:c:d:u:n:g:x:h" opt; do
   esac
 done
 
-echo $type
-echo $function
-echo $s3Bucket
-echo $s3Key
-echo $redshiftRole
-echo $cluster
-echo $db
-echo $user
-echo $schema
-echo $securityGroup
-echo $subnet
-
 # validate required arguments
 notNull "$type" "Please provide the function type -t"
 notNull "$function" "Please provide the function name -f"

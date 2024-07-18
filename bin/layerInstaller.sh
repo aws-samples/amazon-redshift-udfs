@@ -46,11 +46,6 @@ notNull "$requirement" "Please provide the dependency requirement (e.g. boto3>=1
 notNull "$s3Path" "Please provide an S3 key to store the library in using -s"
 notNull "$function" "Please provide the function name using -f"
 
-echo $requirement
-echo $s3Path
-echo $function
-echo $python_version
-
 if [ -z "${python_version}" ]; then
 	python_version="3.9"
 fi
