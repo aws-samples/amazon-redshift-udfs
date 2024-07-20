@@ -45,6 +45,7 @@ done
 notNull "$requirement" "Please provide the dependency requirement (e.g. boto3>=1.29.0) with -r"
 notNull "$s3Path" "Please provide an S3 key to store the library in using -s"
 notNull "$function" "Please provide the function name using -f"
+
 if [ -z "${python_version}" ]; then
 	python_version="3.9"
 fi
@@ -72,6 +73,7 @@ docker run \
 	--user $UID:$UID \
     "public.ecr.aws/sam/build-python${python_version}" \
     /bin/sh \
+	-c "pip install --upgrade pip" \
     -c "pip install -r requirements.txt -t python/lib/python${python_version}/site-packages/; exit"
 
 echo "Built, zipping layer contents..."

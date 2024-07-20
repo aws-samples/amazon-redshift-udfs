@@ -1,0 +1,93 @@
+AWSTemplateFormatVersion: '2010-09-09'
+Resources:
+  LambdaRole:
+    Type: AWS::IAM::Role
+    Properties:
+      AssumeRolePolicyDocument:
+          Version: 2012-10-17
+          Statement:
+            -
+              Effect: Allow
+              Principal:
+                Service:
+                  - lambda.amazonaws.com
+              Action:
+                - sts:AssumeRole
+      Path: /
+      Policies:
+          -
+            PolicyName: CloudwatchLogs
+            PolicyDocument:
+              Version: 2012-10-17
+              Statement:
+                -
+                  Effect: Allow
+                  Action:
+                    - logs:CreateLogGroup
+                  Resource:
+                    - !Sub "arn:${AWS::Partition}:logs:${AWS::Region}:${AWS::AccountId}:*"
+                -
+                  Effect: Allow
+                  Action:
+                    - logs:CreateLogStream
+                    - logs:PutLogEvents
+                  Resource:
+                    - !Sub "arn:${AWS::Partition}:logs:${AWS::Region}:${AWS::AccountId}:log-group:/aws/lambda/*"
+                -
+                  Effect: Allow
+                  Action:
+                    - bedrock:InvokeModel
+                  Resource:
+                    - !Sub "arn:${AWS::Partition}:bedrock:${AWS::Region}::foundation-model/amazon.titan-embed-text-v1"
+  LambdaUDFFunction:
+     Type: "AWS::Lambda::Function"
+     Properties:
+       FunctionName: f-titan-embedding-varchar
+       Role: !GetAtt 'LambdaRole.Arn'
+       Handler: index.handler
+       Runtime: python3.9
+       Timeout: 300
+       Code:
+         ZipFile: |
+          import boto3, json, sys
+          bedrock_runtime = boto3.client(service_name="bedrock-runtime")
+
+          def generate_embeddings(text=None):
+              try:
+                  input_data = {"inputText": text}
+                  response = bedrock_runtime.invoke_model(
+                      body=json.dumps(input_data),
+                      modelId="amazon.titan-embed-text-v1",
+                      accept="application/json",
+                      contentType="application/json"
+                  )
+                  response = response.get("body").read().decode('utf-8')
+                  response_json = json.loads(response)
+                  return response_json.get("embedding")
+                  
+              except Exception as e:
+                  exc_type, exc_obj, exc_tb = sys.exc_info()
+                  print(exc_type, exc_tb.tb_lineno)
+                  print('Error: '+ str(e))
+                  return ''
+                  
+          def handler(event, context):
+              print(event)
+              redshift_response = {"success": False, "num_records": event["num_records"]}
+              try:
+                  result = []
+                  for row in event["arguments"]:
+                      try:
+                          embedding = generate_embeddings(row[0])
+                          result.append(json.dumps(embedding))
+                      except Exception as e:
+                          print(f"Error: {e}")
+                          result.append(None)
+                  redshift_response["success"] = True
+                  redshift_response["results"] = result
+              except Exception as e:
+                  redshift_response["error_msg"] = str(e)
+                  print('Error: '+ str(e))
+                  exc_type, exc_obj, exc_tb = sys.exc_info()
+                  print(exc_type, exc_tb.tb_lineno)
+              return json.dumps(redshift_response)
