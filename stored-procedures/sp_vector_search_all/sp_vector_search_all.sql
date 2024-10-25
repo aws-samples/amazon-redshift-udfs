@@ -37,9 +37,10 @@ END $$ LANGUAGE plpgsql;
 
 /* Usage Example:
 SET enable_case_sensitive_identifier TO true;
-call sp_vector_search_all('reviews', 'bat product quality', 100, 'searchresults')
+call sp_vector_search_all('reviews', 'bad broken unreliable slow', 100, 'searchresults');
 
 select review_id, product_title, review_title, review_desc, similarity 
 from  #searchresults 
 join reviews on review_id = "recordId"
+order by similarity desc;
 */
