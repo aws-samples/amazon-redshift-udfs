@@ -15,8 +15,8 @@ Parameters:
 Requirements:
         expects a table with the following tables to exist and be populated:
             CREATE TABLE $(tablename)_embeddings
-                ( recordid VARCHAR(15),
-                  modeloutput SUPER ) DISTKEY (recordid);
+                ( "recordId" VARCHAR(15),
+                  "modelOutput" SUPER ) DISTKEY (recordid);
             CREATE TABLE $(tablename)_kmeans 
                 ( cluster int, 
                   centroid SUPER, 
@@ -25,20 +25,23 @@ Requirements:
                   interations int) DISTSTYLE ALL;
             CREATE TABLE $(tablename)_kmeans_clusters 
                 ( cluster int, 
-                  recordid VARCHAR(15), 
+                  "recordId" VARCHAR(15), 
                   similarity float, 
                   rnk int) DISTKEY (recordid);
 
 History:
 2024-07-19 - rjvgupta - Created
+2024-10-25 - rjvgupta - Updated for case-sensitivity.
 **********************************************************************************************/
+
+SET enable_case_sensitive_identifier TO true;
 
 CREATE OR REPLACE PROCEDURE sp_vector_search (tablename IN varchar, search IN varchar, cnt IN int, tmp_name IN varchar) AS $$
 BEGIN
     EXECUTE 'drop table if exists #'||tmp_name;
-    EXECUTE 'create table #'||tmp_name ||' (recordid varchar(100), similarity float)';
+    EXECUTE 'create table #'||tmp_name ||' ("recordId" varchar(100), similarity float)';
     EXECUTE 'insert into #'||tmp_name ||'
-        select re.recordid, sum(rv::float*qv::float)/SQRT(sum(rv::float*rv::float)*sum(qv::float*qv::float)) esimilarity
+        select re."recordId", sum(rv::float*qv::float)/SQRT(sum(rv::float*rv::float)*sum(qv::float*qv::float)) esimilarity
         from (
             select k.cluster, q.q, sum(kv::float*qv::float)/SQRT(sum(kv::float*kv::float)*sum(qv::float*qv::float)) csimilarity
             from '||tablename||'_kmeans k, k.centroid kv at kvi, 
@@ -46,16 +49,18 @@ BEGIN
             where kvi = qvi 
             group by 1,2
             qualify rank() over (order by csimilarity desc) = 1
-        ) q, '||tablename||'_kmeans_clusters c, '||tablename||'_embeddings re, q.q qv at qvi, re.modeloutput.embedding rv at rvi 
-        where rvi = qvi and c.cluster = q.cluster and c.recordid = re.recordid
+        ) q, '||tablename||'_kmeans_clusters c, '||tablename||'_embeddings re, q.q qv at qvi, re."modelOutput".embedding rv at rvi 
+        where rvi = qvi and c.cluster = q.cluster and c."recordId" = re."recordId"
         group by 1
         qualify rank() over (order by esimilarity desc) <= '||cnt;
 END $$ LANGUAGE plpgsql;
 
 /* Usage Example:
-call sp_kmeans('reviews', 'bat product quality', 100, 'searchresults')
+SET enable_case_sensitive_identifier TO true;
+call sp_vector_search('reviews', 'bad broken unreliable slow', 100, 'searchresults');
 
 select review_id, product_title, review_title, review_desc, similarity 
 from  #searchresults 
-join reviews on review_id = recordid
+join reviews on review_id = "recordId"
+order by similarity desc;
 */
