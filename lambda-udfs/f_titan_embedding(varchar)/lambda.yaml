@@ -54,7 +54,7 @@ Resources:
 
           def generate_embeddings(text=None):
               try:
-                  input_data = {"inputText": text}
+                  input_data = {"inputText": text, "dimensions": 256}
                   response = bedrock_runtime.invoke_model(
                       body=json.dumps(input_data),
                       modelId="amazon.titan-embed-text-v1",
