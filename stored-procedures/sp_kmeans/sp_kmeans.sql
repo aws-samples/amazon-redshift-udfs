@@ -3,7 +3,7 @@ Purpose: Generate K-Means clusters from vector embeddings.
 Notes:  
         This procedure is used to support vector search capabilities by creating K-Means clusters 
         generated and loaded into Redshift from embeddings; typically created by foundational models.
-        The ouput of this procedure will be the <tablename>_kmeans table containing the cluster & centroid 
+        The output of this procedure will be the <tablename>_kmeans table containing the cluster & centroid 
         and a <tablename>_kmeans_clusters table contain the member records of the cluster.  
         See the following article for more info:
         https://repost.aws/articles/ARPoweQIN2ROOXZiJAtSQvkQ/vector-search-with-amazon-redshift
