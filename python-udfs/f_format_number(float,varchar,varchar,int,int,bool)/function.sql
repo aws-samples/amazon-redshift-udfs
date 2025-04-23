@@ -48,12 +48,12 @@ AS $$
         try:
             value_float = float(value)
         except ValueError, e:
-            print('A problem occured with formatting, numeric value was expected.')
+            print('A problem occurred with formatting, numeric value was expected.')
             raise(e)
         try:
             assert decimal_sep != group_sep
         except AssertionError, e:
-            print('A problem occured with formatting, group and decimal separators should not be equal!')
+            print('A problem occurred with formatting, group and decimal separators should not be equal!')
             raise(e)
 
         if value < 0:
