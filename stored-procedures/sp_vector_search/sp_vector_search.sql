@@ -22,7 +22,7 @@ Requirements:
                   centroid SUPER, 
                   startts timestamp, 
                   endts timestamp, 
-                  interations int) DISTSTYLE ALL;
+                  iterations int) DISTSTYLE ALL;
             CREATE TABLE $(tablename)_kmeans_clusters 
                 ( cluster int, 
                   "recordId" VARCHAR(15), 
