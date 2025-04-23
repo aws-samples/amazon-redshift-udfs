@@ -86,7 +86,7 @@ BEGIN
                 EXECUTE 'INSERT INTO tmp_sp_fix_pk'||
                        ' SELECT DISTINCT * FROM '||check_table||' WHERE ('||pk_columns||') IN (SELECT '||pk_columns||
                          ' FROM '||check_table||' GROUP BY '||pk_columns||' HAVING COUNT(*) > 1)';
-                --Check that PK duplciates are removed in the temp table
+                --Check that PK duplicates are removed in the temp table
                 EXECUTE 'SELECT COUNT(*) FROM (SELECT '||pk_columns||
                         ' FROM tmp_sp_fix_pk GROUP BY '||pk_columns||' HAVING COUNT(*) > 1)' INTO temp_count ;
                 IF temp_count > 0 THEN
