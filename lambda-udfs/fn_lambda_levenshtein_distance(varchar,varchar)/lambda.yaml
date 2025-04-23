@@ -85,8 +85,8 @@ Resources:
               except Exception as e:
                 print (str(e))
                 ret['error_msg'] = str(e)
-                ret['sucess'] = False
-              ret['sucess'] = True
+                ret['success'] = False
+              ret['success'] = True
               ret['results'] = res
               return json.dumps(ret)
       Handler: index.lambda_handler
