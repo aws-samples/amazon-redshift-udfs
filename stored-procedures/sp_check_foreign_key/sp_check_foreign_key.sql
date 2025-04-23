@@ -1,7 +1,7 @@
 /**********************************************************************************************
 Purpose: Check the integrity of the FOREIGN KEY declared on a table and a column
 
-Notes:  If the foreign key dosen't have a primary key, it will raise a info. 
+Notes:  If the foreign key doesn't have a primary key, it will raise a info. 
 
 Parameters:
         batch_time  : Timestamp for this batch. Can be used to group multiple fixes
