@@ -8,7 +8,7 @@ Purpose:
     inputs:
       src - the table column which needs to be masked/unmasked
       class - the classification of data, i.e. different class values may have different masking partial or full masking rules.
-      priv - the level of privilage allowed for this user.  e.g. if
+      priv - the level of privilege allowed for this user.  e.g. if
         not supplied/null, function should return null
         if 'N' - no masking, will return source value
         if 'F' - the data should be fully masked
