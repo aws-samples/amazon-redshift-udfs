@@ -36,7 +36,7 @@ BEGIN
     schema_n := NVL(schema_name,'public');
     -- Default to 1 percent
     anlyz_pct := NVL(analyze_percent,1);
-    -- Generagte ANALYZE SQL
+    -- Generate ANALYZE SQL
     anlyz_set := 'SET ANALYZE_THRESHOLD_PERCENT TO '||anlyz_pct::varchar||'; ';
     SELECT INTO anlyz_sql 'ANALYZE '||n.nspname||'.'||c.relname||' ('||NVL(NVL(srtk.attname,dstk.attname),cols.attname)||');' AS sql
     FROM pg_namespace n 
