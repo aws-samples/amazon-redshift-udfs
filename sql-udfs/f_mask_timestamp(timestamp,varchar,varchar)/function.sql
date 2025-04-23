@@ -15,7 +15,7 @@ Purpose:
         if 'P' - the data should be partially masked
 
     note:
-      this function is volitile and will fail on the test for full masking because it uses a RANDOM function, this is by design.
+      this function is volatile and will fail on the test for full masking because it uses a RANDOM function, this is by design.
 
 2021-09-03: written by rjvgupta
 */
