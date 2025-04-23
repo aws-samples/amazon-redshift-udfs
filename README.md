@@ -85,7 +85,7 @@ This script will test the UDF by
 
 We would love your contributions.  See the [contributing](contributing.md) page for more details on creating a fork of the project and a pull request of your contribution.
 
-> Pull requests will be tested using a Github workflow which leverages the above testing scripts. Please execute these script prior to submitting a pull request to ensure the request is approved quickly.  When executed in the test enviornment the [RedshiftRole](#redshift-role) will be defined as follows. You can create a similar role in your local environment for testing.
+> Pull requests will be tested using a Github workflow which leverages the above testing scripts. Please execute these script prior to submitting a pull request to ensure the request is approved quickly.  When executed in the test environment the [RedshiftRole](#redshift-role) will be defined as follows. You can create a similar role in your local environment for testing.
 
 ##Appendix
 
