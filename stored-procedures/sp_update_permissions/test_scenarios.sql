@@ -86,7 +86,7 @@ SET SESSION AUTHORIZATION 'user2';
 SELECT f_sql_greater (10,20);
 
 /*--- Test 5: GRANT access to all tables in schema & grant access with RBAC ---*/
--- First creatae role
+-- First create role
 SET SESSION AUTHORIZATION '[superuser]';
 CREATE ROLE role1;
 GRANT ROLE role1 to user1;
