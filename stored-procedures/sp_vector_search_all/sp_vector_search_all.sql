@@ -2,7 +2,7 @@
 Purpose: Execute vector search leveraging vector indexes 
 Notes:  
         This procedure is used to execute a vectorized searh of your query string.  The procedure will create
-        and on-the-fly embedding using the LambdaUDF f_titan_embeding(varchar) and compare the result to all
+        and on-the-fly embedding using the LambdaUDF f_titan_embedding(varchar) and compare the result to all
         data in your $(tablename)_embeddings table.  See the following article for more info:
         https://repost.aws/articles/ARPoweQIN2ROOXZiJAtSQvkQ/vector-search-with-amazon-redshift
 
