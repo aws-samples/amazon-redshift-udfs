@@ -8,7 +8,7 @@ Notes:
 
 Parameters:
         tablename : The table which was the source of the data which contains the batch embeddings and K-Means clusters. 
-        search    : The texst you want to search
+        search    : The text you want to search
         cnt       : The number of results you want to return
         tmp_name  : The name of the temp table that will be created to return your search results.
 
