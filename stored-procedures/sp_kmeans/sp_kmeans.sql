@@ -3,7 +3,7 @@ Purpose: Generate K-Means clusters from vector embeddings.
 Notes:  
         This procedure is used to support vector search capabilities by creating K-Means clusters 
         generated and loaded into Redshift from embeddings; typically created by foundational models.
-        The ouput of this procedure will be the <tablename>_kmeans table containing the cluster & centroid 
+        The output of this procedure will be the <tablename>_kmeans table containing the cluster & centroid 
         and a <tablename>_kmeans_clusters table contain the member records of the cluster.  
         See the following article for more info:
         https://repost.aws/articles/ARPoweQIN2ROOXZiJAtSQvkQ/vector-search-with-amazon-redshift
@@ -38,7 +38,7 @@ BEGIN
     -- create kmeans tables and choose random starting centroids
     EXECUTE 'CREATE TABLE IF NOT EXISTS ' || tablename || '_kmeans (
         cluster int, centroid SUPER, startts timestamp, endts timestamp, 
-        interations int) DISTSTYLE ALL';
+        iterations int) DISTSTYLE ALL';
     EXECUTE 'TRUNCATE TABLE ' || tablename || '_kmeans';
 
     EXECUTE 'CREATE TABLE IF NOT EXISTS ' || tablename || '_kmeans_clusters (
@@ -89,7 +89,7 @@ BEGIN
                         ' || tablename || '_kmeans m, m.centroid mv at mvi 
                     where m.cluster = '|| cluster ||' and kvi = mvi' INTO similarity;
             COMMIT;
-            EXECUTE 'UPDATE ' || tablename || '_kmeans SET centroid = (select centroid from #centroid), endts = CURRENT_TIMESTAMP, interations = '|| i ||' where cluster = ' || cluster;
+            EXECUTE 'UPDATE ' || tablename || '_kmeans SET centroid = (select centroid from #centroid), endts = CURRENT_TIMESTAMP, iterations = '|| i ||' where cluster = ' || cluster;
             COMMIT;
             i := i+1;
             COMMIT;

@@ -11,13 +11,13 @@ Arguments:
 test
 2015-10-15: created by Joe Harris (https://github.com/joeharris76)
 */
-CREATE OR REPLACE FUNCTION f_bitwise_to_delimited(bitwise_column BIGINT, bits_in_column INT, delimter CHAR(1))
+CREATE OR REPLACE FUNCTION f_bitwise_to_delimited(bitwise_column BIGINT, bits_in_column INT, delimiter CHAR(1))
     RETURNS VARCHAR(512)
 STABLE
 AS $$
   # Convert column to binary, strip "0b" prefix, pad out with zeroes
   b = bin(bitwise_column)[2:].zfill(bits_in_column)
   # Convert each character to a member of an array, join array into string using delimiter
-  o = delimter.join([b[i:i+1] for i in range(0, len(b), 1)])
+  o = delimiter.join([b[i:i+1] for i in range(0, len(b), 1)])
   return o
 $$ LANGUAGE plpythonu;

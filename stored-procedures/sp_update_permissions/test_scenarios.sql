@@ -77,7 +77,7 @@ SELECT f_sql_greater (10,20);
 
 /*--- Test 4: REVOKE execute function permission from user1 & GRANT execute function permission to group1. Note that the same mechanism works for stored procedures as well. ---*/
 -- Load user_access_details4.csv into S3 bucket, delete user_access_details3.csv and execute SP (as superuser)
--- Expected result: user1 should NOT be able to execute function. user2 should be able to execute function, sinc ehe is member of group1
+-- Expected result: user1 should NOT be able to execute function. user2 should be able to execute function, since he is a member of group1
 
 SET SESSION AUTHORIZATION 'user1';
 SELECT f_sql_greater (10,20);
@@ -86,7 +86,7 @@ SET SESSION AUTHORIZATION 'user2';
 SELECT f_sql_greater (10,20);
 
 /*--- Test 5: GRANT access to all tables in schema & grant access with RBAC ---*/
--- First creatae role
+-- First create role
 SET SESSION AUTHORIZATION '[superuser]';
 CREATE ROLE role1;
 GRANT ROLE role1 to user1;

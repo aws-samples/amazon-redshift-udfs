@@ -1,14 +1,14 @@
 /**********************************************************************************************
 Purpose: Execute vector search leveraging vector indexes 
 Notes:  
-        This procedure is used to execute a vectorized searh of your query string.  The procedure will create
-        and on-the-fly embedding using the LambdaUDF f_titan_embeding(varchar) and compare the result to your 
+        This procedure is used to execute a vectorized search of your query string.  The procedure will create
+        and on-the-fly embedding using the LambdaUDF f_titan_embedding(varchar) and compare the result to your 
         K-Means clusters create using the stored procedure sp_vector_search.  See the following article for more info:
         https://repost.aws/articles/ARPoweQIN2ROOXZiJAtSQvkQ/vector-search-with-amazon-redshift
 
 Parameters:
         tablename : The table which was the source of the data which contains the batch embeddings and K-Means clusters. 
-        search    : The texst you want to search
+        search    : The text you want to search
         cnt       : The number of results you want to return
         tmp_name  : The name of the temp table that will be created to return your search results.
 
@@ -22,7 +22,7 @@ Requirements:
                   centroid SUPER, 
                   startts timestamp, 
                   endts timestamp, 
-                  interations int) DISTSTYLE ALL;
+                  iterations int) DISTSTYLE ALL;
             CREATE TABLE $(tablename)_kmeans_clusters 
                 ( cluster int, 
                   "recordId" VARCHAR(15), 

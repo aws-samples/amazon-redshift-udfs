@@ -8,14 +8,14 @@ Purpose:
     inputs:
       src - the table column which needs to be masked/unmasked
       class - the classification of data, i.e. different class values may have different masking partial or full masking rules.
-      priv - the level of privilage allowed for this user.  e.g. if
+      priv - the level of privilege allowed for this user.  e.g. if
         not supplied/null, function should return null
         if 'N' - no masking, will return source value
         if 'F' - the data should be fully masked
         if 'P' - the data should be partially masked
 
     note:
-      this function is volitile and will fail on the test for full masking because it uses a RANDOM function, this is by design.
+      this function is volatile and will fail on the test for full masking because it uses a RANDOM function, this is by design.
 
 2021-09-03: written by rjvgupta
 */
