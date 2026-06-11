@@ -1,0 +1,79 @@
+AWSTemplateFormatVersion: '2010-09-09'
+Resources:
+  LambdaRole:
+    Type: AWS::IAM::Role
+    Properties:
+      AssumeRolePolicyDocument:
+          Version: 2012-10-17
+          Statement:
+            -
+              Effect: Allow
+              Principal:
+                Service:
+                  - lambda.amazonaws.com
+              Action:
+                - sts:AssumeRole
+      Path: /
+      Policies:
+          -
+            PolicyName: CloudwatchLogs
+            PolicyDocument:
+              Version: 2012-10-17
+              Statement:
+                -
+                  Effect: Allow
+                  Action:
+                    - logs:CreateLogGroup
+                  Resource:
+                    - !Sub "arn:${AWS::Partition}:logs:${AWS::Region}:${AWS::AccountId}:*"
+                -
+                  Effect: Allow
+                  Action:
+                    - logs:CreateLogStream
+                    - logs:PutLogEvents
+                  Resource:
+                    - !Sub "arn:${AWS::Partition}:logs:${AWS::Region}:${AWS::AccountId}:log-group:/aws/lambda/*"
+  LambdaUDFFunction:
+     Type: "AWS::Lambda::Function"
+     Properties:
+       FunctionName: f-unixts-to-timestamp-bigint-varchar
+       Role: !GetAtt 'LambdaRole.Arn'
+       Handler: index.handler
+       Runtime: python3.12
+       Timeout: 300
+       Code:
+         ZipFile: |
+          import json
+          from datetime import datetime, timezone
+
+          UNIT_DIVISORS = {'s': 1, 'ms': 1000, 'us': 1000000}
+
+          def handler(event, context):
+              redshift_response = {"success": False, "num_records": event["num_records"]}
+              try:
+                  result = []
+                  for row in event["arguments"]:
+                      try:
+                          ts = row[0]
+                          units = row[1]
+                          if ts is None or units is None:
+                              result.append(None)
+                          else:
+                              units = units.strip()
+                              divisor = UNIT_DIVISORS.get(units, 1)
+                              seconds = int(ts) / divisor
+                              dt = datetime.fromtimestamp(seconds, tz=timezone.utc)
+                              if units == 'us':
+                                  result.append(dt.strftime('%Y-%m-%d %H:%M:%S.%f'))
+                              elif units == 'ms':
+                                  result.append(dt.strftime('%Y-%m-%d %H:%M:%S.') + f"{dt.microsecond // 1000:03d}")
+                              else:
+                                  result.append(dt.strftime('%Y-%m-%d %H:%M:%S'))
+                      except Exception as e:
+                          print(f"Error processing row: {e}")
+                          result.append(None)
+                  redshift_response["success"] = True
+                  redshift_response["results"] = result
+              except Exception as e:
+                  redshift_response["error_msg"] = str(e)
+              return json.dumps(redshift_response)

@@ -1,0 +1,93 @@
+AWSTemplateFormatVersion: '2010-09-09'
+Parameters:
+  S3Bucket:
+    Description: the S3 Bucket containing the Lambda layer
+    Type: String
+  S3Key:
+    Description: the S3 Key containing the Lambda layer
+    Type: String
+Conditions:
+  NoS3Prefix: !Equals [!Ref S3Key, '']
+Resources:
+  LambdaRole:
+    Type: AWS::IAM::Role
+    Properties:
+      AssumeRolePolicyDocument:
+          Version: 2012-10-17
+          Statement:
+            -
+              Effect: Allow
+              Principal:
+                Service:
+                  - lambda.amazonaws.com
+              Action:
+                - sts:AssumeRole
+      Path: /
+      Policies:
+          -
+            PolicyName: CloudwatchLogs
+            PolicyDocument:
+              Version: 2012-10-17
+              Statement:
+                -
+                  Effect: Allow
+                  Action:
+                    - logs:CreateLogGroup
+                  Resource:
+                    - !Sub "arn:${AWS::Partition}:logs:${AWS::Region}:${AWS::AccountId}:*"
+                -
+                  Effect: Allow
+                  Action:
+                    - logs:CreateLogStream
+                    - logs:PutLogEvents
+                  Resource:
+                    - !Sub "arn:${AWS::Partition}:logs:${AWS::Region}:${AWS::AccountId}:log-group:/aws/lambda/*"
+  NumpyLayer:
+    Type: AWS::Lambda::LayerVersion
+    Properties:
+      CompatibleRuntimes:
+        - python3.12
+      Content:
+        S3Bucket: !Ref S3Bucket
+        S3Key: !If ["NoS3Prefix", "numpy_layer.zip", !Sub "${S3Key}/numpy_layer.zip"]
+      Description: Numpy library
+      LayerName: numpy
+  LambdaUDFFunction:
+     Type: "AWS::Lambda::Function"
+     Properties:
+       FunctionName: f-cosine-similarity-varchar-varchar
+       Role: !GetAtt 'LambdaRole.Arn'
+       Handler: index.handler
+       Runtime: python3.12
+       Layers:
+        - !Ref NumpyLayer
+       Timeout: 300
+       Code:
+         ZipFile: |
+          import json
+          import numpy
+          from numpy.linalg import norm
+
+          def handler(event, context):
+              redshift_response = {"success": False, "num_records": event["num_records"]}
+              try:
+                  result = []
+                  for row in event["arguments"]:
+                      try:
+                          v1 = row[0]
+                          v2 = row[1]
+                          if v1 is None or v2 is None:
+                              result.append(None)
+                          else:
+                              A = numpy.array(json.loads(v1))
+                              B = numpy.array(json.loads(v2))
+                              similarity = float(numpy.dot(A, B) / (norm(A) * norm(B)))
+                              result.append(similarity)
+                      except Exception as e:
+                          print(f"Error processing row: {e}")
+                          result.append(None)
+                  redshift_response["success"] = True
+                  redshift_response["results"] = result
+              except Exception as e:
+                  redshift_response["error_msg"] = str(e)
+              return json.dumps(redshift_response)
