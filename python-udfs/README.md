@@ -30,11 +30,13 @@ This repository includes a Kiro AI Skill that automates the entire end-to-end mi
 
 ### Install the Skill
 
-Run the following command to install the skill into your AI-powered development environment:
+Run the following command to install the skill into your AI-powered IDE (Kiro, Cursor, Claude, Codex, etc.):
 
 ```bash
-npx @anthropic/kiro-skill-install https://github.com/aws-samples/amazon-redshift-udfs/tree/master/python-udfs/migrating-python-udfs
+npx skills add https://github.com/aws-samples/amazon-redshift-udfs/tree/master/python-udfs/migrating-python-udfs
 ```
+
+The CLI will detect your agent environment and install the skill to the appropriate local skills folder.
 
 ### How to Use
 
