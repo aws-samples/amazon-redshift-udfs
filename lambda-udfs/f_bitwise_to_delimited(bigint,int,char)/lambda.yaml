@@ -1,0 +1,70 @@
+AWSTemplateFormatVersion: '2010-09-09'
+Resources:
+  LambdaRole:
+    Type: AWS::IAM::Role
+    Properties:
+      AssumeRolePolicyDocument:
+          Version: 2012-10-17
+          Statement:
+            -
+              Effect: Allow
+              Principal:
+                Service:
+                  - lambda.amazonaws.com
+              Action:
+                - sts:AssumeRole
+      Path: /
+      Policies:
+          -
+            PolicyName: CloudwatchLogs
+            PolicyDocument:
+              Version: 2012-10-17
+              Statement:
+                -
+                  Effect: Allow
+                  Action:
+                    - logs:CreateLogGroup
+                  Resource:
+                    - !Sub "arn:${AWS::Partition}:logs:${AWS::Region}:${AWS::AccountId}:*"
+                -
+                  Effect: Allow
+                  Action:
+                    - logs:CreateLogStream
+                    - logs:PutLogEvents
+                  Resource:
+                    - !Sub "arn:${AWS::Partition}:logs:${AWS::Region}:${AWS::AccountId}:log-group:/aws/lambda/*"
+  LambdaUDFFunction:
+     Type: "AWS::Lambda::Function"
+     Properties:
+       FunctionName: f-bitwise-to-delimited-bigint-int-char
+       Role: !GetAtt 'LambdaRole.Arn'
+       Handler: index.handler
+       Runtime: python3.12
+       Timeout: 300
+       Code:
+         ZipFile: |
+          import json
+
+          def handler(event, context):
+              redshift_response = {"success": False, "num_records": event["num_records"]}
+              try:
+                  result = []
+                  for row in event["arguments"]:
+                      try:
+                          bitwise_column = row[0]
+                          bits_in_column = row[1]
+                          delimiter = row[2]
+                          if bitwise_column is None or bits_in_column is None or delimiter is None:
+                              result.append(None)
+                          else:
+                              b = bin(int(bitwise_column))[2:].zfill(int(bits_in_column))
+                              o = delimiter.join([b[i:i+1] for i in range(0, len(b), 1)])
+                              result.append(o)
+                      except Exception as e:
+                          print(f"Error processing row: {e}")
+                          result.append(None)
+                  redshift_response["success"] = True
+                  redshift_response["results"] = result
+              except Exception as e:
+                  redshift_response["error_msg"] = str(e)
+              return json.dumps(redshift_response)
