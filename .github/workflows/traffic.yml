@@ -1,0 +1,89 @@
+name: Collect Traffic Data
+
+on:
+  schedule:
+    - cron: '0 9 * * *' # Daily at 9:00 UTC
+  workflow_dispatch: # Allow manual trigger
+
+permissions:
+  contents: write
+
+jobs:
+  collect-traffic:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Check out repository
+        uses: actions/checkout@v4
+
+      - name: Fetch and merge traffic data
+        env:
+          GH_TOKEN: ${{ github.token }}
+          REPO: ${{ github.repository }}
+        run: |
+          set -e
+
+          mkdir -p traffic
+
+          VIEWS_FILE="traffic/views.json"
+          POPULAR_FILE="traffic/popular_paths.json"
+
+          # --- Repository-level traffic (views) ---
+          echo "Fetching repository views..."
+          VIEWS_RESPONSE=$(gh api "repos/${REPO}/traffic/views")
+
+          # Load existing data or initialize empty array
+          if [ -f "$VIEWS_FILE" ]; then
+            EXISTING_VIEWS=$(cat "$VIEWS_FILE")
+          else
+            EXISTING_VIEWS='[]'
+          fi
+
+          # Merge new daily view entries with existing data (deduplicate by timestamp)
+          NEW_VIEWS=$(echo "$VIEWS_RESPONSE" | jq '.views')
+          MERGED_VIEWS=$(echo "$EXISTING_VIEWS" "$NEW_VIEWS" | jq -s '
+            .[0] + .[1]
+            | group_by(.timestamp)
+            | map(max_by(.uniques // 0))
+            | sort_by(.timestamp)
+          ')
+          echo "$MERGED_VIEWS" | jq '.' > "$VIEWS_FILE"
+
+          # --- Popular paths (content) ---
+          echo "Fetching popular paths..."
+          PATHS_RESPONSE=$(gh api "repos/${REPO}/traffic/popular/paths")
+
+          # Load existing data or initialize empty array
+          if [ -f "$POPULAR_FILE" ]; then
+            EXISTING_PATHS=$(cat "$POPULAR_FILE")
+          else
+            EXISTING_PATHS='[]'
+          fi
+
+          # Add a fetched_at timestamp so we can track when data was collected
+          FETCHED_AT=$(date -u +"%Y-%m-%dT%H:%M:%SZ")
+          TIMESTAMPED_PATHS=$(echo "$PATHS_RESPONSE" | jq --arg ts "$FETCHED_AT" '
+            { "fetched_at": $ts, "paths": . }
+          ')
+
+          # Merge: keep one entry per fetched_at date (last write wins for same day)
+          FETCH_DATE=$(date -u +"%Y-%m-%d")
+          MERGED_PATHS=$(echo "$EXISTING_PATHS" | jq --arg date "$FETCH_DATE" --argjson new "$TIMESTAMPED_PATHS" '
+            [.[] | select((.fetched_at | split("T")[0]) != $date)] + [$new]
+            | sort_by(.fetched_at)
+          ')
+          echo "$MERGED_PATHS" | jq '.' > "$POPULAR_FILE"
+
+          echo "Done. Views entries: $(echo "$MERGED_VIEWS" | jq length)"
+          echo "Done. Popular path snapshots: $(echo "$MERGED_PATHS" | jq length)"
+
+      - name: Commit and push
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "github-actions[bot]@users.noreply.github.com"
+          git add traffic/
+          if git diff --cached --quiet; then
+            echo "No changes to commit."
+          else
+            git commit -m "chore: update traffic data [skip ci]"
+            git push
+          fi
