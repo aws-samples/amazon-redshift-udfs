@@ -22,10 +22,10 @@ jobs:
         run: |
           set -e
 
-          mkdir -p traffic
+          mkdir -p .github/traffic
 
-          VIEWS_FILE="traffic/views.json"
-          POPULAR_FILE="traffic/popular_paths.json"
+          VIEWS_FILE=".github/traffic/views.json"
+          POPULAR_FILE=".github/traffic/popular_paths.json"
 
           # --- Repository-level traffic (views) ---
           echo "Fetching repository views..."
