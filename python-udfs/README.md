@@ -24,7 +24,7 @@ For full details, see the AWS blog post: [Amazon Redshift Python user-defined fu
 
 ---
 
-## Automated Migration with Kiro AI Skill
+## Automated Migration with Kiro, Cursor, Claude, Codex AI Skill
 
 This repository includes a Kiro AI Skill that automates the entire end-to-end migration workflow. With a single natural language command, the skill handles discovery, conversion, deployment, validation, and cutover — all with safety gates that require your explicit approval before making any production changes.
 
