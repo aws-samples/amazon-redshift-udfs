@@ -17,7 +17,7 @@ jobs:
 
       - name: Fetch and merge traffic data
         env:
-          GH_TOKEN: ${{ github.token }}
+          GH_TOKEN: ${{ secrets.TRAFFIC_TOKEN }}
           REPO: ${{ github.repository }}
         run: |
           set -e
