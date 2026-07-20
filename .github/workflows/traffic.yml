@@ -22,10 +22,10 @@ jobs:
         run: |
           set -e
 
-          mkdir -p traffic
+          mkdir -p .github/traffic
 
-          VIEWS_FILE="traffic/views.json"
-          POPULAR_FILE="traffic/popular_paths.json"
+          VIEWS_FILE=".github/traffic/views.json"
+          POPULAR_FILE=".github/traffic/popular_paths.json"
 
           # --- Repository-level traffic (views) ---
           echo "Fetching repository views..."
@@ -80,10 +80,11 @@ jobs:
         run: |
           git config user.name "github-actions[bot]"
           git config user.email "github-actions[bot]@users.noreply.github.com"
-          git add traffic/
+          git add .github/traffic/
           if git diff --cached --quiet; then
             echo "No changes to commit."
           else
             git commit -m "chore: update traffic data [skip ci]"
             git push
           fi
+
