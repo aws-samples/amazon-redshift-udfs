@@ -1,0 +1,249 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Repository Traffic Dashboard</title>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js@4"></script>
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+            background: #0d1117;
+            color: #c9d1d9;
+            padding: 2rem;
+        }
+        h1 {
+            text-align: center;
+            margin-bottom: 0.5rem;
+            color: #58a6ff;
+        }
+        .subtitle {
+            text-align: center;
+            margin-bottom: 2rem;
+            color: #8b949e;
+            font-size: 0.9rem;
+        }
+        .chart-container {
+            background: #161b22;
+            border: 1px solid #30363d;
+            border-radius: 6px;
+            padding: 1.5rem;
+            margin-bottom: 2rem;
+            max-width: 1000px;
+            margin-left: auto;
+            margin-right: auto;
+        }
+        .chart-container h2 {
+            margin-bottom: 1rem;
+            color: #c9d1d9;
+            font-size: 1.1rem;
+        }
+        canvas { width: 100% !important; }
+        .error {
+            text-align: center;
+            color: #f85149;
+            padding: 2rem;
+            display: none;
+        }
+        .loading {
+            text-align: center;
+            padding: 2rem;
+            color: #8b949e;
+        }
+    </style>
+</head>
+<body>
+    <h1>📊 Repository Traffic</h1>
+    <p class="subtitle" id="repo-name"></p>
+
+    <div class="loading" id="loading">Loading traffic data...</div>
+    <div class="error" id="error">Failed to load traffic data. Make sure this page is hosted on GitHub Pages or accessed via raw.githubusercontent.com.</div>
+
+    <div class="chart-container" style="display:none" id="views-container">
+        <h2>Page Views Over Time</h2>
+        <canvas id="viewsChart"></canvas>
+    </div>
+
+    <div class="chart-container" style="display:none" id="paths-container">
+        <h2>Popular Paths (Views by Fetch Date)</h2>
+        <canvas id="pathsChart"></canvas>
+    </div>
+
+    <script>
+        function getBaseUrl() {
+            // Derive org/repo from the current hosting location
+            const url = window.location.href;
+            let org, repo;
+
+            // GitHub Pages: <org>.github.io/<repo>/...
+            const pagesMatch = url.match(/https?:\/\/([^.]+)\.github\.io\/([^/]+)/);
+            if (pagesMatch) {
+                org = pagesMatch[1];
+                repo = pagesMatch[2];
+            }
+
+            // raw.githubusercontent.com/<org>/<repo>/...
+            const rawMatch = url.match(/https?:\/\/raw\.githubusercontent\.com\/([^/]+)\/([^/]+)/);
+            if (rawMatch) {
+                org = rawMatch[1];
+                repo = rawMatch[2];
+            }
+
+            // Fallback: try to parse from any github-like URL
+            if (!org || !repo) {
+                const ghMatch = url.match(/github\.com\/([^/]+)\/([^/]+)/);
+                if (ghMatch) {
+                    org = ghMatch[1];
+                    repo = ghMatch[2];
+                }
+            }
+
+            // Final fallback: use path segments for local testing
+            if (!org || !repo) {
+                // Attempt to read from the JSON data itself (paths contain org/repo)
+                return null;
+            }
+
+            return `https://raw.githubusercontent.com/${org}/${repo}/refs/heads/master/.github/traffic`;
+        }
+
+        async function fetchJSON(url) {
+            const response = await fetch(url);
+            if (!response.ok) throw new Error(`HTTP ${response.status}`);
+            return response.json();
+        }
+
+        function formatDate(dateStr) {
+            const d = new Date(dateStr);
+            return d.toLocaleDateString('en-US', { month: 'short', day: 'numeric' });
+        }
+
+        function renderViewsChart(data) {
+            const labels = data.map(d => formatDate(d.timestamp));
+            const views = data.map(d => d.count);
+            const uniques = data.map(d => d.uniques);
+
+            new Chart(document.getElementById('viewsChart'), {
+                type: 'line',
+                data: {
+                    labels,
+                    datasets: [
+                        {
+                            label: 'Total Views',
+                            data: views,
+                            borderColor: '#58a6ff',
+                            backgroundColor: 'rgba(88, 166, 255, 0.1)',
+                            fill: true,
+                            tension: 0.3
+                        },
+                        {
+                            label: 'Unique Visitors',
+                            data: uniques,
+                            borderColor: '#3fb950',
+                            backgroundColor: 'rgba(63, 185, 80, 0.1)',
+                            fill: true,
+                            tension: 0.3
+                        }
+                    ]
+                },
+                options: {
+                    responsive: true,
+                    plugins: {
+                        legend: { labels: { color: '#c9d1d9' } }
+                    },
+                    scales: {
+                        x: { ticks: { color: '#8b949e' }, grid: { color: '#21262d' } },
+                        y: { ticks: { color: '#8b949e' }, grid: { color: '#21262d' }, beginAtZero: true }
+                    }
+                }
+            });
+        }
+
+        function renderPathsChart(data) {
+            const labels = data.map(d => formatDate(d.fetched_at));
+
+            // Get top 5 paths across all snapshots by total count
+            const pathTotals = {};
+            data.forEach(snapshot => {
+                snapshot.paths.forEach(p => {
+                    const shortPath = p.title || p.path.split('/').slice(3).join('/');
+                    pathTotals[shortPath] = (pathTotals[shortPath] || 0) + p.count;
+                });
+            });
+            const topPaths = Object.entries(pathTotals)
+                .sort((a, b) => b[1] - a[1])
+                .slice(0, 5)
+                .map(([path]) => path);
+
+            const colors = ['#58a6ff', '#3fb950', '#d29922', '#f85149', '#bc8cff'];
+
+            const datasets = topPaths.map((path, i) => ({
+                label: path.length > 40 ? path.substring(0, 37) + '...' : path,
+                data: data.map(snapshot => {
+                    const found = snapshot.paths.find(p => (p.title || p.path.split('/').slice(3).join('/')) === path);
+                    return found ? found.count : 0;
+                }),
+                borderColor: colors[i],
+                backgroundColor: colors[i] + '33',
+                fill: false,
+                tension: 0.3
+            }));
+
+            new Chart(document.getElementById('pathsChart'), {
+                type: 'bar',
+                data: { labels, datasets },
+                options: {
+                    responsive: true,
+                    plugins: {
+                        legend: { labels: { color: '#c9d1d9', font: { size: 11 } } }
+                    },
+                    scales: {
+                        x: { ticks: { color: '#8b949e' }, grid: { color: '#21262d' }, stacked: true },
+                        y: { ticks: { color: '#8b949e' }, grid: { color: '#21262d' }, beginAtZero: true, stacked: true }
+                    }
+                }
+            });
+        }
+
+        async function init() {
+            const loading = document.getElementById('loading');
+            const error = document.getElementById('error');
+            const viewsContainer = document.getElementById('views-container');
+            const pathsContainer = document.getElementById('paths-container');
+
+            let baseUrl = getBaseUrl();
+
+            // If we can't determine from URL, try relative paths (for local/GitHub Pages serving)
+            if (!baseUrl) {
+                baseUrl = '.';
+            }
+
+            document.getElementById('repo-name').textContent = baseUrl === '.'
+                ? 'Local preview'
+                : baseUrl.replace('https://raw.githubusercontent.com/', '').replace('/refs/heads/master/.github/traffic', '');
+
+            try {
+                const [views, paths] = await Promise.all([
+                    fetchJSON(`${baseUrl}/views.json`),
+                    fetchJSON(`${baseUrl}/popular_paths.json`)
+                ]);
+
+                loading.style.display = 'none';
+                viewsContainer.style.display = 'block';
+                pathsContainer.style.display = 'block';
+
+                renderViewsChart(views);
+                renderPathsChart(paths);
+            } catch (e) {
+                loading.style.display = 'none';
+                error.style.display = 'block';
+                error.textContent += ` (${e.message})`;
+                console.error('Failed to load traffic data:', e);
+            }
+        }
+
+        init();
+    </script>
+</body>
+</html>
