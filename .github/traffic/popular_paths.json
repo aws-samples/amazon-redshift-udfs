@@ -193,5 +193,70 @@
         "uniques": 3
       }
     ]
+  },
+  {
+    "fetched_at": "2026-07-20T10:06:13Z",
+    "paths": [
+      {
+        "path": "/aws-samples/amazon-redshift-udfs",
+        "title": "Overview",
+        "count": 33,
+        "uniques": 15
+      },
+      {
+        "path": "/aws-samples/amazon-redshift-udfs/pulls",
+        "title": "/pulls",
+        "count": 18,
+        "uniques": 5
+      },
+      {
+        "path": "/aws-samples/amazon-redshift-udfs/tree/master/python-udfs",
+        "title": "/tree/master/python-udfs",
+        "count": 9,
+        "uniques": 7
+      },
+      {
+        "path": "/aws-samples/amazon-redshift-udfs/issues",
+        "title": "/issues",
+        "count": 8,
+        "uniques": 4
+      },
+      {
+        "path": "/aws-samples/amazon-redshift-udfs/tree/master",
+        "title": "/tree/master",
+        "count": 6,
+        "uniques": 4
+      },
+      {
+        "path": "/aws-samples/amazon-redshift-udfs/blob/master/lambda-udfs/f_parse_url_query_string(varchar)/function.sql",
+        "title": "/blob/master/lambda-udfs/f_parse_url_query_string(varchar)/function.sql",
+        "count": 6,
+        "uniques": 2
+      },
+      {
+        "path": "/aws-samples/amazon-redshift-udfs/tree/master/.github/traffic",
+        "title": "/tree/master/.github/traffic",
+        "count": 6,
+        "uniques": 2
+      },
+      {
+        "path": "/aws-samples/amazon-redshift-udfs/tree/master/lambda-udfs/f_parse_url_query_string(varchar)",
+        "title": "/tree/master/lambda-udfs/f_parse_url_query_string(varchar)",
+        "count": 6,
+        "uniques": 2
+      },
+      {
+        "path": "/aws-samples/amazon-redshift-udfs/tree/master/.github/workflows",
+        "title": "/tree/master/.github/workflows",
+        "count": 6,
+        "uniques": 1
+      },
+      {
+        "path": "/aws-samples/amazon-redshift-udfs/tree/master/lambda-udfs",
+        "title": "/tree/master/lambda-udfs",
+        "count": 5,
+        "uniques": 4
+      }
+    ]
   }
 ]
