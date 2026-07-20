@@ -1,1 +1,3 @@
-.github/traffic/*
+# Traffic data is managed per-fork by the traffic workflow.
+# Force-added by the action; ignored here to prevent inclusion in PRs.
+.github/traffic/*.json
