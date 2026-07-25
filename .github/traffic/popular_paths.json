@@ -518,5 +518,70 @@
         "uniques": 2
       }
     ]
+  },
+  {
+    "fetched_at": "2026-07-25T09:35:45Z",
+    "paths": [
+      {
+        "path": "/aws-samples/amazon-redshift-udfs/pulls",
+        "title": "/pulls",
+        "count": 73,
+        "uniques": 6
+      },
+      {
+        "path": "/aws-samples/amazon-redshift-udfs",
+        "title": "Overview",
+        "count": 64,
+        "uniques": 17
+      },
+      {
+        "path": "/aws-samples/amazon-redshift-udfs/issues",
+        "title": "/issues",
+        "count": 42,
+        "uniques": 6
+      },
+      {
+        "path": "/aws-samples/amazon-redshift-udfs/tree/master/.github/traffic",
+        "title": "/tree/master/.github/traffic",
+        "count": 9,
+        "uniques": 2
+      },
+      {
+        "path": "/aws-samples/amazon-redshift-udfs/actions",
+        "title": "/actions",
+        "count": 8,
+        "uniques": 3
+      },
+      {
+        "path": "/aws-samples/amazon-redshift-udfs/tree/master/.github/workflows",
+        "title": "/tree/master/.github/workflows",
+        "count": 8,
+        "uniques": 1
+      },
+      {
+        "path": "/aws-samples/amazon-redshift-udfs/tree/master/python-udfs",
+        "title": "/tree/master/python-udfs",
+        "count": 6,
+        "uniques": 5
+      },
+      {
+        "path": "/aws-samples/amazon-redshift-udfs/blob/master/.github/workflows/traffic.yml",
+        "title": "/blob/master/.github/workflows/traffic.yml",
+        "count": 5,
+        "uniques": 2
+      },
+      {
+        "path": "/aws-samples/amazon-redshift-udfs/tree/master/stored-procedures",
+        "title": "/tree/master/stored-procedures",
+        "count": 5,
+        "uniques": 2
+      },
+      {
+        "path": "/aws-samples/amazon-redshift-udfs/tree/master/.github",
+        "title": "/tree/master/.github",
+        "count": 5,
+        "uniques": 1
+      }
+    ]
   }
 ]
