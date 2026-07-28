@@ -713,5 +713,70 @@
         "uniques": 3
       }
     ]
+  },
+  {
+    "fetched_at": "2026-07-28T09:55:28Z",
+    "paths": [
+      {
+        "path": "/aws-samples/amazon-redshift-udfs/pulls",
+        "title": "/pulls",
+        "count": 104,
+        "uniques": 8
+      },
+      {
+        "path": "/aws-samples/amazon-redshift-udfs",
+        "title": "Overview",
+        "count": 80,
+        "uniques": 20
+      },
+      {
+        "path": "/aws-samples/amazon-redshift-udfs/issues",
+        "title": "/issues",
+        "count": 56,
+        "uniques": 7
+      },
+      {
+        "path": "/aws-samples/amazon-redshift-udfs/actions",
+        "title": "/actions",
+        "count": 12,
+        "uniques": 5
+      },
+      {
+        "path": "/aws-samples/amazon-redshift-udfs/tree/master/views",
+        "title": "/tree/master/views",
+        "count": 11,
+        "uniques": 1
+      },
+      {
+        "path": "/aws-samples/amazon-redshift-udfs/tree/master/lambda-udfs/f_kms_encrypt(varchar,varchar)",
+        "title": "/tree/master/lambda-udfs/f_kms_encrypt(varchar,varchar)",
+        "count": 9,
+        "uniques": 7
+      },
+      {
+        "path": "/aws-samples/amazon-redshift-udfs/tree/master/.github/traffic",
+        "title": "/tree/master/.github/traffic",
+        "count": 9,
+        "uniques": 2
+      },
+      {
+        "path": "/aws-samples/amazon-redshift-udfs/tree/master/.github/workflows",
+        "title": "/tree/master/.github/workflows",
+        "count": 8,
+        "uniques": 1
+      },
+      {
+        "path": "/aws-samples/amazon-redshift-udfs/issues/37",
+        "title": "/issues/37",
+        "count": 7,
+        "uniques": 6
+      },
+      {
+        "path": "/aws-samples/amazon-redshift-udfs/issues/19",
+        "title": "/issues/19",
+        "count": 7,
+        "uniques": 5
+      }
+    ]
   }
 ]
