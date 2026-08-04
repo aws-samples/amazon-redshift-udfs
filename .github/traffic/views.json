@@ -143,5 +143,20 @@
     "timestamp": "2026-07-31T00:00:00Z",
     "count": 55,
     "uniques": 11
+  },
+  {
+    "timestamp": "2026-08-01T00:00:00Z",
+    "count": 25,
+    "uniques": 7
+  },
+  {
+    "timestamp": "2026-08-02T00:00:00Z",
+    "count": 33,
+    "uniques": 6
+  },
+  {
+    "timestamp": "2026-08-03T00:00:00Z",
+    "count": 26,
+    "uniques": 7
   }
 ]

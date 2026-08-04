@@ -1168,5 +1168,70 @@
         "uniques": 5
       }
     ]
+  },
+  {
+    "fetched_at": "2026-08-04T09:56:26Z",
+    "paths": [
+      {
+        "path": "/aws-samples/amazon-redshift-udfs/pulls",
+        "title": "/pulls",
+        "count": 129,
+        "uniques": 9
+      },
+      {
+        "path": "/aws-samples/amazon-redshift-udfs/issues",
+        "title": "/issues",
+        "count": 77,
+        "uniques": 8
+      },
+      {
+        "path": "/aws-samples/amazon-redshift-udfs",
+        "title": "Overview",
+        "count": 70,
+        "uniques": 20
+      },
+      {
+        "path": "/aws-samples/amazon-redshift-udfs/tree/master/views",
+        "title": "/tree/master/views",
+        "count": 11,
+        "uniques": 1
+      },
+      {
+        "path": "/aws-samples/amazon-redshift-udfs/tree/master/python-udfs",
+        "title": "/tree/master/python-udfs",
+        "count": 9,
+        "uniques": 9
+      },
+      {
+        "path": "/aws-samples/amazon-redshift-udfs/tree/master/lambda-udfs/f_kms_encrypt(varchar,varchar)",
+        "title": "/tree/master/lambda-udfs/f_kms_encrypt(varchar,varchar)",
+        "count": 9,
+        "uniques": 8
+      },
+      {
+        "path": "/aws-samples/amazon-redshift-udfs/tree/master/lambda-udfs/f_kms_decrypt(varchar)",
+        "title": "/tree/master/lambda-udfs/f_kms_decrypt(varchar)",
+        "count": 9,
+        "uniques": 6
+      },
+      {
+        "path": "/aws-samples/amazon-redshift-udfs/issues/37",
+        "title": "/issues/37",
+        "count": 8,
+        "uniques": 6
+      },
+      {
+        "path": "/aws-samples/amazon-redshift-udfs/actions",
+        "title": "/actions",
+        "count": 8,
+        "uniques": 4
+      },
+      {
+        "path": "/aws-samples/amazon-redshift-udfs/releases",
+        "title": "/releases",
+        "count": 7,
+        "uniques": 5
+      }
+    ]
   }
 ]
