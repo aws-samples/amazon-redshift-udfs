@@ -1428,5 +1428,70 @@
         "uniques": 7
       }
     ]
+  },
+  {
+    "fetched_at": "2026-08-08T09:16:39Z",
+    "paths": [
+      {
+        "path": "/aws-samples/amazon-redshift-udfs/pulls",
+        "title": "/pulls",
+        "count": 116,
+        "uniques": 10
+      },
+      {
+        "path": "/aws-samples/amazon-redshift-udfs",
+        "title": "Overview",
+        "count": 69,
+        "uniques": 25
+      },
+      {
+        "path": "/aws-samples/amazon-redshift-udfs/issues",
+        "title": "/issues",
+        "count": 67,
+        "uniques": 10
+      },
+      {
+        "path": "/aws-samples/amazon-redshift-udfs/tree/master/views",
+        "title": "/tree/master/views",
+        "count": 11,
+        "uniques": 1
+      },
+      {
+        "path": "/aws-samples/amazon-redshift-udfs/tree/master/python-udfs",
+        "title": "/tree/master/python-udfs",
+        "count": 10,
+        "uniques": 9
+      },
+      {
+        "path": "/aws-samples/amazon-redshift-udfs/tree/master/lambda-udfs/f_kms_decrypt(varchar)",
+        "title": "/tree/master/lambda-udfs/f_kms_decrypt(varchar)",
+        "count": 8,
+        "uniques": 6
+      },
+      {
+        "path": "/aws-samples/amazon-redshift-udfs/tree/master/sql-udfs",
+        "title": "/tree/master/sql-udfs",
+        "count": 8,
+        "uniques": 6
+      },
+      {
+        "path": "/aws-samples/amazon-redshift-udfs/tree/master/lambda-udfs/f_kms_encrypt(varchar,varchar)",
+        "title": "/tree/master/lambda-udfs/f_kms_encrypt(varchar,varchar)",
+        "count": 7,
+        "uniques": 7
+      },
+      {
+        "path": "/aws-samples/amazon-redshift-udfs/issues/17",
+        "title": "/issues/17",
+        "count": 7,
+        "uniques": 5
+      },
+      {
+        "path": "/aws-samples/amazon-redshift-udfs/blob/master/python-udfs/migrating-python-udfs/SKILL.md",
+        "title": "/blob/master/python-udfs/migrating-python-udfs/SKILL.md",
+        "count": 6,
+        "uniques": 6
+      }
+    ]
   }
 ]
