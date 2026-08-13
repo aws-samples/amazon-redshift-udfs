@@ -1753,5 +1753,70 @@
         "uniques": 5
       }
     ]
+  },
+  {
+    "fetched_at": "2026-08-13T09:28:38Z",
+    "paths": [
+      {
+        "path": "/aws-samples/amazon-redshift-udfs/pulls",
+        "title": "/pulls",
+        "count": 120,
+        "uniques": 9
+      },
+      {
+        "path": "/aws-samples/amazon-redshift-udfs/issues",
+        "title": "/issues",
+        "count": 71,
+        "uniques": 12
+      },
+      {
+        "path": "/aws-samples/amazon-redshift-udfs",
+        "title": "Overview",
+        "count": 67,
+        "uniques": 26
+      },
+      {
+        "path": "/aws-samples/amazon-redshift-udfs/releases",
+        "title": "/releases",
+        "count": 9,
+        "uniques": 8
+      },
+      {
+        "path": "/aws-samples/amazon-redshift-udfs/tree/master/python-udfs",
+        "title": "/tree/master/python-udfs",
+        "count": 7,
+        "uniques": 7
+      },
+      {
+        "path": "/aws-samples/amazon-redshift-udfs/issues/17",
+        "title": "/issues/17",
+        "count": 6,
+        "uniques": 6
+      },
+      {
+        "path": "/aws-samples/amazon-redshift-udfs/tree/master/sql-udfs",
+        "title": "/tree/master/sql-udfs",
+        "count": 6,
+        "uniques": 6
+      },
+      {
+        "path": "/aws-samples/amazon-redshift-udfs/issues/39",
+        "title": "/issues/39",
+        "count": 5,
+        "uniques": 5
+      },
+      {
+        "path": "/aws-samples/amazon-redshift-udfs/tree/master/lambda-udfs/f_kms_decrypt(varchar)",
+        "title": "/tree/master/lambda-udfs/f_kms_decrypt(varchar)",
+        "count": 5,
+        "uniques": 5
+      },
+      {
+        "path": "/aws-samples/amazon-redshift-udfs/commits",
+        "title": "/commits",
+        "count": 5,
+        "uniques": 4
+      }
+    ]
   }
 ]
