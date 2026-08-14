@@ -1818,5 +1818,70 @@
         "uniques": 4
       }
     ]
+  },
+  {
+    "fetched_at": "2026-08-14T09:26:17Z",
+    "paths": [
+      {
+        "path": "/aws-samples/amazon-redshift-udfs/pulls",
+        "title": "/pulls",
+        "count": 113,
+        "uniques": 8
+      },
+      {
+        "path": "/aws-samples/amazon-redshift-udfs/issues",
+        "title": "/issues",
+        "count": 72,
+        "uniques": 12
+      },
+      {
+        "path": "/aws-samples/amazon-redshift-udfs",
+        "title": "Overview",
+        "count": 68,
+        "uniques": 26
+      },
+      {
+        "path": "/aws-samples/amazon-redshift-udfs/tree/master/python-udfs",
+        "title": "/tree/master/python-udfs",
+        "count": 8,
+        "uniques": 8
+      },
+      {
+        "path": "/aws-samples/amazon-redshift-udfs/releases",
+        "title": "/releases",
+        "count": 7,
+        "uniques": 6
+      },
+      {
+        "path": "/aws-samples/amazon-redshift-udfs/issues/17",
+        "title": "/issues/17",
+        "count": 6,
+        "uniques": 5
+      },
+      {
+        "path": "/aws-samples/amazon-redshift-udfs/tree/master/stored-procedures",
+        "title": "/tree/master/stored-procedures",
+        "count": 6,
+        "uniques": 5
+      },
+      {
+        "path": "/aws-samples/amazon-redshift-udfs/commit/06f4fe58b478a5cc91f7b6372b71f98c38050086",
+        "title": "/commit/06f4fe58b478a5cc91f7b6372b71f98c38050086",
+        "count": 6,
+        "uniques": 4
+      },
+      {
+        "path": "/aws-samples/amazon-redshift-udfs/commits",
+        "title": "/commits",
+        "count": 6,
+        "uniques": 4
+      },
+      {
+        "path": "/aws-samples/amazon-redshift-udfs/blob/master/python-udfs/migrating-python-udfs/SKILL.md",
+        "title": "/blob/master/python-udfs/migrating-python-udfs/SKILL.md",
+        "count": 5,
+        "uniques": 4
+      }
+    ]
   }
 ]
