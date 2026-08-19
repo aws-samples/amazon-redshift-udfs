@@ -2143,5 +2143,70 @@
         "uniques": 4
       }
     ]
+  },
+  {
+    "fetched_at": "2026-08-19T09:13:40Z",
+    "paths": [
+      {
+        "path": "/aws-samples/amazon-redshift-udfs/pulls",
+        "title": "/pulls",
+        "count": 114,
+        "uniques": 9
+      },
+      {
+        "path": "/aws-samples/amazon-redshift-udfs",
+        "title": "Overview",
+        "count": 87,
+        "uniques": 32
+      },
+      {
+        "path": "/aws-samples/amazon-redshift-udfs/issues",
+        "title": "/issues",
+        "count": 71,
+        "uniques": 12
+      },
+      {
+        "path": "/aws-samples/amazon-redshift-udfs/actions",
+        "title": "/actions",
+        "count": 9,
+        "uniques": 4
+      },
+      {
+        "path": "/aws-samples/amazon-redshift-udfs/tree/master/python-udfs",
+        "title": "/tree/master/python-udfs",
+        "count": 8,
+        "uniques": 8
+      },
+      {
+        "path": "/aws-samples/amazon-redshift-udfs/commit/d8451a299cd8e055236787d0c04eedad544c04ba",
+        "title": "/commit/d8451a299cd8e055236787d0c04eedad544c04ba",
+        "count": 8,
+        "uniques": 4
+      },
+      {
+        "path": "/aws-samples/amazon-redshift-udfs/pull/63",
+        "title": "/pull/63",
+        "count": 8,
+        "uniques": 3
+      },
+      {
+        "path": "/aws-samples/amazon-redshift-udfs/tree/master/stored-procedures",
+        "title": "/tree/master/stored-procedures",
+        "count": 7,
+        "uniques": 6
+      },
+      {
+        "path": "/aws-samples/amazon-redshift-udfs/commit/06f4fe58b478a5cc91f7b6372b71f98c38050086",
+        "title": "/commit/06f4fe58b478a5cc91f7b6372b71f98c38050086",
+        "count": 7,
+        "uniques": 4
+      },
+      {
+        "path": "/aws-samples/amazon-redshift-udfs/commit/9d5b3c55a681d98f58d49ac70a510ab5b29b93b2",
+        "title": "/commit/9d5b3c55a681d98f58d49ac70a510ab5b29b93b2",
+        "count": 7,
+        "uniques": 4
+      }
+    ]
   }
 ]
