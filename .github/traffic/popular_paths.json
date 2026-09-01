@@ -2988,5 +2988,70 @@
         "uniques": 4
       }
     ]
+  },
+  {
+    "fetched_at": "2026-09-01T09:17:10Z",
+    "paths": [
+      {
+        "path": "/aws-samples/amazon-redshift-udfs",
+        "title": "Overview",
+        "count": 78,
+        "uniques": 25
+      },
+      {
+        "path": "/aws-samples/amazon-redshift-udfs/pulls",
+        "title": "/pulls",
+        "count": 61,
+        "uniques": 9
+      },
+      {
+        "path": "/aws-samples/amazon-redshift-udfs/issues",
+        "title": "/issues",
+        "count": 54,
+        "uniques": 8
+      },
+      {
+        "path": "/aws-samples/amazon-redshift-udfs/pull/63",
+        "title": "/pull/63",
+        "count": 15,
+        "uniques": 5
+      },
+      {
+        "path": "/aws-samples/amazon-redshift-udfs/actions",
+        "title": "/actions",
+        "count": 15,
+        "uniques": 4
+      },
+      {
+        "path": "/aws-samples/amazon-redshift-udfs/blob/master/.gitignore",
+        "title": "/blob/master/.gitignore",
+        "count": 13,
+        "uniques": 5
+      },
+      {
+        "path": "/aws-samples/amazon-redshift-udfs/commit/8feda6339f7b9dd1d8f10aea5d916c84852a0c7c",
+        "title": "/commit/8feda6339f7b9dd1d8f10aea5d916c84852a0c7c",
+        "count": 13,
+        "uniques": 5
+      },
+      {
+        "path": "/aws-samples/amazon-redshift-udfs/commit/422670cf9c9b8c5d453203d02c5d2e01ad283337",
+        "title": "/commit/422670cf9c9b8c5d453203d02c5d2e01ad283337",
+        "count": 12,
+        "uniques": 5
+      },
+      {
+        "path": "/aws-samples/amazon-redshift-udfs/pull/64",
+        "title": "/pull/64",
+        "count": 12,
+        "uniques": 5
+      },
+      {
+        "path": "/aws-samples/amazon-redshift-udfs/commit/06f4fe58b478a5cc91f7b6372b71f98c38050086",
+        "title": "/commit/06f4fe58b478a5cc91f7b6372b71f98c38050086",
+        "count": 12,
+        "uniques": 4
+      }
+    ]
   }
 ]
