@@ -3573,5 +3573,70 @@
         "uniques": 5
       }
     ]
+  },
+  {
+    "fetched_at": "2026-09-10T09:15:46Z",
+    "paths": [
+      {
+        "path": "/aws-samples/amazon-redshift-udfs",
+        "title": "Overview",
+        "count": 91,
+        "uniques": 32
+      },
+      {
+        "path": "/aws-samples/amazon-redshift-udfs/issues",
+        "title": "/issues",
+        "count": 39,
+        "uniques": 7
+      },
+      {
+        "path": "/aws-samples/amazon-redshift-udfs/pulls",
+        "title": "/pulls",
+        "count": 36,
+        "uniques": 7
+      },
+      {
+        "path": "/aws-samples/amazon-redshift-udfs/actions",
+        "title": "/actions",
+        "count": 17,
+        "uniques": 5
+      },
+      {
+        "path": "/aws-samples/amazon-redshift-udfs/activity",
+        "title": "/activity",
+        "count": 12,
+        "uniques": 5
+      },
+      {
+        "path": "/aws-samples/amazon-redshift-udfs/commit/8feda6339f7b9dd1d8f10aea5d916c84852a0c7c",
+        "title": "/commit/8feda6339f7b9dd1d8f10aea5d916c84852a0c7c",
+        "count": 11,
+        "uniques": 6
+      },
+      {
+        "path": "/aws-samples/amazon-redshift-udfs/commit/422670cf9c9b8c5d453203d02c5d2e01ad283337",
+        "title": "/commit/422670cf9c9b8c5d453203d02c5d2e01ad283337",
+        "count": 11,
+        "uniques": 4
+      },
+      {
+        "path": "/aws-samples/amazon-redshift-udfs/commit/aaca383361cf2aa5a6d12f5fc6940d1c18d7e72d",
+        "title": "/commit/aaca383361cf2aa5a6d12f5fc6940d1c18d7e72d",
+        "count": 10,
+        "uniques": 6
+      },
+      {
+        "path": "/aws-samples/amazon-redshift-udfs/commit/141d39abef5f359f26081d479ccd16ff123d07db",
+        "title": "/commit/141d39abef5f359f26081d479ccd16ff123d07db",
+        "count": 10,
+        "uniques": 4
+      },
+      {
+        "path": "/aws-samples/amazon-redshift-udfs/commit/4a35141cf9b17f2aed19920d4e264cde8093cdb0",
+        "title": "/commit/4a35141cf9b17f2aed19920d4e264cde8093cdb0",
+        "count": 10,
+        "uniques": 4
+      }
+    ]
   }
 ]
