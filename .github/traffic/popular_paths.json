@@ -4353,5 +4353,70 @@
         "uniques": 3
       }
     ]
+  },
+  {
+    "fetched_at": "2026-09-22T09:15:16Z",
+    "paths": [
+      {
+        "path": "/aws-samples/amazon-redshift-udfs",
+        "title": "Overview",
+        "count": 54,
+        "uniques": 26
+      },
+      {
+        "path": "/aws-samples/amazon-redshift-udfs/issues",
+        "title": "/issues",
+        "count": 28,
+        "uniques": 8
+      },
+      {
+        "path": "/aws-samples/amazon-redshift-udfs/pulls",
+        "title": "/pulls",
+        "count": 23,
+        "uniques": 6
+      },
+      {
+        "path": "/aws-samples/amazon-redshift-udfs/blob/master/lambda-udfs/fn_lambda_levenshtein_distance(varchar,varchar)/lambda.yaml",
+        "title": "/blob/master/lambda-udfs/fn_lambda_levenshtein_distance(varchar,varchar)/lambda.yaml",
+        "count": 17,
+        "uniques": 4
+      },
+      {
+        "path": "/aws-samples/amazon-redshift-udfs/tree/master/stored-procedures",
+        "title": "/tree/master/stored-procedures",
+        "count": 9,
+        "uniques": 5
+      },
+      {
+        "path": "/aws-samples/amazon-redshift-udfs/tree/master/sql-udfs",
+        "title": "/tree/master/sql-udfs",
+        "count": 7,
+        "uniques": 7
+      },
+      {
+        "path": "/aws-samples/amazon-redshift-udfs/tree/master/lambda-udfs",
+        "title": "/tree/master/lambda-udfs",
+        "count": 7,
+        "uniques": 6
+      },
+      {
+        "path": "/aws-samples/amazon-redshift-udfs/commit/aaca383361cf2aa5a6d12f5fc6940d1c18d7e72d",
+        "title": "/commit/aaca383361cf2aa5a6d12f5fc6940d1c18d7e72d",
+        "count": 6,
+        "uniques": 3
+      },
+      {
+        "path": "/aws-samples/amazon-redshift-udfs/labels",
+        "title": "/labels",
+        "count": 5,
+        "uniques": 4
+      },
+      {
+        "path": "/aws-samples/amazon-redshift-udfs/activity",
+        "title": "/activity",
+        "count": 5,
+        "uniques": 3
+      }
+    ]
   }
 ]
