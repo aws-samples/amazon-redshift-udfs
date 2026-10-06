@@ -5263,5 +5263,70 @@
         "uniques": 4
       }
     ]
+  },
+  {
+    "fetched_at": "2026-10-06T09:17:10Z",
+    "paths": [
+      {
+        "path": "/aws-samples/amazon-redshift-udfs",
+        "title": "Overview",
+        "count": 60,
+        "uniques": 27
+      },
+      {
+        "path": "/aws-samples/amazon-redshift-udfs/pulls",
+        "title": "/pulls",
+        "count": 22,
+        "uniques": 7
+      },
+      {
+        "path": "/aws-samples/amazon-redshift-udfs/issues",
+        "title": "/issues",
+        "count": 21,
+        "uniques": 9
+      },
+      {
+        "path": "/aws-samples/amazon-redshift-udfs/tree/master/stored-procedures",
+        "title": "/tree/master/stored-procedures",
+        "count": 13,
+        "uniques": 5
+      },
+      {
+        "path": "/aws-samples/amazon-redshift-udfs/tree/master/lambda-udfs/f_kms_encrypt(varchar,varchar)",
+        "title": "/tree/master/lambda-udfs/f_kms_encrypt(varchar,varchar)",
+        "count": 7,
+        "uniques": 5
+      },
+      {
+        "path": "/aws-samples/amazon-redshift-udfs/commit/4a35141cf9b17f2aed19920d4e264cde8093cdb0",
+        "title": "/commit/4a35141cf9b17f2aed19920d4e264cde8093cdb0",
+        "count": 6,
+        "uniques": 4
+      },
+      {
+        "path": "/aws-samples/amazon-redshift-udfs/commit/939ccc54b5ec7c7067c9e09cb41981a2f105877e",
+        "title": "/commit/939ccc54b5ec7c7067c9e09cb41981a2f105877e",
+        "count": 6,
+        "uniques": 4
+      },
+      {
+        "path": "/aws-samples/amazon-redshift-udfs/commit/9d5b3c55a681d98f58d49ac70a510ab5b29b93b2",
+        "title": "/commit/9d5b3c55a681d98f58d49ac70a510ab5b29b93b2",
+        "count": 6,
+        "uniques": 4
+      },
+      {
+        "path": "/aws-samples/amazon-redshift-udfs/tree/master/lambda-udfs/f_kms_decrypt(varchar)",
+        "title": "/tree/master/lambda-udfs/f_kms_decrypt(varchar)",
+        "count": 6,
+        "uniques": 4
+      },
+      {
+        "path": "/aws-samples/amazon-redshift-udfs/commit/141d39abef5f359f26081d479ccd16ff123d07db",
+        "title": "/commit/141d39abef5f359f26081d479ccd16ff123d07db",
+        "count": 6,
+        "uniques": 3
+      }
+    ]
   }
 ]
