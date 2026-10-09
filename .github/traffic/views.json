@@ -483,5 +483,10 @@
     "timestamp": "2026-10-07T00:00:00Z",
     "count": 12,
     "uniques": 6
+  },
+  {
+    "timestamp": "2026-10-08T00:00:00Z",
+    "count": 24,
+    "uniques": 8
   }
 ]
