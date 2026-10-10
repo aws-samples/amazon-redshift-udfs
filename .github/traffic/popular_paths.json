@@ -5523,5 +5523,70 @@
         "uniques": 4
       }
     ]
+  },
+  {
+    "fetched_at": "2026-10-10T09:15:08Z",
+    "paths": [
+      {
+        "path": "/aws-samples/amazon-redshift-udfs",
+        "title": "Overview",
+        "count": 53,
+        "uniques": 26
+      },
+      {
+        "path": "/aws-samples/amazon-redshift-udfs/issues",
+        "title": "/issues",
+        "count": 21,
+        "uniques": 10
+      },
+      {
+        "path": "/aws-samples/amazon-redshift-udfs/pulls",
+        "title": "/pulls",
+        "count": 21,
+        "uniques": 9
+      },
+      {
+        "path": "/aws-samples/amazon-redshift-udfs/tree/master/lambda-udfs/f_kms_encrypt(varchar,varchar)",
+        "title": "/tree/master/lambda-udfs/f_kms_encrypt(varchar,varchar)",
+        "count": 11,
+        "uniques": 5
+      },
+      {
+        "path": "/aws-samples/amazon-redshift-udfs/tree/master/bin/PipLibraryInstaller",
+        "title": "/tree/master/bin/PipLibraryInstaller",
+        "count": 6,
+        "uniques": 6
+      },
+      {
+        "path": "/aws-samples/amazon-redshift-udfs/tree/master/lambda-udfs",
+        "title": "/tree/master/lambda-udfs",
+        "count": 6,
+        "uniques": 4
+      },
+      {
+        "path": "/aws-samples/amazon-redshift-udfs/commit/141d39abef5f359f26081d479ccd16ff123d07db",
+        "title": "/commit/141d39abef5f359f26081d479ccd16ff123d07db",
+        "count": 6,
+        "uniques": 3
+      },
+      {
+        "path": "/aws-samples/amazon-redshift-udfs/commit/9fd751da57d5f96eae8b381034fffa79892fffea",
+        "title": "/commit/9fd751da57d5f96eae8b381034fffa79892fffea",
+        "count": 5,
+        "uniques": 5
+      },
+      {
+        "path": "/aws-samples/amazon-redshift-udfs/tree/master/stored-procedures",
+        "title": "/tree/master/stored-procedures",
+        "count": 5,
+        "uniques": 5
+      },
+      {
+        "path": "/aws-samples/amazon-redshift-udfs/commit/4a35141cf9b17f2aed19920d4e264cde8093cdb0",
+        "title": "/commit/4a35141cf9b17f2aed19920d4e264cde8093cdb0",
+        "count": 5,
+        "uniques": 4
+      }
+    ]
   }
 ]
