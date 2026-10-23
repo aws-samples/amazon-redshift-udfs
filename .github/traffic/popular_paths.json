@@ -6368,5 +6368,70 @@
         "uniques": 1
       }
     ]
+  },
+  {
+    "fetched_at": "2026-10-23T09:15:06Z",
+    "paths": [
+      {
+        "path": "/aws-samples/amazon-redshift-udfs",
+        "title": "Overview",
+        "count": 23,
+        "uniques": 14
+      },
+      {
+        "path": "/aws-samples/amazon-redshift-udfs/pulls",
+        "title": "/pulls",
+        "count": 8,
+        "uniques": 5
+      },
+      {
+        "path": "/aws-samples/amazon-redshift-udfs/issues",
+        "title": "/issues",
+        "count": 6,
+        "uniques": 4
+      },
+      {
+        "path": "/aws-samples/amazon-redshift-udfs/blob/master/lambda-udfs/fn_lambda_levenshtein_distance(varchar,varchar)/function.sql",
+        "title": "/blob/master/lambda-udfs/fn_lambda_levenshtein_distance(varchar,varchar)/function.sql",
+        "count": 4,
+        "uniques": 1
+      },
+      {
+        "path": "/aws-samples/amazon-redshift-udfs/blob/master/lambda-udfs/fn_lambda_levenshtein_distance(varchar,varchar)/lambda.yaml",
+        "title": "/blob/master/lambda-udfs/fn_lambda_levenshtein_distance(varchar,varchar)/lambda.yaml",
+        "count": 4,
+        "uniques": 1
+      },
+      {
+        "path": "/aws-samples/amazon-redshift-udfs/blob/master/README.md",
+        "title": "/blob/master/README.md",
+        "count": 3,
+        "uniques": 3
+      },
+      {
+        "path": "/aws-samples/amazon-redshift-udfs/blob/master/lambda-udfs/fn_lambda_levenshtein_distance(varchar,varchar)/input.csv",
+        "title": "/blob/master/lambda-udfs/fn_lambda_levenshtein_distance(varchar,varchar)/input.csv",
+        "count": 3,
+        "uniques": 1
+      },
+      {
+        "path": "/aws-samples/amazon-redshift-udfs/blob/master/lambda-udfs/fn_lambda_levenshtein_distance(varchar,varchar)/output.csv",
+        "title": "/blob/master/lambda-udfs/fn_lambda_levenshtein_distance(varchar,varchar)/output.csv",
+        "count": 3,
+        "uniques": 1
+      },
+      {
+        "path": "/aws-samples/amazon-redshift-udfs/tree/master/lambda-udfs",
+        "title": "/tree/master/lambda-udfs",
+        "count": 3,
+        "uniques": 1
+      },
+      {
+        "path": "/aws-samples/amazon-redshift-udfs/tree/master/lambda-udfs/f_unixts_to_timestamp(bigint,varchar)",
+        "title": "/tree/master/lambda-udfs/f_unixts_to_timestamp(bigint,varchar)",
+        "count": 3,
+        "uniques": 1
+      }
+    ]
   }
 ]
