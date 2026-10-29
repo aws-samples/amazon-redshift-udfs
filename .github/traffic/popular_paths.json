@@ -6758,5 +6758,70 @@
         "uniques": 2
       }
     ]
+  },
+  {
+    "fetched_at": "2026-10-29T09:12:08Z",
+    "paths": [
+      {
+        "path": "/aws-samples/amazon-redshift-udfs",
+        "title": "Overview",
+        "count": 22,
+        "uniques": 14
+      },
+      {
+        "path": "/aws-samples/amazon-redshift-udfs/pulls",
+        "title": "/pulls",
+        "count": 6,
+        "uniques": 2
+      },
+      {
+        "path": "/aws-samples/amazon-redshift-udfs/issues",
+        "title": "/issues",
+        "count": 5,
+        "uniques": 3
+      },
+      {
+        "path": "/aws-samples/amazon-redshift-udfs/blob/master/lambda-udfs/fn_lambda_levenshtein_distance(varchar,varchar)/function.sql",
+        "title": "/blob/master/lambda-udfs/fn_lambda_levenshtein_distance(varchar,varchar)/function.sql",
+        "count": 5,
+        "uniques": 2
+      },
+      {
+        "path": "/aws-samples/amazon-redshift-udfs/commits/master",
+        "title": "/commits/master",
+        "count": 5,
+        "uniques": 1
+      },
+      {
+        "path": "/aws-samples/amazon-redshift-udfs/blob/master/lambda-udfs/fn_lambda_levenshtein_distance(varchar,varchar)/lambda.yaml",
+        "title": "/blob/master/lambda-udfs/fn_lambda_levenshtein_distance(varchar,varchar)/lambda.yaml",
+        "count": 4,
+        "uniques": 1
+      },
+      {
+        "path": "/aws-samples/amazon-redshift-udfs/blob/master/lambda-udfs/fn_lambda_levenshtein_distance(varchar,varchar)/input.csv",
+        "title": "/blob/master/lambda-udfs/fn_lambda_levenshtein_distance(varchar,varchar)/input.csv",
+        "count": 3,
+        "uniques": 1
+      },
+      {
+        "path": "/aws-samples/amazon-redshift-udfs/blob/master/lambda-udfs/fn_lambda_levenshtein_distance(varchar,varchar)/output.csv",
+        "title": "/blob/master/lambda-udfs/fn_lambda_levenshtein_distance(varchar,varchar)/output.csv",
+        "count": 3,
+        "uniques": 1
+      },
+      {
+        "path": "/aws-samples/amazon-redshift-udfs/blob/master/NOTICE.txt",
+        "title": "/blob/master/NOTICE.txt",
+        "count": 2,
+        "uniques": 2
+      },
+      {
+        "path": "/aws-samples/amazon-redshift-udfs/blob/master/python-udfs/f_parse_url(varchar,varchar)/function.sql",
+        "title": "/blob/master/python-udfs/f_parse_url(varchar,varchar)/function.sql",
+        "count": 2,
+        "uniques": 2
+      }
+    ]
   }
 ]
