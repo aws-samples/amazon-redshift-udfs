@@ -6888,5 +6888,70 @@
         "uniques": 1
       }
     ]
+  },
+  {
+    "fetched_at": "2026-10-31T09:09:05Z",
+    "paths": [
+      {
+        "path": "/aws-samples/amazon-redshift-udfs",
+        "title": "Overview",
+        "count": 22,
+        "uniques": 14
+      },
+      {
+        "path": "/aws-samples/amazon-redshift-udfs/pulls",
+        "title": "/pulls",
+        "count": 7,
+        "uniques": 3
+      },
+      {
+        "path": "/aws-samples/amazon-redshift-udfs/commits/master",
+        "title": "/commits/master",
+        "count": 6,
+        "uniques": 1
+      },
+      {
+        "path": "/aws-samples/amazon-redshift-udfs/blob/master/lambda-udfs/fn_lambda_levenshtein_distance(varchar,varchar)/function.sql",
+        "title": "/blob/master/lambda-udfs/fn_lambda_levenshtein_distance(varchar,varchar)/function.sql",
+        "count": 5,
+        "uniques": 2
+      },
+      {
+        "path": "/aws-samples/amazon-redshift-udfs/blob/master/lambda-udfs/fn_lambda_levenshtein_distance(varchar,varchar)/lambda.yaml",
+        "title": "/blob/master/lambda-udfs/fn_lambda_levenshtein_distance(varchar,varchar)/lambda.yaml",
+        "count": 4,
+        "uniques": 1
+      },
+      {
+        "path": "/aws-samples/amazon-redshift-udfs/blob/master/NOTICE.txt",
+        "title": "/blob/master/NOTICE.txt",
+        "count": 3,
+        "uniques": 3
+      },
+      {
+        "path": "/aws-samples/amazon-redshift-udfs/blob/master/sql-udfs/f_mask_varchar(varchar,varchar,varchar)/function.sql",
+        "title": "/blob/master/sql-udfs/f_mask_varchar(varchar,varchar,varchar)/function.sql",
+        "count": 3,
+        "uniques": 2
+      },
+      {
+        "path": "/aws-samples/amazon-redshift-udfs/tree/master/lambda-udfs",
+        "title": "/tree/master/lambda-udfs",
+        "count": 3,
+        "uniques": 2
+      },
+      {
+        "path": "/aws-samples/amazon-redshift-udfs/blob/master/lambda-udfs/fn_lambda_levenshtein_distance(varchar,varchar)/input.csv",
+        "title": "/blob/master/lambda-udfs/fn_lambda_levenshtein_distance(varchar,varchar)/input.csv",
+        "count": 3,
+        "uniques": 1
+      },
+      {
+        "path": "/aws-samples/amazon-redshift-udfs/blob/master/lambda-udfs/fn_lambda_levenshtein_distance(varchar,varchar)/output.csv",
+        "title": "/blob/master/lambda-udfs/fn_lambda_levenshtein_distance(varchar,varchar)/output.csv",
+        "count": 3,
+        "uniques": 1
+      }
+    ]
   }
 ]
