@@ -7083,5 +7083,70 @@
         "uniques": 1
       }
     ]
+  },
+  {
+    "fetched_at": "2026-11-03T09:10:13Z",
+    "paths": [
+      {
+        "path": "/aws-samples/amazon-redshift-udfs",
+        "title": "Overview",
+        "count": 26,
+        "uniques": 16
+      },
+      {
+        "path": "/aws-samples/amazon-redshift-udfs/pulls",
+        "title": "/pulls",
+        "count": 9,
+        "uniques": 3
+      },
+      {
+        "path": "/aws-samples/amazon-redshift-udfs/commits/master",
+        "title": "/commits/master",
+        "count": 6,
+        "uniques": 1
+      },
+      {
+        "path": "/aws-samples/amazon-redshift-udfs/blob/master/lambda-udfs/fn_lambda_levenshtein_distance(varchar,varchar)/function.sql",
+        "title": "/blob/master/lambda-udfs/fn_lambda_levenshtein_distance(varchar,varchar)/function.sql",
+        "count": 5,
+        "uniques": 2
+      },
+      {
+        "path": "/aws-samples/amazon-redshift-udfs/issues",
+        "title": "/issues",
+        "count": 4,
+        "uniques": 2
+      },
+      {
+        "path": "/aws-samples/amazon-redshift-udfs/tree/master/lambda-udfs",
+        "title": "/tree/master/lambda-udfs",
+        "count": 4,
+        "uniques": 2
+      },
+      {
+        "path": "/aws-samples/amazon-redshift-udfs/blob/master/lambda-udfs/fn_lambda_levenshtein_distance(varchar,varchar)/lambda.yaml",
+        "title": "/blob/master/lambda-udfs/fn_lambda_levenshtein_distance(varchar,varchar)/lambda.yaml",
+        "count": 4,
+        "uniques": 1
+      },
+      {
+        "path": "/aws-samples/amazon-redshift-udfs/blob/master/NOTICE.txt",
+        "title": "/blob/master/NOTICE.txt",
+        "count": 3,
+        "uniques": 3
+      },
+      {
+        "path": "/aws-samples/amazon-redshift-udfs/tree/master/python-udfs/f_fuzzy_string_match(varchar,varchar)",
+        "title": "/tree/master/python-udfs/f_fuzzy_string_match(varchar,varchar)",
+        "count": 3,
+        "uniques": 3
+      },
+      {
+        "path": "/aws-samples/amazon-redshift-udfs/blob/master/sql-udfs/f_mask_varchar(varchar,varchar,varchar)/function.sql",
+        "title": "/blob/master/sql-udfs/f_mask_varchar(varchar,varchar,varchar)/function.sql",
+        "count": 3,
+        "uniques": 2
+      }
+    ]
   }
 ]
