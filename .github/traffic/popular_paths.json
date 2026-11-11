@@ -7603,5 +7603,70 @@
         "uniques": 4
       }
     ]
+  },
+  {
+    "fetched_at": "2026-11-11T09:10:09Z",
+    "paths": [
+      {
+        "path": "/aws-samples/amazon-redshift-udfs",
+        "title": "Overview",
+        "count": 60,
+        "uniques": 28
+      },
+      {
+        "path": "/aws-samples/amazon-redshift-udfs/tree/master/lambda-udfs",
+        "title": "/tree/master/lambda-udfs",
+        "count": 16,
+        "uniques": 3
+      },
+      {
+        "path": "/aws-samples/amazon-redshift-udfs/issues",
+        "title": "/issues",
+        "count": 13,
+        "uniques": 8
+      },
+      {
+        "path": "/aws-samples/amazon-redshift-udfs/pulls",
+        "title": "/pulls",
+        "count": 12,
+        "uniques": 7
+      },
+      {
+        "path": "/aws-samples/amazon-redshift-udfs/tree/master/stored-procedures",
+        "title": "/tree/master/stored-procedures",
+        "count": 7,
+        "uniques": 6
+      },
+      {
+        "path": "/aws-samples/amazon-redshift-udfs/blob/master/views/v_generate_udf_ddl.sql",
+        "title": "/blob/master/views/v_generate_udf_ddl.sql",
+        "count": 7,
+        "uniques": 3
+      },
+      {
+        "path": "/aws-samples/amazon-redshift-udfs/commits/master",
+        "title": "/commits/master",
+        "count": 7,
+        "uniques": 1
+      },
+      {
+        "path": "/aws-samples/amazon-redshift-udfs/blob/master/python-udfs/migrating-python-udfs/SKILL.md",
+        "title": "/blob/master/python-udfs/migrating-python-udfs/SKILL.md",
+        "count": 6,
+        "uniques": 6
+      },
+      {
+        "path": "/aws-samples/amazon-redshift-udfs/tree/master/python-udfs/f_fuzzy_string_match(varchar,varchar)",
+        "title": "/tree/master/python-udfs/f_fuzzy_string_match(varchar,varchar)",
+        "count": 6,
+        "uniques": 6
+      },
+      {
+        "path": "/aws-samples/amazon-redshift-udfs/tree/master/docs",
+        "title": "/tree/master/docs",
+        "count": 6,
+        "uniques": 4
+      }
+    ]
   }
 ]
