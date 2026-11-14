@@ -7798,5 +7798,70 @@
         "uniques": 3
       }
     ]
+  },
+  {
+    "fetched_at": "2026-11-14T09:08:47Z",
+    "paths": [
+      {
+        "path": "/aws-samples/amazon-redshift-udfs",
+        "title": "Overview",
+        "count": 62,
+        "uniques": 24
+      },
+      {
+        "path": "/aws-samples/amazon-redshift-udfs/pulls",
+        "title": "/pulls",
+        "count": 24,
+        "uniques": 7
+      },
+      {
+        "path": "/aws-samples/amazon-redshift-udfs/issues",
+        "title": "/issues",
+        "count": 23,
+        "uniques": 8
+      },
+      {
+        "path": "/aws-samples/amazon-redshift-udfs/tree/master/lambda-udfs",
+        "title": "/tree/master/lambda-udfs",
+        "count": 15,
+        "uniques": 3
+      },
+      {
+        "path": "/aws-samples/amazon-redshift-udfs/blob/master/stored-procedures/sp_populate_mv_definitions/sp_populate_mv_definitions.sql",
+        "title": "/blob/master/stored-procedures/sp_populate_mv_definitions/sp_populate_mv_definitions.sql",
+        "count": 12,
+        "uniques": 3
+      },
+      {
+        "path": "/aws-samples/amazon-redshift-udfs/tree/master/python-udfs/migrating-python-udfs",
+        "title": "/tree/master/python-udfs/migrating-python-udfs",
+        "count": 8,
+        "uniques": 6
+      },
+      {
+        "path": "/aws-samples/amazon-redshift-udfs/blob/master/python-udfs/migrating-python-udfs/SKILL.md",
+        "title": "/blob/master/python-udfs/migrating-python-udfs/SKILL.md",
+        "count": 7,
+        "uniques": 7
+      },
+      {
+        "path": "/aws-samples/amazon-redshift-udfs/tree/master/stored-procedures",
+        "title": "/tree/master/stored-procedures",
+        "count": 7,
+        "uniques": 5
+      },
+      {
+        "path": "/aws-samples/amazon-redshift-udfs/tree/master/python-udfs",
+        "title": "/tree/master/python-udfs",
+        "count": 7,
+        "uniques": 4
+      },
+      {
+        "path": "/aws-samples/amazon-redshift-udfs/blob/master/views/v_generate_udf_ddl.sql",
+        "title": "/blob/master/views/v_generate_udf_ddl.sql",
+        "count": 7,
+        "uniques": 3
+      }
+    ]
   }
 ]
