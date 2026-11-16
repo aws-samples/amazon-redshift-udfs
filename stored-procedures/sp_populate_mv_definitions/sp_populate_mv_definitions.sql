@@ -1,31 +1,35 @@
 /**********************************************************************************************
-Purpose: Populate the mv_definitions table with each materialized view's definition text and a
-         blocker_hint naming the SQL constructs that block incremental refresh (DISTINCT,
-         OUTER JOIN, window functions, subqueries, mutable functions, statistical and
-         bitwise aggregates, and so on).
+Purpose: Populate the mv_definitions table with each materialized view's definition text and
+         an incremental_blocker_hint naming the SQL constructs that block incremental refresh
+         (DISTINCT, OUTER JOIN, window functions, subqueries, mutable functions, statistical
+         and bitwise aggregates, and so on).
 
 Notes:   Creates mv_definitions in the current schema (first schema in the search_path)
          if it doesn't exist. Each run replaces its contents in a single
          transaction, so the table always reflects the MVs at the time of the run.
-         blocker_hint is only derived for MVs with state 0 (full recompute). Every other MV
-         reports 'none'. A blocked MV with no known construct reports 'unidentified' (for
+         incremental_blocker_hint is only derived for MVs with state 0 (full recompute). Every
+         other MV reports 'none'. A blocked MV with no known construct reports 'unidentified' (for
          example an external Hudi or Delta Lake MV, blocked by table format).
          NONATOMIC, so one unreadable MV is recorded as 'UNREADABLE: ...' and the run
          continues. It walks a staged list of MVs with a WHILE loop because a cursor does
          not survive NONATOMIC commits.
          Uses session temporary tables tmp_mv_oids and tmp_mv_definitions.
          definition_text starts at CREATE MATERIALIZED VIEW (leading comments, such as the
-         Query Editor v2 tag, are dropped). Comments are ignored when deriving blocker_hint.
+         Query Editor v2 tag, are dropped). Comments are ignored when deriving
+         incremental_blocker_hint.
 
 Parameters:
         None
 
 Usage:
     CALL sp_populate_mv_definitions();
-    SELECT mv_schema, mv_name, blocker_hint FROM mv_definitions WHERE blocker_hint <> 'none';
+    SELECT mv_schema, mv_name, incremental_blocker_hint
+    FROM mv_definitions
+    WHERE incremental_blocker_hint <> 'none';
 
     -- Combined with the admin.v_mv_health view from amazon-redshift-utils (src/AdminViews):
-    SELECT v.*, d.blocker_hint
+    -- https://github.com/awslabs/amazon-redshift-utils/blob/master/src/AdminViews/v_mv_health.sql
+    SELECT v.*, d.incremental_blocker_hint
     FROM admin.v_mv_health v
     LEFT JOIN mv_definitions d
         ON v.mv_schema = d.mv_schema
@@ -55,7 +59,7 @@ BEGIN
         mv_schema VARCHAR(128),
         mv_name VARCHAR(128),
         definition_text VARCHAR(MAX),
-        blocker_hint VARCHAR(512)
+        incremental_blocker_hint VARCHAR(512)
     );
 
     -- Results are collected in a session-local staging table and published to
@@ -139,13 +143,13 @@ BEGIN
                 END IF;
             END IF;
 
-            INSERT INTO tmp_mv_definitions (mv_schema, mv_name, definition_text, blocker_hint)
+            INSERT INTO tmp_mv_definitions (mv_schema, mv_name, definition_text, incremental_blocker_hint)
             VALUES (v_schema, v_name, v_def, v_hint);
 
         EXCEPTION WHEN OTHERS THEN
             -- Log-and-continue: record the unreadable MV instead of dropping it,
             -- so the diagnostic surfaces the problem rather than silently omitting it.
-            INSERT INTO tmp_mv_definitions (mv_schema, mv_name, definition_text, blocker_hint)
+            INSERT INTO tmp_mv_definitions (mv_schema, mv_name, definition_text, incremental_blocker_hint)
             VALUES (v_schema, v_name, NULL, LEFT('UNREADABLE: ' || SQLERRM, 512));
         END;
 
