@@ -8058,5 +8058,70 @@
         "uniques": 4
       }
     ]
+  },
+  {
+    "fetched_at": "2026-11-18T09:09:48Z",
+    "paths": [
+      {
+        "path": "/aws-samples/amazon-redshift-udfs",
+        "title": "Overview",
+        "count": 60,
+        "uniques": 20
+      },
+      {
+        "path": "/aws-samples/amazon-redshift-udfs/pulls",
+        "title": "/pulls",
+        "count": 41,
+        "uniques": 8
+      },
+      {
+        "path": "/aws-samples/amazon-redshift-udfs/issues",
+        "title": "/issues",
+        "count": 32,
+        "uniques": 6
+      },
+      {
+        "path": "/aws-samples/amazon-redshift-udfs/blob/master/stored-procedures/sp_populate_mv_definitions/sp_populate_mv_definitions.sql",
+        "title": "/blob/master/stored-procedures/sp_populate_mv_definitions/sp_populate_mv_definitions.sql",
+        "count": 12,
+        "uniques": 3
+      },
+      {
+        "path": "/aws-samples/amazon-redshift-udfs/tree/master/lambda-udfs",
+        "title": "/tree/master/lambda-udfs",
+        "count": 12,
+        "uniques": 2
+      },
+      {
+        "path": "/aws-samples/amazon-redshift-udfs/actions",
+        "title": "/actions",
+        "count": 11,
+        "uniques": 4
+      },
+      {
+        "path": "/aws-samples/amazon-redshift-udfs/tree/master/python-udfs/migrating-python-udfs",
+        "title": "/tree/master/python-udfs/migrating-python-udfs",
+        "count": 9,
+        "uniques": 7
+      },
+      {
+        "path": "/aws-samples/amazon-redshift-udfs/blob/master/python-udfs/migrating-python-udfs/SKILL.md",
+        "title": "/blob/master/python-udfs/migrating-python-udfs/SKILL.md",
+        "count": 8,
+        "uniques": 8
+      },
+      {
+        "path": "/aws-samples/amazon-redshift-udfs/blob/master/views/v_generate_udf_ddl.sql",
+        "title": "/blob/master/views/v_generate_udf_ddl.sql",
+        "count": 7,
+        "uniques": 3
+      },
+      {
+        "path": "/aws-samples/amazon-redshift-udfs/blob/7b557c7987ecb9d896320dbebd4e8ceef6a726e7/python-udfs/f_parse_url(varchar,varchar)/function.sql",
+        "title": "/blob/7b557c7987ecb9d896320dbebd4e8ceef6a726e7/python-udfs/f_parse_url(varchar,varchar)/function.sql",
+        "count": 7,
+        "uniques": 2
+      }
+    ]
   }
 ]
